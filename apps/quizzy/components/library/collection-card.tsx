@@ -15,21 +15,15 @@ const LEVEL_PILL_VARIANT = {
 
 export function CollectionCard({ c }: { c: QuizCard }) {
   const pct = Math.round((c.progress ?? 0) * 100)
-  const disabled = !c.available || c.locked
-  const Wrapper = (disabled ? 'div' : Link) as React.ElementType
-  const wrapperProps = disabled ? { 'aria-disabled': true } : { href: `/quizzes/${c.id}` }
 
   return (
     <motion.div
-      whileHover={disabled ? undefined : { y: -3 }}
+      whileHover={{ y: -3 }}
       transition={{ duration: 0.16, ease: [0.22, 1, 0.36, 1] }}
     >
-      <Wrapper
-        {...wrapperProps}
-        className={cn(
-          'relative block overflow-hidden chunky-card p-5 flex flex-col gap-3 no-underline text-ink transition-shadow',
-          disabled ? 'opacity-65 [filter:grayscale(0.5)] cursor-not-allowed' : 'cursor-pointer hover:border-purple-deep hover:shadow-[0_7px_0_var(--line-2)]'
-        )}
+      <Link
+        href={`/quizzes/${c.id}`}
+        className="relative block overflow-hidden chunky-card p-5 flex flex-col gap-3 no-underline text-ink transition-shadow cursor-pointer hover:border-purple-deep hover:shadow-[0_7px_0_var(--line-2)]"
         style={{ ['--tint' as string]: c.tint, ['--ink-of-tint' as string]: c.inkOfTint } as React.CSSProperties}
       >
         {/* Color stripe */}
@@ -39,19 +33,8 @@ export function CollectionCard({ c }: { c: QuizCard }) {
           style={{ background: 'var(--tint)', opacity: 0.55 }}
         />
 
-        {/* New / Locked / Coming-soon badge */}
-        {c.locked ? (
-          <span className="absolute top-3.5 right-3.5 z-10 size-7.5 rounded-[9px] bg-ink text-paper grid place-items-center">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="size-3.5">
-              <rect x="4" y="11" width="16" height="10" rx="2" />
-              <path d="M8 11V7a4 4 0 0 1 8 0v4" />
-            </svg>
-          </span>
-        ) : !c.available ? (
-          <span className="absolute top-3 right-3.5 z-10 pill-mono bg-paper-2 text-ink-3 border border-line">
-            Đang chuẩn bị
-          </span>
-        ) : c.isNew ? (
+        {/* New badge */}
+        {c.isNew ? (
           <span className="absolute top-3 right-3.5 z-10 pill-mono bg-pink text-white shadow-[0_2px_0_#c93b78]">
             MỚI
           </span>
@@ -80,7 +63,7 @@ export function CollectionCard({ c }: { c: QuizCard }) {
           {c.desc}
         </p>
 
-        {(c.progress ?? 0) > 0 && !disabled ? (
+        {(c.progress ?? 0) > 0 ? (
           <div className="relative z-10 flex flex-col gap-2">
             <div className="flex items-center justify-between font-mono text-[11px] font-bold text-ink-2 uppercase tracking-[0.06em]">
               <span>Tiến độ</span>
@@ -115,7 +98,7 @@ export function CollectionCard({ c }: { c: QuizCard }) {
             {c.minutes} phút
           </span>
         </div>
-      </Wrapper>
+      </Link>
     </motion.div>
   )
 }

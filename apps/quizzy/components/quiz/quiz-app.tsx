@@ -8,6 +8,7 @@ import { QuizSidebar } from './quiz-sidebar'
 import { QuizMascotRow } from './quiz-mascot-row'
 import { QuizChoices } from './quiz-choices'
 import { QuizFooter } from './quiz-footer'
+import { Debby } from '@/components/debby/debby'
 import { TS_BASICS_INITIAL_STATUS, TS_BASICS_INITIAL_ID } from '@/lib/questions/ts-basics'
 import { cn } from '@/lib/utils'
 
@@ -131,7 +132,14 @@ export function QuizApp({
 
       <div className="flex flex-col min-w-0 min-h-screen">
         <main className="flex-1 w-full max-w-[880px] mx-auto px-5 md:px-8 py-6 pb-10 flex flex-col gap-7 justify-center">
-          <QuizMascotRow mood={mood} topic={current.topic} stem={current.stem} />
+          {current.stem ? (
+            <QuizMascotRow mood={mood} topic={current.topic} stem={current.stem} />
+          ) : (
+            <div className="flex flex-col items-center justify-center gap-4 py-16 text-center">
+              <Debby mood="idle" size={120} />
+              <p className="text-ink-3 font-semibold text-base">Câu này chưa có nội dung.<br/>Debby đang chuẩn bị thêm câu hỏi! 🐛</p>
+            </div>
+          )}
 
           {bodyMap[currentId] ? (
             <div className="cq-md" dangerouslySetInnerHTML={{ __html: bodyMap[currentId]! }} />

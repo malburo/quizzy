@@ -143,21 +143,21 @@ body {
   }
 
   .cq-code {
-    background: #1f1830;
-    color: #e8e3f5;
+    background: #f6f0e8;
+    color: var(--ink);
     border-radius: var(--radius-sm);
     margin: 14px 0;
     overflow: hidden;
-    border: 2px solid #1a1428;
-    box-shadow: 0 4px 0 #0f0a1c;
+    border: 2px solid var(--line-2);
+    box-shadow: 0 4px 0 var(--line-2);
   }
   .cq-code-head {
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 8px 14px;
-    background: #16101f;
-    border-bottom: 1px solid #2a2240;
+    background: #ede6db;
+    border-bottom: 1px solid var(--line-2);
     font-family: var(--font-mono);
     font-size: 11px;
   }
@@ -165,7 +165,7 @@ body {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    color: #b9b0d4;
+    color: var(--ink-3);
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.06em;
@@ -177,8 +177,8 @@ body {
     display: inline-block;
   }
   .cq-code-lang .swatch.ts { background: var(--ts-blue); }
-  .cq-code-lang .swatch.js { background: #f7df1e; }
-  .cq-code-lang .swatch.jsx { background: #61dafb; }
+  .cq-code-lang .swatch.js { background: #c9a800; }
+  .cq-code-lang .swatch.jsx { background: #0ea5c9; }
   .cq-code-dots {
     display: inline-flex;
     gap: 5px;
@@ -187,7 +187,7 @@ body {
     width: 9px;
     height: 9px;
     border-radius: 50%;
-    background: #2a2240;
+    background: var(--line-2);
   }
   .cq-code pre {
     margin: 0;
@@ -200,31 +200,11 @@ body {
     tab-size: 2;
   }
   .cq-code pre code {
-    background: none;
-    color: inherit;
+    background: none !important;
     padding: 0;
     font-weight: 500;
   }
-  /* Syntax tokens — overrides on top of shiki's github-light to match
-     the warm cream/purple palette. */
-  .cq-code .keyword,
-  .cq-code .token.keyword { color: #c490ff; font-weight: 600; }
-  .cq-code .string,
-  .cq-code .token.string { color: #9be3a4; }
-  .cq-code .number,
-  .cq-code .token.number { color: #ffb15a; }
-  .cq-code .comment,
-  .cq-code .token.comment { color: #6c6184; font-style: italic; }
-  .cq-code .function,
-  .cq-code .token.function { color: #82c8ff; }
-  .cq-code .type,
-  .cq-code .token.type { color: #6cd6c4; }
-  .cq-code .property,
-  .cq-code .token.property { color: #ffb7d8; }
-  .cq-code .punctuation,
-  .cq-code .token.punctuation { color: #b9b0d4; }
-  .cq-code .boolean,
-  .cq-code .token.boolean { color: #ffb15a; font-weight: 600; }
+  /* shiki github-light renders inline span colors — no token overrides needed */
 
   .cq-md {
     font-size: 16px;

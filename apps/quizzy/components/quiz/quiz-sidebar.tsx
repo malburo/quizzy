@@ -71,18 +71,15 @@ export function QuizSidebar({
             {sec.items.map((q) => {
               const status: QuestionStatus = statuses[q.id] ?? 'idle'
               const isCurrent = q.id === currentId
-              const canNavigate = Boolean(q.body)
               return (
                 <button
                   key={q.id}
                   type="button"
-                  disabled={!canNavigate}
                   onClick={() => onPick(q.id)}
                   title={q.title}
                   className={cn(
                     'group flex items-center gap-2.5 w-full px-2.5 py-2.5 rounded-[10px] bg-transparent border-0 cursor-pointer text-left font-display text-[13px] font-semibold text-ink-2 transition-[background,color] duration-150 ease-[cubic-bezier(0.22,1,0.36,1)] relative',
-                    canNavigate && 'hover:bg-paper-2 hover:text-ink',
-                    !canNavigate && 'cursor-not-allowed opacity-60',
+                    'hover:bg-paper-2 hover:text-ink',
                     isCurrent && 'bg-paper-2 text-ink'
                   )}
                 >

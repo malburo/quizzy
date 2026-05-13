@@ -7,21 +7,14 @@ const FULL_SETS: Record<string, QuizSet> = {
   'ts-basics': tsBasics,
 }
 
-/**
- * Returns every quiz set with an `available` flag.
- * `available === true` means the set has been fully seeded and can be
- * navigated to via /quizzes/[id]; metadata-only sets render as
- * "đang chuẩn bị" cards in the library.
- */
+const QUIZ_SETS_MAP = new Map(QUIZ_SETS.map((q) => [q.id, q]))
+
 export const getAllQuizzes = cache((): QuizCard[] => {
-  return QUIZ_SETS.map((q) => {
-    const full = FULL_SETS[q.id]
-    return full ? { ...full, available: true } : { ...q, available: false }
-  })
+  return QUIZ_SETS.map((q) => ({ ...(FULL_SETS[q.id] ?? q), available: true }))
 })
 
 export const getQuizById = cache((id: string): QuizSet | null => {
-  return FULL_SETS[id] ?? null
+  return FULL_SETS[id] ?? QUIZ_SETS_MAP.get(id) ?? null
 })
 
-export const getAvailableQuizIds = cache((): string[] => Object.keys(FULL_SETS))
+export const getAvailableQuizIds = cache((): string[] => QUIZ_SETS.map((q) => q.id))
