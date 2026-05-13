@@ -9,7 +9,7 @@ import { QuizMascotRow } from './quiz-mascot-row'
 import { QuizChoices } from './quiz-choices'
 import { QuizFooter } from './quiz-footer'
 import { Debby } from '@/components/debby/debby'
-import { TS_BASICS_INITIAL_STATUS, TS_BASICS_INITIAL_ID } from '@/lib/questions/ts-basics'
+import { TS_BASICS_INITIAL_STATUS, TS_BASICS_INITIAL_ID } from '@/lib/questions/ts-basics-constants'
 import { cn } from '@/lib/utils'
 
 const Confetti = dynamic(() => import('./confetti').then((m) => m.Confetti), { ssr: false })
