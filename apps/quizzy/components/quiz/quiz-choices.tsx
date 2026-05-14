@@ -1,24 +1,14 @@
 'use client'
 
 import { motion, AnimatePresence } from 'motion/react'
-import type { Choice, ChoiceKey } from '@/lib/types'
+import type { Choice } from '@/models/quiz'
+import { useQuizActions, useSession } from '@/stores/quiz-store'
 import { cn } from '@/lib/utils'
 
-export function QuizChoices({
-  currentId,
-  choices,
-  selected,
-  checked,
-  correctKey,
-  onSelect,
-}: {
-  currentId: number
-  choices: Choice[]
-  selected: ChoiceKey | null
-  checked: boolean
-  correctKey: ChoiceKey
-  onSelect: (key: ChoiceKey) => void
-}) {
+export function QuizChoices({ choices }: { choices: Choice[] }) {
+  const { selected, checked, correctKey, currentId } = useSession()
+  const { select } = useQuizActions()
+
   return (
     <div role="radiogroup" aria-label="Đáp án" className="grid grid-cols-1 md:grid-cols-2 gap-3.5 mt-1">
       <AnimatePresence mode="wait" initial={false}>
@@ -44,7 +34,7 @@ export function QuizChoices({
                 role="radio"
                 aria-checked={selected === c.key}
                 disabled={checked}
-                onClick={() => !checked && onSelect(c.key)}
+                onClick={() => !checked && select(c.key)}
                 variants={{
                   hidden: { opacity: 0, y: 10 },
                   show: { opacity: 1, y: 0, transition: { duration: 0.28, ease: [0.22, 1, 0.36, 1] } },
@@ -52,7 +42,7 @@ export function QuizChoices({
                 whileHover={!checked ? { y: -1 } : undefined}
                 whileTap={!checked ? { y: 2 } : undefined}
                 className={cn(
-                  'relative chunky-card text-left font-semibold pl-[60px] pr-4.5 py-4.5 min-h-[64px] text-[16px] flex items-center',
+                  'relative chunky-card text-left font-semibold pl-15 pr-4.5 py-4.5 min-h-16 text-[16px] flex items-center',
                   c.code && 'font-mono text-[14px]',
                   !isSelected && !isCorrect && !isWrong && 'hover:border-purple-tint',
                   isSelected && 'border-purple bg-purple-soft shadow-[0_4px_0_var(--purple)] text-purple-deep',

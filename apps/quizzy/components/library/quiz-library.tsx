@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useMemo, useState } from 'react'
-import type { QuizCard, QuizSection } from '@/lib/types'
+import type { QuizCard, QuizSection } from '@/models/quiz'
 import { CollectionCard } from './collection-card'
 import { Debby } from '@/components/debby/debby'
 
@@ -29,10 +29,8 @@ export function QuizLibrary({ quizzes }: { quizzes: QuizCard[] }) {
     return out
   }, [filtered])
 
-  const totalDone = quizzes.filter((c) => (c.progress ?? 0) === 1).length
-
   return (
-    <div className="mx-auto max-w-[1240px] px-8 pt-6 pb-14">
+    <div className="mx-auto max-w-310 px-8 pt-6 pb-14">
       {/* Top nav */}
       <nav className="flex items-center justify-between gap-5 pb-5 mb-7 border-b border-line">
         <Link href="/" className="inline-flex items-center gap-3 font-extrabold text-[17px] no-underline text-ink tracking-tight">
@@ -45,16 +43,16 @@ export function QuizLibrary({ quizzes }: { quizzes: QuizCard[] }) {
 
       {/* Header */}
       <header className="mb-7 grid grid-cols-1 md:grid-cols-[1fr_auto] items-center gap-6">
-        <div className="max-w-[560px]">
-          <h1 className="font-display font-black tracking-[-0.025em] leading-[1.1] text-[clamp(30px,4vw,42px)]">
+        <div className="max-w-140">
+          <h1 className="font-display font-black tracking-tight leading-[1.1] text-[clamp(30px,4vw,42px)]">
             Chọn một bộ để bắt đầu
           </h1>
           <p className="mt-2 text-[15px] font-semibold text-ink-2 mb-4">
-            {totalDone} / {quizzes.length} bộ đã hoàn thành. Tiếp tục đi nào! 🐝
+            {quizzes.length} bộ đang chờ bạn. Tiếp tục đi nào! 🐝
           </p>
 
           {/* Search */}
-          <div className="relative w-full max-w-[460px]">
+          <div className="relative w-full max-w-115">
             <svg
               viewBox="0 0 24 24"
               fill="none"
@@ -77,9 +75,9 @@ export function QuizLibrary({ quizzes }: { quizzes: QuizCard[] }) {
           </div>
         </div>
 
-        <div className="hidden md:block relative size-[180px] shrink-0">
+        <div className="hidden md:block relative size-45 shrink-0">
           <Debby mood="idle" size={180} />
-          <div className="absolute top-2 -left-[130px] cq-bubble !p-2.5 !px-3.5 !text-[13px] !font-bold whitespace-nowrap">
+          <div className="absolute top-2 -left-32.5 cq-bubble p-2.5! px-3.5! text-[13px]! font-bold! whitespace-nowrap">
             Hôm nay học gì nào?
           </div>
         </div>

@@ -45,7 +45,7 @@ export function Confetti({ active }: { active: boolean }) {
   if (!active || reduce) return null
 
   return (
-    <div className="fixed top-[30%] inset-x-0 bottom-0 pointer-events-none z-[200] overflow-hidden" aria-hidden>
+    <div className="fixed top-[30%] inset-x-0 bottom-0 pointer-events-none z-200 overflow-hidden" aria-hidden>
       {pieces.map((p) => (
         <motion.span
           key={p.i}

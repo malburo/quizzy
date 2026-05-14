@@ -1,5 +1,3 @@
-export type QuestionStatus = 'idle' | 'correct' | 'wrong'
-
 export type ChoiceKey = 'A' | 'B' | 'C' | 'D'
 
 export type Choice = {
@@ -47,15 +45,14 @@ export type QuizSet = {
   /** Contrast ink for mono icon on the tint stripe. */
   inkOfTint: string
   level: QuizLevel
-  /** Sidebar items; full body optional per item. */
   questions: Question[]
   minutes: number
-  /** 0..1, always 0 this phase. */
-  progress?: number
   section: QuizSection
   isNew?: boolean
-  locked?: boolean
 }
 
 /** A QuizSet enriched with availability info for the library cards. */
 export type QuizCard = QuizSet & { available: boolean }
+
+/** Map of question id → answer status. Persisted in localStorage. */
+export type QuestionStatuses = Record<number, 'correct' | 'wrong'>

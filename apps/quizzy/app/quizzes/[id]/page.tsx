@@ -1,3 +1,4 @@
+import { Suspense } from 'react'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { getAvailableQuizIds, getQuizById } from '@/lib/questions'
@@ -35,5 +36,9 @@ export default async function QuizDetailPage({
   )
   const bodyMap = Object.fromEntries(bodyEntries) as Record<number, string | null>
 
-  return <QuizApp quiz={quiz} bodyMap={bodyMap} />
+  return (
+    <Suspense fallback={null}>
+      <QuizApp quiz={quiz} bodyMap={bodyMap} />
+    </Suspense>
+  )
 }

@@ -7,26 +7,13 @@ iconMono: true
 tint: "#dcd5ff"
 inkOfTint: "#3142a8"
 level: easy
-minutes: 15
-progress: 0.62
+minutes: 10
 section: đang học
 ---
 
 ## Basics
 
-### 1. Khai báo biến với let
-
-### 2. const vs let — khác gì?
-
-### 3. Kiểu nguyên thủy: string
-
-### 4. Kiểu number và NaN
-
-### 5. boolean — true/false
-
-### 6. any vs unknown
-
-### 7. Type narrowing với typeof
+### 1. Type narrowing với typeof
 
 topic: TypeScript · Type narrowing
 stem: Đoán xem code này in ra cái gì nhỉ? 🐛
@@ -45,59 +32,23 @@ function describe(value: string | string[]): string {
 console.log(describe(["hello", "world"]));
 ```
 
-Gợi ý: chú ý đến **type guard** `typeof` — nó giúp TS thu hẹp kiểu trong nhánh nào? 🤔
+- A: `single: HELLO,WORLD`
+- B: `list of 2: hello + world`
+- C: `list of 2: HELLO + WORLD`
+- D: `TypeError: value is not a string`
 
-- [ ] A: `single: HELLO,WORLD`
-- [x] B: `list of 2: hello + world`
-- [ ] C: `list of 2: HELLO + WORLD`
-- [ ] D: `TypeError: value is not a string`
+<details>
+<summary>👉 Đáp án</summary>
 
-correct: Đúng rồi! `typeof value === "string"` chỉ true cho chuỗi đơn — mảng đi vào nhánh dưới và trả về `list of 2: hello + world`.
-wrong: Chưa chuẩn rồi. `typeof value === "string"` *false* với mảng → code đi vào nhánh `return` thứ hai, dùng `.length` và `.join(" + ")`.
+**B** — `list of 2: hello + world`
 
-### 8. never — khi nào dùng?
+✅ Đúng rồi! `typeof value === "string"` chỉ true cho chuỗi đơn — mảng đi vào nhánh dưới và trả về `list of 2: hello + world`.
 
-## Functions
+❌ Chưa chuẩn rồi. `typeof value === "string"` *false* với mảng → code đi vào nhánh `return` thứ hai, dùng `.length` và `.join(" + ")`.
 
-### 9. Khai báo function với return type
+</details>
 
-### 10. Tham số optional với ?
-
-### 11. Default parameters
-
-### 12. Rest parameters: ...args
-
-### 13. Function overloading
-
-### 14. Arrow function vs function
-
-### 15. void return type
-
-### 16. Function type signatures
-
-## Objects & Interfaces
-
-### 17. interface User { ... }
-
-### 18. type alias vs interface
-
-### 19. readonly properties
-
-### 20. Optional properties với ?
-
-### 21. Index signatures
-
-### 22. Extending interface
-
-### 23. Intersection types: A & B
-
-### 24. Nested objects
-
-### 25. Object destructuring với types
-
-## Arrays & Tuples
-
-### 26. Array<T> vs T[]
+### 2. Array<T> vs T[]
 
 topic: TypeScript · Arrays
 stem: Hai cách viết kiểu mảng — có khác nhau không?
@@ -111,64 +62,112 @@ const b: Array<number> = [1, 2, 3];
 
 Câu nào sau đây mô tả đúng nhất về `number[]` và `Array<number>`?
 
-- [x] A: Hoàn toàn tương đương về mặt kiểu
-- [ ] B: `Array<number>` cho phép kiểu hỗn hợp, `number[]` thì không
-- [ ] C: `number[]` immutable, `Array<number>` mutable
-- [ ] D: `Array<number>` chỉ dùng được trong generic
+- A: Hoàn toàn tương đương về mặt kiểu
+- B: `Array<number>` cho phép kiểu hỗn hợp, `number[]` thì không
+- C: `number[]` immutable, `Array<number>` mutable
+- D: `Array<number>` chỉ dùng được trong generic
 
-correct: Đúng. Đây là *syntactic sugar* — TypeScript treat hai cách viết hoàn toàn giống nhau. Convention chung là dùng `T[]` cho kiểu đơn giản, `Array<T>` khi `T` phức tạp (union, intersection).
-wrong: Hai cách viết tương đương về kiểu — cả hai đều mutable, đều không phải union, và không bị giới hạn ở generic. Quy ước style dùng `T[]` cho ngắn gọn, `Array<T>` khi `T` dài.
+<details>
+<summary>👉 Đáp án</summary>
 
-### 27. Tuple [string, number]
+**A** — Hoàn toàn tương đương về mặt kiểu
 
-### 28. Readonly arrays
+✅ Đúng. Đây là *syntactic sugar* — TypeScript treat hai cách viết hoàn toàn giống nhau. Convention chung là dùng `T[]` cho kiểu đơn giản, `Array<T>` khi `T` phức tạp (union, intersection).
 
-### 29. Array.map kiểu trả về
+❌ Hai cách viết tương đương về kiểu — cả hai đều mutable, đều không phải union, và không bị giới hạn ở generic. Quy ước style dùng `T[]` cho ngắn gọn, `Array<T>` khi `T` dài.
 
-### 30. Array.filter type predicate
+</details>
 
-### 31. Spread vs rest trong tuple
+### 3. interface vs type alias
 
-### 32. Mảng đa kiểu: (string|number)[]
+topic: TypeScript · Type system
+stem: Khai báo trùng tên — cái nào hợp lệ? 🤔
 
-## Generics
+Trong cùng một file, bạn viết:
 
-### 33. function identity<T>(x: T)
+```ts
+type Animal = { name: string }
+interface Animal { age: number }
 
-### 34. Generic constraint với extends
+const a: Animal = { name: "Mit", age: 3 }
+```
 
-### 35. Generic interface Box<T>
+Code này biên dịch thế nào?
 
-### 36. keyof và T[K]
+- A: OK — TS tự merge thành `{ name: string; age: number }`
+- B: `interface` ghi đè `type`, chỉ còn field `age`
+- C: Lỗi — không thể merge `interface` với `type alias`
+- D: Lỗi — `type` ghi đè `interface`, thiếu field `age`
 
-### 37. Partial<T>
+<details>
+<summary>👉 Đáp án</summary>
 
-### 38. Pick<T, K>
+**C** — Lỗi: "Duplicate identifier 'Animal'"
 
-### 39. Omit<T, K>
+✅ Đúng. `interface` hỗ trợ *declaration merging* nhưng chỉ với `interface` khác cùng tên. Khi đụng phải `type alias` cùng tên, TS báo `Duplicate identifier`.
 
-### 40. Record<K, V>
+❌ Sai rồi. `type` và `interface` không bao giờ tự merge với nhau. Chỉ có `interface` + `interface` mới merge (rất hữu ích cho mở rộng `Window`, `Express.Request`...).
 
-## Advanced
+</details>
 
-### 41. Union types: A | B
+### 4. as const — readonly literal
 
-### 42. Literal types: "on" | "off"
+topic: TypeScript · Const assertion
+stem: `as const` thực sự làm gì với type inference?
 
-### 43. Discriminated unions
+```ts
+const config = {
+  mode: "dark",
+  size: 14,
+} as const
 
-### 44. as const — readonly literal
+type Mode = typeof config.mode
+```
 
-### 45. Conditional types: T extends U ?
+`Mode` sẽ là kiểu gì?
 
-### 46. Mapped types
+- A: `string`
+- B: `"dark"`
+- C: `"dark" | "light"`
+- D: `readonly string`
 
-## React & DOM
+<details>
+<summary>👉 Đáp án</summary>
 
-### 47. React props với TypeScript
+**B** — `"dark"`
 
-### 48. useState<T>() generic
+✅ Đúng. `as const` làm 2 việc: (1) widen các literal value thành literal type (`"dark"` thay vì `string`), (2) đánh dấu mọi field là `readonly`. Không có `as const` thì `mode` infer thành `string`.
 
-### 49. Event handler types
+❌ Sai. Không có `as const`, mode sẽ là `string`. TS không tự đoán union `"dark" | "light"` — bạn phải khai báo rõ. Có `as const`, type bị **narrow** về đúng giá trị literal.
 
-### 50. tsconfig strict mode
+</details>
+
+### 5. keyof + indexed access
+
+topic: TypeScript · keyof
+stem: Lấy union các value type của object — làm thế nào?
+
+```ts
+const user = { id: 1, name: "An", isAdmin: false }
+
+type UserKey = keyof typeof user
+type UserValue = (typeof user)[UserKey]
+```
+
+`UserValue` sẽ là kiểu gì?
+
+- A: `number`
+- B: `string | number | boolean`
+- C: `unknown`
+- D: `any`
+
+<details>
+<summary>👉 Đáp án</summary>
+
+**B** — `string | number | boolean`
+
+✅ Đúng. `keyof typeof user` là union `"id" | "name" | "isAdmin"`. Khi index một type bằng *union các key*, TS trả về *union các value type* tương ứng.
+
+❌ Sai. Pattern này chính là cách TS implement `Record`, `Pick`, `Omit`. Nó không trả về `unknown`/`any` — TS biết chính xác value type của từng key vì object là literal `as const`-ish ngay từ đầu.
+
+</details>

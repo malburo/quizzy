@@ -2,7 +2,7 @@ import { cache } from 'react'
 import { readFileSync, readdirSync } from 'fs'
 import { join } from 'path'
 import { parseQuiz } from './parse-quiz'
-import type { QuizCard, QuizSet } from '@/lib/types'
+import type { QuizCard, QuizSet } from '@/models/quiz'
 
 const CONTENT_DIR = join(process.cwd(), 'content/quizzes')
 

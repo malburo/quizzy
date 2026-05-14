@@ -1,7 +1,12 @@
 'use client'
 
 import { cn } from '@/lib/utils'
-import type { Question, QuestionStatus } from '@/lib/types'
+import type { Question, QuizSet } from '@/models/quiz'
+import {
+  useAnsweredCount,
+  useSession,
+  useStatuses,
+} from '@/stores/quiz-store'
 
 type Section = { name: string; items: Question[] }
 
@@ -16,44 +21,40 @@ function groupBySection(questions: Question[]): Section[] {
 }
 
 export function QuizSidebar({
-  track,
-  questions,
-  statuses,
-  currentId,
-  totalAnswered,
+  quiz,
   onPick,
 }: {
-  track: string
-  questions: Question[]
-  statuses: Record<number, 'correct' | 'wrong'>
-  currentId: number
-  totalAnswered: number
+  quiz: QuizSet
   onPick: (id: number) => void
 }) {
-  const progress = totalAnswered / questions.length
+  const statuses = useStatuses(quiz.id)
+  const totalAnswered = useAnsweredCount(quiz.id)
+  const { currentId } = useSession()
+  const progress = totalAnswered / quiz.questions.length
 
   return (
-    <aside className="sticky top-0 self-start h-screen w-[304px] flex flex-col bg-paper border-r-2 border-line">
-      <div className="p-4 border-b border-line bg-gradient-to-b from-[color-mix(in_srgb,var(--purple-soft)_60%,transparent)] to-transparent">
+    <aside className="sticky top-0 self-start h-screen w-76 flex flex-col bg-paper border-r-2 border-line">
+      <div className="p-4 border-b border-line bg-linear-to-b from-[color-mix(in_srgb,var(--purple-soft)_60%,transparent)] to-transparent">
         <div className="flex items-center gap-3 mb-3">
-          <span className="size-9.5 rounded-[10px] bg-white border-2 border-line-2 shadow-[0_2px_0_var(--line-2)] grid place-items-center shrink-0 overflow-hidden">
-            <svg viewBox="0 0 24 24" fill="#3178c6" stroke="#1f5fa3" strokeWidth="1.2" strokeLinejoin="round" className="size-7">
-              <rect x="2" y="2" width="20" height="20" rx="2.5" />
-              <text x="12" y="17" textAnchor="middle" fontFamily="JetBrains Mono, monospace" fontWeight="800" fontSize="11" fill="#fff">
-                TS
-              </text>
-            </svg>
+          <span
+            className={cn(
+              'size-9.5 rounded-[10px] bg-paper border-2 border-line-2 shadow-[0_2px_0_var(--line-2)] grid place-items-center shrink-0 text-[18px] leading-none',
+              quiz.iconMono && 'font-mono font-extrabold text-[13px]'
+            )}
+            style={quiz.iconMono ? { color: quiz.inkOfTint } : undefined}
+          >
+            {quiz.icon}
           </span>
           <div className="min-w-0 flex-1">
-            <div className="text-[15px] font-extrabold text-ink leading-tight truncate">{track}</div>
+            <div className="text-[15px] font-extrabold text-ink leading-tight truncate">{quiz.title}</div>
             <div className="font-mono text-[11px] text-ink-3 font-semibold mt-0.5">
-              {totalAnswered}/{questions.length} câu đã làm
+              {totalAnswered}/{quiz.questions.length} câu đã làm
             </div>
           </div>
         </div>
         <div className="h-2 bg-paper-2 rounded-full border border-line overflow-hidden">
           <div
-            className="h-full rounded-full transition-[width] duration-[480ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
+            className="h-full rounded-full transition-[width] duration-480 ease-[cubic-bezier(0.22,1,0.36,1)]"
             style={{
               width: `${progress * 100}%`,
               background: 'linear-gradient(180deg, #7c6cdc 0%, var(--purple) 100%)',
@@ -63,13 +64,13 @@ export function QuizSidebar({
       </div>
 
       <nav className="flex-1 overflow-y-auto px-2 py-2.5" aria-label="Danh sách câu hỏi">
-        {groupBySection(questions).map((sec) => (
+        {groupBySection(quiz.questions).map((sec) => (
           <div key={sec.name} className="mb-2.5">
             <div className="font-mono text-[10px] font-bold text-ink-3 uppercase tracking-[0.08em] px-2.5 pt-2.5 pb-1.5">
               {sec.name}
             </div>
             {sec.items.map((q) => {
-              const status: QuestionStatus = statuses[q.id] ?? 'idle'
+              const status = statuses[q.id] ?? 'idle'
               const isCurrent = q.id === currentId
               return (
                 <button
