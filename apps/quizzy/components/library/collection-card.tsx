@@ -10,12 +10,19 @@ import {
   useHydrateQuizStore,
 } from '@/stores/quiz-store'
 import { cn } from '@/lib/utils'
+import { pressable } from '@/lib/motion'
 
 const LEVEL_LABEL = { easy: 'Dễ', mid: 'Vừa', hard: 'Khó' } as const
 const LEVEL_BADGE_VARIANT = {
   easy: 'correct',
   mid: 'bee',
   hard: 'wrong',
+} as const
+// Tailwind v4 scanner needs literal class names; map dot color explicitly.
+const LEVEL_DOT_CLASS = {
+  easy: 'bg-correct',
+  mid: 'bg-bee',
+  hard: 'bg-wrong',
 } as const
 
 export function CollectionCard({ c }: { c: QuizCard }) {
@@ -29,13 +36,10 @@ export function CollectionCard({ c }: { c: QuizCard }) {
   const pct = Math.round((answered / total) * 100)
 
   return (
-    <motion.div
-      whileHover={{ y: -3 }}
-      transition={{ duration: 0.16, ease: [0.22, 1, 0.36, 1] }}
-    >
+    <motion.div {...pressable}>
       <Link
         href={`/quizzes/${c.id}`}
-        className="relative overflow-hidden chunky-card p-5 flex flex-col gap-3 no-underline text-ink transition-shadow cursor-pointer hover:border-brand-purple-deep hover:shadow-[0_7px_0_var(--line-2)]"
+        className="relative overflow-hidden bg-paper border-2 border-line-2 rounded-lg shadow-chunky-md p-5 flex flex-col gap-3 no-underline text-ink transition-shadow cursor-pointer hover:border-brand-purple-deep hover:shadow-chunky-lg"
         style={{ ['--tint' as string]: c.tint, ['--ink-of-tint' as string]: c.inkOfTint } as React.CSSProperties}
       >
         <span
@@ -45,7 +49,10 @@ export function CollectionCard({ c }: { c: QuizCard }) {
         />
 
         {c.isNew ? (
-          <Badge className="absolute top-3 right-3.5 z-10 bg-mask text-white shadow-[0_2px_0_#c93b78]">
+          <Badge
+            variant="mask"
+            className="absolute top-3 right-3.5 z-10 bg-mask text-white"
+          >
             MỚI
           </Badge>
         ) : null}
@@ -53,47 +60,45 @@ export function CollectionCard({ c }: { c: QuizCard }) {
         <div className="relative z-10 flex items-start justify-between gap-3">
           <div
             className={cn(
-              'size-14 rounded-[14px] grid place-items-center text-[26px] leading-none shrink-0',
-              'bg-paper border-2 border-line-2 shadow-[0_2px_0_var(--line-2)]',
-              c.iconMono && 'font-mono font-extrabold text-[18px]'
+              'size-14 rounded-md grid place-items-center text-2xl leading-none shrink-0',
+              'bg-paper border-2 border-line-2 shadow-chunky-sm',
+              c.iconMono && 'font-mono font-extrabold text-lg'
             )}
             style={c.iconMono ? { color: c.inkOfTint } : undefined}
           >
             {c.icon}
           </div>
           <Badge variant={LEVEL_BADGE_VARIANT[c.level]}>
-            <span className={`size-1.5 rounded-full bg-${LEVEL_BADGE_VARIANT[c.level]}`} />
+            <span
+              className={cn('size-1.5 rounded-full', LEVEL_DOT_CLASS[c.level])}
+            />
             {LEVEL_LABEL[c.level]}
           </Badge>
         </div>
 
-        <h3 className="relative z-10 text-[18px] font-extrabold leading-tight tracking-tight text-pretty">
+        <h3 className="relative z-10 t-h3 leading-tight text-pretty">
           {c.title}
         </h3>
-        <p className="relative z-10 text-[13.5px] font-medium leading-normal text-ink-2 text-pretty flex-1">
+        <p className="relative z-10 t-small font-medium text-ink-2 text-pretty flex-1">
           {c.desc}
         </p>
 
         {pct > 0 ? (
           <div className="relative z-10 flex flex-col gap-2">
-            <div className="flex items-center justify-between font-mono text-[11px] font-bold text-ink-2 uppercase tracking-[0.06em]">
+            <div className="flex items-center justify-between t-caption text-ink-2">
               <span>Tiến độ</span>
               <span className="text-correct-deep">{pct}%</span>
             </div>
             <div className="h-2.5 rounded-full bg-paper-2 border border-line overflow-hidden">
               <div
-                className="h-full rounded-full"
-                style={{
-                  width: `${pct}%`,
-                  background: 'linear-gradient(180deg, #84e07b 0%, var(--status-correct) 60%, var(--status-correct-deep) 100%)',
-                  transition: 'width 480ms cubic-bezier(0.22, 1, 0.36, 1)',
-                }}
+                className="h-full rounded-full bg-correct transition-[width] duration-500"
+                style={{ width: `${pct}%` }}
               />
             </div>
           </div>
         ) : null}
 
-        <div className="relative z-10 flex items-center gap-3.5 pt-3 border-t border-dashed border-line-2 font-mono text-[11px] font-bold text-ink-3 uppercase tracking-[0.06em]">
+        <div className="relative z-10 flex items-center gap-3.5 pt-3 border-t border-dashed border-line-2 t-caption text-ink-3">
           <span className="inline-flex items-center gap-1.5">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" className="size-3">
               <circle cx="12" cy="12" r="9" />
@@ -119,10 +124,10 @@ function CollectionCardSkeleton() {
     <div
       aria-busy="true"
       aria-label="Đang tải bộ câu hỏi"
-      className="chunky-card p-5 flex flex-col gap-3 animate-pulse"
+      className="bg-paper border-2 border-line-2 rounded-lg shadow-chunky-md p-5 flex flex-col gap-3 animate-pulse"
     >
       <div className="flex items-start justify-between gap-3">
-        <div className="size-14 rounded-[14px] bg-paper-2 border-2 border-line-2" />
+        <div className="size-14 rounded-md bg-paper-2 border-2 border-line-2" />
         <div className="h-6 w-14 rounded-full bg-paper-2" />
       </div>
       <div className="h-5 w-3/4 rounded bg-paper-2" />
