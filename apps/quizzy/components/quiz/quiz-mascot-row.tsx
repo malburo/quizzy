@@ -54,7 +54,7 @@ export function QuizMascotRow({ stem }: { stem?: string }) {
         className="size-20 shrink-0 md:size-45"
       />
       <div className="cq-bubble min-w-0 w-fit pb-6 pr-8">
-        <div className="text-lg md:text-2xl font-extrabold leading-tight text-ink text-pretty w-fit">
+        <div className="t-h3 md:t-h2 text-ink text-pretty w-fit">
           {stem}
         </div>
       </div>
