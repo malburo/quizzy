@@ -1,53 +1,150 @@
 @import 'tailwindcss';
 
 :root {
+  /* Brand */
+  --brand-purple: #6b5bd2;
+  --brand-purple-deep: #4f3fb8;
+  --brand-purple-soft: #efecff;
+  --brand-purple-tint: #dcd5ff;
+
+  /* Status — Duolingo */
+  --status-correct: #58cc02;
+  --status-correct-deep: #46a302;
+  --status-correct-soft: #d7ffb8;
+  --status-wrong: #ff4b4b;
+  --status-wrong-deep: #ea2b2b;
+  --status-wrong-soft: #ffdfe0;
+
+  /* Accents — Duolingo secondary */
+  --accent-bee: #ffc800;
+  --accent-bee-soft: #fff1c2;
+  --accent-bee-deep: #b38a00;
+  --accent-fox: #ff9600;
+  --accent-fox-soft: #ffe0bd;
+  --accent-fox-deep: #b36800;
+  --accent-macaw: #1cb0f6;
+  --accent-macaw-soft: #d6effd;
+  --accent-macaw-deep: #0f7aad;
+  --accent-mask: #ff86d0;
+  --accent-mask-soft: #ffe0f1;
+  --accent-mask-deep: #b14d8e;
+  --accent-sea: #00cd9c;
+  --accent-sea-soft: #c7f4e6;
+  --accent-sea-deep: #008b6a;
+
+  /* Neutrals — warm */
   --paper: #fefcf9;
   --paper-2: #f6f1ea;
+  --paper-3: #ede6db;
   --ink: #2a2438;
   --ink-2: #5a5470;
   --ink-3: #8b8597;
+  --ink-4: #b5b0be;
   --line: #ebe4d9;
   --line-2: #d9d2c4;
-  --purple: #6b5bd2;
-  --purple-deep: #4f3fb8;
-  --purple-soft: #efecff;
-  --purple-tint: #dcd5ff;
-  --correct: #58cc4a;
-  --correct-deep: #46a838;
-  --correct-soft: #e8f9e3;
-  --wrong: #e35a5a;
-  --wrong-deep: #b73e3e;
-  --wrong-soft: #fce6e6;
-  --pink: #ff5fa2;
-  --amber: #f4a93a;
-  --ts-blue: #3178c6;
 
-  --radius-card: 18px;
-  --radius-sm: 12px;
+  /* Radius */
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --radius-pill: 9999px;
+
+  /* Shadow — chunky offset */
+  --shadow-chunky-sm: 0 2px 0 var(--line-2);
+  --shadow-chunky-md: 0 4px 0 var(--line-2);
+  --shadow-chunky-lg: 0 6px 0 var(--line-2);
+  --shadow-chunky-md-brand: 0 4px 0 var(--brand-purple-deep);
+  --shadow-chunky-md-correct: 0 4px 0 var(--status-correct-deep);
+  --shadow-chunky-md-wrong: 0 4px 0 var(--status-wrong-deep);
+  --shadow-chunky-sm-brand: 0 2px 0 var(--brand-purple-deep);
+  --shadow-chunky-sm-correct: 0 2px 0 var(--status-correct-deep);
+  --shadow-chunky-sm-wrong: 0 2px 0 var(--status-wrong-deep);
+
+  /* Legacy aliases — will be removed in Phase 3 */
+  --purple: var(--brand-purple);
+  --purple-deep: var(--brand-purple-deep);
+  --purple-soft: var(--brand-purple-soft);
+  --purple-tint: var(--brand-purple-tint);
+  --correct: var(--status-correct);
+  --correct-deep: var(--status-correct-deep);
+  --correct-soft: var(--status-correct-soft);
+  --wrong: var(--status-wrong);
+  --wrong-deep: var(--status-wrong-deep);
+  --wrong-soft: var(--status-wrong-soft);
+  --pink: var(--accent-mask);
+  --amber: var(--accent-bee);
+  --ts-blue: var(--accent-macaw);
+  --radius-card: var(--radius-lg);
 }
 
 @theme inline {
+  /* Colors */
+  --color-brand-purple: var(--brand-purple);
+  --color-brand-purple-deep: var(--brand-purple-deep);
+  --color-brand-purple-soft: var(--brand-purple-soft);
+  --color-brand-purple-tint: var(--brand-purple-tint);
+  --color-correct: var(--status-correct);
+  --color-correct-deep: var(--status-correct-deep);
+  --color-correct-soft: var(--status-correct-soft);
+  --color-wrong: var(--status-wrong);
+  --color-wrong-deep: var(--status-wrong-deep);
+  --color-wrong-soft: var(--status-wrong-soft);
+  --color-bee: var(--accent-bee);
+  --color-bee-soft: var(--accent-bee-soft);
+  --color-bee-deep: var(--accent-bee-deep);
+  --color-fox: var(--accent-fox);
+  --color-fox-soft: var(--accent-fox-soft);
+  --color-fox-deep: var(--accent-fox-deep);
+  --color-macaw: var(--accent-macaw);
+  --color-macaw-soft: var(--accent-macaw-soft);
+  --color-macaw-deep: var(--accent-macaw-deep);
+  --color-mask: var(--accent-mask);
+  --color-mask-soft: var(--accent-mask-soft);
+  --color-mask-deep: var(--accent-mask-deep);
+  --color-sea: var(--accent-sea);
+  --color-sea-soft: var(--accent-sea-soft);
+  --color-sea-deep: var(--accent-sea-deep);
   --color-paper: var(--paper);
   --color-paper-2: var(--paper-2);
+  --color-paper-3: var(--paper-3);
   --color-ink: var(--ink);
   --color-ink-2: var(--ink-2);
   --color-ink-3: var(--ink-3);
+  --color-ink-4: var(--ink-4);
   --color-line: var(--line);
   --color-line-2: var(--line-2);
-  --color-purple: var(--purple);
-  --color-purple-deep: var(--purple-deep);
-  --color-purple-soft: var(--purple-soft);
-  --color-purple-tint: var(--purple-tint);
-  --color-correct: var(--correct);
-  --color-correct-deep: var(--correct-deep);
-  --color-correct-soft: var(--correct-soft);
-  --color-wrong: var(--wrong);
-  --color-wrong-deep: var(--wrong-deep);
-  --color-wrong-soft: var(--wrong-soft);
-  --color-pink: var(--pink);
-  --color-amber: var(--amber);
-  --color-ts-blue: var(--ts-blue);
 
+  /* Legacy Tailwind aliases — will be removed in Phase 3 */
+  --color-purple: var(--brand-purple);
+  --color-purple-deep: var(--brand-purple-deep);
+  --color-purple-soft: var(--brand-purple-soft);
+  --color-purple-tint: var(--brand-purple-tint);
+  --color-pink: var(--accent-mask);
+  --color-amber: var(--accent-bee);
+  --color-ts-blue: var(--accent-macaw);
+
+  /* Radius */
+  --radius-xs: var(--radius-xs);
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+  --radius-pill: var(--radius-pill);
+
+  /* Shadow */
+  --shadow-chunky-sm: var(--shadow-chunky-sm);
+  --shadow-chunky-md: var(--shadow-chunky-md);
+  --shadow-chunky-lg: var(--shadow-chunky-lg);
+  --shadow-chunky-md-brand: var(--shadow-chunky-md-brand);
+  --shadow-chunky-md-correct: var(--shadow-chunky-md-correct);
+  --shadow-chunky-md-wrong: var(--shadow-chunky-md-wrong);
+  --shadow-chunky-sm-brand: var(--shadow-chunky-sm-brand);
+  --shadow-chunky-sm-correct: var(--shadow-chunky-sm-correct);
+  --shadow-chunky-sm-wrong: var(--shadow-chunky-sm-wrong);
+
+  /* Fonts */
   --font-display: var(--font-nunito), ui-rounded, system-ui, sans-serif;
   --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
 }
@@ -61,6 +158,68 @@ html {
 
 body {
   min-height: 100vh;
+}
+
+/* ------------------------------------------------------------------ */
+/* @utility — typography scale                                          */
+/* ------------------------------------------------------------------ */
+@utility t-display {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 5vw, 42px);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+@utility t-h1 {
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.015em;
+  line-height: 1.1;
+}
+@utility t-h2 {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+}
+@utility t-h3 {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.005em;
+  line-height: 1.25;
+}
+@utility t-body-lg {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.55;
+}
+@utility t-body {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.6;
+}
+@utility t-small {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+@utility t-caption {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+@utility t-mono {
+  font-family: var(--font-mono);
+  font-weight: 600;
 }
 
 /* ------------------------------------------------------------------ */
