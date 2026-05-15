@@ -172,7 +172,7 @@ export function QuizSidebar({
                         }}
                         title={q.title}
                         className={cn(
-                          'group flex items-center gap-2.5 w-full px-2.5 py-2.5 rounded-[10px] cursor-pointer text-left font-display t-small font-semibold text-ink-2 transition-[background,color] duration-150 ease-[cubic-bezier(0.22,1,0.36,1)]',
+                          'group flex items-center gap-2.5 w-full px-2.5 py-2.5 rounded-sm cursor-pointer text-left font-display t-small font-semibold text-ink-2 transition-[background,color] duration-150 ease-out',
                           'hover:bg-paper-2 hover:text-ink',
                           isCurrent && 'bg-paper-2 text-ink'
                         )}
