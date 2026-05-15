@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'motion/react'
 import type { Choice } from '@/models/quiz'
 import { useQuizActions, useSession } from '@/stores/quiz-store'
 import { cn } from '@/lib/utils'
+import { pressable } from '@/lib/motion'
 
 export function QuizChoices({ choices }: { choices: Choice[] }) {
   const { selected, checked, correctKey, currentId } = useSession()
@@ -28,6 +29,8 @@ export function QuizChoices({ choices }: { choices: Choice[] }) {
             const isCorrect = checked && c.key === correctKey
             const isWrong = checked && selected === c.key && c.key !== correctKey
 
+            const isInteractive = !checked
+
             return (
               <motion.button
                 key={c.key}
@@ -39,21 +42,20 @@ export function QuizChoices({ choices }: { choices: Choice[] }) {
                   hidden: { opacity: 0, y: 10 },
                   show: { opacity: 1, y: 0, transition: { duration: 0.28, ease: [0.22, 1, 0.36, 1] } },
                 }}
-                whileHover={!checked ? { y: -1 } : undefined}
-                whileTap={!checked ? { y: 2 } : undefined}
+                {...(isInteractive ? pressable : {})}
                 className={cn(
-                  'relative chunky-card text-left font-semibold pl-15 pr-4.5 py-4.5 min-h-16 text-[16px] flex items-center',
-                  c.code && 'font-mono text-[14px]',
+                  'relative chunky-card text-left font-semibold pl-15 pr-4.5 py-4.5 min-h-16 t-body-lg flex items-center',
+                  c.code && 'font-mono t-small',
                   !isSelected && !isCorrect && !isWrong && 'hover:border-brand-purple-tint',
-                  isSelected && 'border-brand-purple bg-brand-purple-soft shadow-[0_4px_0_var(--brand-purple)] text-brand-purple-deep',
-                  isCorrect && 'border-correct bg-correct-soft shadow-[0_4px_0_var(--status-correct)] text-[#2a6e22]',
-                  isWrong && 'border-wrong bg-wrong-soft shadow-[0_4px_0_var(--status-wrong)] text-wrong-deep',
+                  isSelected && 'border-brand-purple bg-brand-purple-soft shadow-chunky-md-brand text-brand-purple-deep',
+                  isCorrect && 'border-correct bg-correct-soft shadow-chunky-md-correct text-correct-deep',
+                  isWrong && 'border-wrong bg-wrong-soft shadow-chunky-md-wrong text-wrong-deep',
                   checked && 'cursor-not-allowed'
                 )}
               >
                 <span
                   className={cn(
-                    'absolute left-3.5 top-1/2 -translate-y-1/2 size-8 rounded-[9px] border-2 grid place-items-center font-mono font-extrabold text-[13px] transition-all duration-150',
+                    'absolute left-3.5 top-1/2 -translate-y-1/2 size-8 rounded-sm border-2 grid place-items-center font-mono font-extrabold t-small transition-all duration-150',
                     !isSelected && !isCorrect && !isWrong && 'border-line-2 bg-paper text-ink-3',
                     isSelected && 'border-brand-purple bg-brand-purple text-white',
                     isCorrect && 'border-correct bg-correct text-white',
