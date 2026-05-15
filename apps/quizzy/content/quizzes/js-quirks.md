@@ -34,9 +34,7 @@ console.log(typeof NaN)
 
 **B** — `"object"`, `"undefined"`, `"number"`
 
-✅ Đúng. `typeof null === "object"` là bug từ JS engine đầu tiên (1995) — sửa thì sẽ phá web hiện có nên giữ luôn. `NaN` ironically thuộc kiểu `number` (chính nó là viết tắt của *Not a Number*).
-
-❌ Sai rồi. Để check `null` dùng `value === null` chứ đừng tin `typeof`. Để check `NaN` dùng `Number.isNaN(value)` — *KHÔNG* dùng `value === NaN` (xem câu 2).
+`typeof null === "object"` là bug từ JS engine đầu tiên (1995) — sửa thì sẽ phá web hiện có nên giữ luôn. `NaN` ironically thuộc kiểu `number` (chính nó là viết tắt của *Not a Number*). Check `null` thì dùng `value === null`, check `NaN` thì dùng `Number.isNaN(value)`.
 
 </details>
 
@@ -61,9 +59,7 @@ console.log([NaN].includes(NaN))
 
 **B** — `false`, `false`, `true`
 
-✅ Đúng. Theo IEEE 754, `NaN` không bằng bất cứ gì kể cả chính nó → `===` luôn cho `false`. Nhưng `Array.prototype.includes` dùng thuật toán *SameValueZero* coi `NaN` bằng `NaN`. Tương tự `Object.is(NaN, NaN) === true`.
-
-❌ Chưa chuẩn. Cách check chuẩn: `Number.isNaN(x)` (không phải `isNaN(x)` global — cái đó coerce trước nên `isNaN("abc") === true` 😱).
+Theo IEEE 754, `NaN` không bằng bất cứ gì kể cả chính nó → `===` luôn cho `false`. Nhưng `Array.prototype.includes` dùng thuật toán *SameValueZero* coi `NaN` bằng `NaN` — tương tự `Object.is(NaN, NaN) === true`. Cách check chuẩn: `Number.isNaN(x)`, không phải `isNaN(x)` global (cái đó coerce trước nên `isNaN("abc") === true` 😱).
 
 </details>
 
@@ -93,9 +89,7 @@ Code in ra gì?
 
 **C** — `undefined` rồi `ReferenceError: Cannot access 'b' before initialization`
 
-✅ Đúng. `var` được hoist *kèm khởi tạo* `undefined` nên đọc được trước khai báo. `let`/`const` cũng hoist nhưng nằm trong **Temporal Dead Zone** — đụng vào trước dòng khai báo là ReferenceError. Đây là lý do nên luôn dùng `let`/`const` thay vì `var`.
-
-❌ Sai. Câu A bỏ qua TDZ của `let`. Câu B nhầm rằng hoisting nâng luôn cả giá trị (không, chỉ nâng *khai báo*). Câu D nhầm `var` cũng có TDZ — không, chỉ `let`/`const` mới có.
+`var` được hoist *kèm khởi tạo* `undefined` nên đọc được trước khai báo. `let`/`const` cũng hoist nhưng nằm trong **Temporal Dead Zone** — đụng vào trước dòng khai báo là ReferenceError. Đây là lý do nên luôn dùng `let`/`const` thay vì `var`.
 
 </details>
 
@@ -127,9 +121,7 @@ console.log(obj.arrow())
 
 **B** — `"Debby"`, `undefined`
 
-✅ Đúng. Method thường (`regular()`) lấy `this` = object đứng trước dấu `.` → `obj`. Arrow function **không có `this` riêng** — nó kế thừa `this` từ scope bao quanh lúc *định nghĩa*. Ở đây scope ngoài là module → `this === undefined` ở strict mode → `this.name` cũng undefined (không error vì optional-chain ngầm... thực ra là đọc property của `undefined`).
-
-❌ Suýt đúng. Đáp án D thì có khi gặp `TypeError: Cannot read properties of undefined`. Phụ thuộc môi trường: ở module scope strict, `this` là `undefined` và đọc `.name` THỰC SỰ ném TypeError. Ở browser script tag thường, `this === window`, code in `""` (window.name mặc định). Nhưng kết quả phổ biến nhất khi chạy module: `undefined`.
+Method thường (`regular()`) lấy `this` = object đứng trước dấu `.` → `obj`. Arrow function **không có `this` riêng** — nó kế thừa `this` từ scope bao quanh lúc *định nghĩa*. Ở module scope strict, `this === undefined` → `this.name` cũng undefined. Trên browser script tag thường thì `this === window`, kết quả có thể khác.
 
 </details>
 
@@ -159,13 +151,6 @@ Thứ tự in ra là gì?
 
 **C** — `A`, `D`, `C`, `B`
 
-✅ Đúng. Event loop chạy theo thứ tự:
-1. **Sync code** chạy hết trước → `A`, `D`
-2. **Microtask queue** drain hết (Promise.then, queueMicrotask) → `C`
-3. **Macrotask queue** mới đến lượt (setTimeout, setInterval, I/O) → `B`
-
-Microtask LUÔN ưu tiên hơn macrotask, dù `setTimeout` có delay = 0.
-
-❌ Chưa nắm event loop. Lưu ý: `setTimeout(fn, 0)` **không** chạy đồng bộ — nó luôn vào macrotask queue, đợi sync + tất cả microtask xong mới được gọi. Đây là lý do tại sao `await` trong async function (vốn là microtask) thường "nhanh hơn" `setTimeout`.
+Event loop chạy theo thứ tự: (1) **sync code** hết trước → `A`, `D`; (2) **microtask queue** drain (Promise.then, queueMicrotask) → `C`; (3) **macrotask queue** mới đến lượt (setTimeout, setInterval, I/O) → `B`. Microtask LUÔN ưu tiên hơn macrotask, dù `setTimeout` có delay = 0. Đây là lý do `await` trong async function (vốn là microtask) thường "nhanh hơn" `setTimeout`.
 
 </details>

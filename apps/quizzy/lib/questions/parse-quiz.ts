@@ -46,34 +46,24 @@ function stripSummary(details: string): string {
   return details.replace(/<summary>[\s\S]*?<\/summary>/i, '').trim()
 }
 
-/** Grab the content following a marker emoji on its own line, up to the next blank line or marker. */
-function extractAfterMarker(body: string, marker: string): string | undefined {
-  const lines = body.split('\n')
-  const start = lines.findIndex((l) => l.trim().startsWith(marker))
-  if (start === -1) return undefined
-  const collected: string[] = []
-  // First line: strip the marker prefix.
-  const firstStripped = lines[start].trim().slice(marker.length).trim()
-  if (firstStripped) collected.push(firstStripped)
-  for (let i = start + 1; i < lines.length; i++) {
-    const t = lines[i].trim()
-    if (t === '') break
-    if (t.startsWith('✅') || t.startsWith('❌')) break
-    collected.push(lines[i])
-  }
-  return collected.join('\n').trim() || undefined
+/** Minimal inline markdown → HTML for explanation text: `code`, **bold**, *italic*. */
+function mdInline(text: string): string {
+  return text
+    .replace(/`([^`]+)`/g, '<code>$1</code>')
+    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+    .replace(/(?<!\*)\*(?!\*)([^*\n]+?)\*(?!\*)/g, '<em>$1</em>')
 }
 
 function parseDetails(details: string): {
   answerKey?: ChoiceKey
-  correct?: string
-  wrong?: string
+  explanation?: string
 } {
   const body = stripSummary(details)
   const letter = ANSWER_LETTER.exec(body)?.[1] as ChoiceKey | undefined
-  const correct = extractAfterMarker(body, '✅')
-  const wrong = extractAfterMarker(body, '❌')
-  return { answerKey: letter, correct, wrong }
+  // Strip the leading "**X** — ..." line; the rest is the explanation.
+  const rest = body.replace(/^[\s\S]*?\*\*[A-D]\*\*[^\n]*\n+/, '').trim()
+  const explanation = rest ? mdInline(rest) : undefined
+  return { answerKey: letter, explanation }
 }
 
 function parseQuestions(content: string): Question[] {
@@ -149,11 +139,8 @@ function parseQuestions(content: string): Question[] {
       if (stem) q.stem = stem
       if (body) q.body = body
       if (choices.length > 0) q.choices = choices
-      if (detailsInfo.correct || detailsInfo.wrong) {
-        q.explanation = {
-          correct: detailsInfo.correct ?? '',
-          wrong: detailsInfo.wrong ?? '',
-        }
+      if (detailsInfo.explanation) {
+        q.explanation = detailsInfo.explanation
       }
 
       questions.push(q)

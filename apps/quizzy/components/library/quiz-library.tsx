@@ -4,7 +4,6 @@ import Link from 'next/link'
 import { useMemo, useState } from 'react'
 import type { QuizCard, QuizSection } from '@/models/quiz'
 import { CollectionCard } from './collection-card'
-import { Debby } from '@/components/debby/debby'
 
 const SECTION_ORDER: QuizSection[] = ['đang học', 'đã hoàn thành', 'khám phá']
 
@@ -42,7 +41,7 @@ export function QuizLibrary({ quizzes }: { quizzes: QuizCard[] }) {
       </nav>
 
       {/* Header */}
-      <header className="mb-7 grid grid-cols-1 md:grid-cols-[1fr_auto] items-center gap-6">
+      <header className="mb-7">
         <div className="max-w-140">
           <h1 className="font-display font-black tracking-tight leading-[1.1] text-[clamp(30px,4vw,42px)]">
             Chọn một bộ để bắt đầu
@@ -75,12 +74,6 @@ export function QuizLibrary({ quizzes }: { quizzes: QuizCard[] }) {
           </div>
         </div>
 
-        <div className="hidden md:block relative size-45 shrink-0">
-          <Debby mood="idle" size={180} />
-          <div className="absolute top-2 -left-32.5 cq-bubble p-2.5! px-3.5! text-[13px]! font-bold! whitespace-nowrap">
-            Hôm nay học gì nào?
-          </div>
-        </div>
       </header>
 
       {filtered.length === 0 ? (

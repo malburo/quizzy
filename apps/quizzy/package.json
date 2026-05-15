@@ -10,6 +10,7 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
+    "@rive-app/react-webgl2": "^4.28.4",
     "clsx": "^2.1.1",
     "gray-matter": "^4.0.3",
     "motion": "^12.9.2",

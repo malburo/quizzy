@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
 import { useShallow } from 'zustand/react/shallow'
-import type { ChoiceKey, Question, QuestionStatuses } from '@/models/quiz'
+import type { ChoiceKey, QuestionStatuses } from '@/models/quiz'
 
 type Result = 'idle' | 'correct' | 'wrong'
 
@@ -16,7 +16,7 @@ type Session = {
   quizId: string
   questionId: number
   correctKey: ChoiceKey | null
-  explanation: Question['explanation'] | null
+  explanation: string | null
   selected: ChoiceKey | null
   checked: boolean
 }
@@ -143,12 +143,7 @@ export const useResult = (): Result =>
   })
 
 export const useExplanation = (): string | undefined =>
-  useStore((s) => {
-    const ss = s.session
-    if (!ss?.checked || !ss.explanation) return undefined
-    const isCorrect = ss.selected === ss.correctKey
-    return isCorrect ? ss.explanation.correct : ss.explanation.wrong
-  })
+  useStore((s) => (s.session?.checked ? s.session.explanation ?? undefined : undefined))
 
 /** Trigger localStorage hydration once on the client. Safe to call from many components — rehydrate is idempotent. */
 export function useHydrateQuizStore() {

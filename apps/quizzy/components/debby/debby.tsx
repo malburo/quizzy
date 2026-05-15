@@ -25,7 +25,16 @@ const SPARKLE_POSITIONS = [
   { x: 20, y: 92, color: '#3178c6', size: 13 },
 ]
 
-export function Debby({ mood = 'idle', size = 180 }: { mood?: Mood; size?: number }) {
+export function Debby({
+  mood = 'idle',
+  size = 180,
+  className,
+}: {
+  mood?: Mood
+  size?: number
+  /** CSS class on the SVG. Useful for responsive sizing — e.g. `size-25 md:size-45` overrides the size prop. */
+  className?: string
+}) {
   const reduce = useReducedMotion()
 
   const idleAnim = reduce
@@ -50,6 +59,7 @@ export function Debby({ mood = 'idle', size = 180 }: { mood?: Mood; size?: numbe
       viewBox="0 0 200 200"
       width={size}
       height={size}
+      className={className}
       aria-label="Debby — chú bọ lập trình"
       style={{ filter: 'drop-shadow(0 8px 0 rgba(79, 63, 184, 0.18))' }}
     >
@@ -117,10 +127,6 @@ export function Debby({ mood = 'idle', size = 180 }: { mood?: Mood; size?: numbe
       >
         <circle cx="100" cy="105" r="55" fill="url(#dbody)" stroke="#3d2f9c" strokeWidth="2.5" />
         <ellipse cx="100" cy="125" rx="32" ry="22" fill="#efecff" opacity="0.4" />
-        <rect x="92" y="68" width="16" height="40" rx="8" fill="#4f3fb8" opacity="0.45" />
-        <text x="100" y="98" textAnchor="middle" fontFamily="JetBrains Mono, monospace" fontWeight="800" fontSize="11" fill="#fff" opacity="0.85">
-          TS
-        </text>
 
         {/* Eyes */}
         {isHappy ? (

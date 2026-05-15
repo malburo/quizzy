@@ -21,7 +21,8 @@ export type Question = {
   /** Light markdown: paragraphs, **bold**, *em*, `inline`, ```fenced``` blocks. */
   body?: string
   choices?: Choice[]
-  explanation?: { correct: string; wrong: string }
+  /** Single explanation shown after the user submits an answer. Inline markdown already converted to HTML. */
+  explanation?: string
 }
 
 export type QuizCategory = 'code' | 'english' | 'animal' | 'fun' | 'world' | 'science'

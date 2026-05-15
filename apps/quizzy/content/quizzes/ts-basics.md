@@ -42,9 +42,7 @@ console.log(describe(["hello", "world"]));
 
 **B** — `list of 2: hello + world`
 
-✅ Đúng rồi! `typeof value === "string"` chỉ true cho chuỗi đơn — mảng đi vào nhánh dưới và trả về `list of 2: hello + world`.
-
-❌ Chưa chuẩn rồi. `typeof value === "string"` *false* với mảng → code đi vào nhánh `return` thứ hai, dùng `.length` và `.join(" + ")`.
+`typeof value === "string"` chỉ *true* cho chuỗi đơn — mảng đi vào nhánh `return` thứ hai, dùng `.length` và `.join(" + ")`.
 
 </details>
 
@@ -72,9 +70,7 @@ Câu nào sau đây mô tả đúng nhất về `number[]` và `Array<number>`?
 
 **A** — Hoàn toàn tương đương về mặt kiểu
 
-✅ Đúng. Đây là *syntactic sugar* — TypeScript treat hai cách viết hoàn toàn giống nhau. Convention chung là dùng `T[]` cho kiểu đơn giản, `Array<T>` khi `T` phức tạp (union, intersection).
-
-❌ Hai cách viết tương đương về kiểu — cả hai đều mutable, đều không phải union, và không bị giới hạn ở generic. Quy ước style dùng `T[]` cho ngắn gọn, `Array<T>` khi `T` dài.
+Đây là *syntactic sugar* — TypeScript treat hai cách viết hoàn toàn giống nhau. Convention chung là dùng `T[]` cho kiểu đơn giản, `Array<T>` khi `T` phức tạp (union, intersection).
 
 </details>
 
@@ -104,9 +100,7 @@ Code này biên dịch thế nào?
 
 **C** — Lỗi: "Duplicate identifier 'Animal'"
 
-✅ Đúng. `interface` hỗ trợ *declaration merging* nhưng chỉ với `interface` khác cùng tên. Khi đụng phải `type alias` cùng tên, TS báo `Duplicate identifier`.
-
-❌ Sai rồi. `type` và `interface` không bao giờ tự merge với nhau. Chỉ có `interface` + `interface` mới merge (rất hữu ích cho mở rộng `Window`, `Express.Request`...).
+`interface` hỗ trợ *declaration merging* nhưng chỉ với `interface` khác cùng tên. Khi đụng phải `type alias` cùng tên, TS báo `Duplicate identifier`. Pattern merge giữa `interface` + `interface` rất hữu ích cho mở rộng `Window`, `Express.Request`...
 
 </details>
 
@@ -136,9 +130,7 @@ type Mode = typeof config.mode
 
 **B** — `"dark"`
 
-✅ Đúng. `as const` làm 2 việc: (1) widen các literal value thành literal type (`"dark"` thay vì `string`), (2) đánh dấu mọi field là `readonly`. Không có `as const` thì `mode` infer thành `string`.
-
-❌ Sai. Không có `as const`, mode sẽ là `string`. TS không tự đoán union `"dark" | "light"` — bạn phải khai báo rõ. Có `as const`, type bị **narrow** về đúng giá trị literal.
+`as const` làm 2 việc: (1) widen các literal value thành literal type (`"dark"` thay vì `string`), (2) đánh dấu mọi field là *readonly*. Không có `as const` thì `mode` infer thành `string` — TS không tự đoán union.
 
 </details>
 
@@ -166,8 +158,6 @@ type UserValue = (typeof user)[UserKey]
 
 **B** — `string | number | boolean`
 
-✅ Đúng. `keyof typeof user` là union `"id" | "name" | "isAdmin"`. Khi index một type bằng *union các key*, TS trả về *union các value type* tương ứng.
-
-❌ Sai. Pattern này chính là cách TS implement `Record`, `Pick`, `Omit`. Nó không trả về `unknown`/`any` — TS biết chính xác value type của từng key vì object là literal `as const`-ish ngay từ đầu.
+`keyof typeof user` là union `"id" | "name" | "isAdmin"`. Khi index một type bằng *union các key*, TS trả về *union các value type* tương ứng. Pattern này chính là cách TS implement `Record`, `Pick`, `Omit`.
 
 </details>
