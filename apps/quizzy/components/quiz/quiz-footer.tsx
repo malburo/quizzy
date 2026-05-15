@@ -56,7 +56,7 @@ export function QuizFooter({ onContinue }: { onContinue: () => void }) {
               <motion.div
                 key="correct"
                 {...slideUp}
-                className="flex w-full items-center justify-between gap-4 md:flex-row md:flex-wrap"
+                className="flex w-full flex-col items-stretch gap-3 md:flex-row md:items-center md:justify-between md:gap-4 md:flex-wrap"
               >
                 <div className="flex items-center gap-4 min-w-0 md:flex-1">
                   <div className="hidden size-14 rounded-full place-items-center bg-correct text-white shrink-0 md:grid">
@@ -87,7 +87,7 @@ export function QuizFooter({ onContinue }: { onContinue: () => void }) {
               <motion.div
                 key="wrong"
                 {...slideUp}
-                className="flex w-full items-center justify-between gap-4 md:flex-row md:flex-wrap"
+                className="flex w-full flex-col items-stretch gap-3 md:flex-row md:items-center md:justify-between md:gap-4 md:flex-wrap"
               >
                 <div className="flex items-center gap-4 min-w-0 md:flex-1">
                   <div className="hidden size-14 rounded-full place-items-center bg-wrong text-white shrink-0 md:grid">
