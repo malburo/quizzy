@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { motion } from 'motion/react'
 import type { QuizCard } from '@/models/quiz'
-import { Pill } from '@/components/ui/pill'
+import { Badge } from '@/components/ui/badge'
 import {
   useAnsweredCount,
   useHasHydrated,
@@ -12,9 +12,9 @@ import {
 import { cn } from '@/lib/utils'
 
 const LEVEL_LABEL = { easy: 'Dễ', mid: 'Vừa', hard: 'Khó' } as const
-const LEVEL_PILL_VARIANT = {
+const LEVEL_BADGE_VARIANT = {
   easy: 'correct',
-  mid: 'amber',
+  mid: 'bee',
   hard: 'wrong',
 } as const
 
@@ -61,9 +61,10 @@ export function CollectionCard({ c }: { c: QuizCard }) {
           >
             {c.icon}
           </div>
-          <Pill variant={LEVEL_PILL_VARIANT[c.level]} dot>
+          <Badge variant={LEVEL_BADGE_VARIANT[c.level]}>
+            <span className={`size-1.5 rounded-full bg-${LEVEL_BADGE_VARIANT[c.level]}`} />
             {LEVEL_LABEL[c.level]}
-          </Pill>
+          </Badge>
         </div>
 
         <h3 className="relative z-10 text-[18px] font-extrabold leading-tight tracking-tight text-pretty">
