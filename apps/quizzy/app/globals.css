@@ -267,40 +267,11 @@ body {
 /* ------------------------------------------------------------------ */
 /* @utility — single-concept utilities that support variants            */
 /* ------------------------------------------------------------------ */
-@utility pill-mono {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.375rem;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  padding: 0.25rem 0.75rem;
-  border-radius: 9999px;
-  background: var(--purple-soft);
-  color: var(--purple-deep);
-}
-
 @utility chunky-card {
   background: var(--paper);
   border: 2px solid var(--line-2);
   border-radius: var(--radius-card);
   box-shadow: 0 4px 0 var(--line-2);
-}
-
-@utility chunky-btn {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: 14px;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  padding: 16px 32px;
-  border-radius: 14px;
-  border: 0;
-  cursor: pointer;
-  min-width: 180px;
-  transition: filter 160ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 /* ------------------------------------------------------------------ */

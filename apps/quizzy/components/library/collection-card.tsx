@@ -45,9 +45,9 @@ export function CollectionCard({ c }: { c: QuizCard }) {
         />
 
         {c.isNew ? (
-          <span className="absolute top-3 right-3.5 z-10 pill-mono bg-pink text-white shadow-[0_2px_0_#c93b78]">
+          <Badge className="absolute top-3 right-3.5 z-10 bg-pink text-white shadow-[0_2px_0_#c93b78]">
             MỚI
-          </span>
+          </Badge>
         ) : null}
 
         <div className="relative z-10 flex items-start justify-between gap-3">

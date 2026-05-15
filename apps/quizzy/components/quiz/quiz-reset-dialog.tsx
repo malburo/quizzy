@@ -1,7 +1,7 @@
 'use client'
 
 import { Dialog } from '@/components/ui/dialog'
-import { cn } from '@/lib/utils'
+import { Button } from '@/components/ui/button'
 
 export function QuizResetDialog({
   open,
@@ -23,28 +23,24 @@ export function QuizResetDialog({
         Tất cả {answeredCount} câu trả lời sẽ bị xóa. Không hoàn tác được.
       </p>
       <div className="flex flex-col-reverse gap-2.5 md:flex-row md:justify-end">
-        <button
+        <Button
           type="button"
           onClick={onClose}
-          className={cn(
-            'chunky-btn w-full md:w-auto',
-            'bg-paper-2 text-ink shadow-[0_2px_0_var(--line-2)] hover:bg-paper-2 hover:brightness-95',
-            'active:translate-y-0.5 active:shadow-[0_1px_0_var(--line-2)]'
-          )}
+          variant="neutral"
+          size="md"
+          className="w-full md:w-auto"
         >
           Hủy
-        </button>
-        <button
+        </Button>
+        <Button
           type="button"
           onClick={onConfirm}
-          className={cn(
-            'chunky-btn w-full md:w-auto',
-            'bg-wrong text-white shadow-[0_4px_0_var(--wrong-deep)] hover:brightness-110',
-            'active:translate-y-0.5 active:shadow-[0_2px_0_var(--wrong-deep)]'
-          )}
+          variant="danger"
+          size="md"
+          className="w-full md:w-auto"
         >
           Xóa tất cả
-        </button>
+        </Button>
       </div>
     </Dialog>
   )

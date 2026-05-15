@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
+import { Button } from '@/components/ui/button'
 
 export default function GlobalError({
   error,
@@ -20,12 +21,9 @@ export default function GlobalError({
         Có gì đó sai sai
       </h1>
       <p className="mt-3 text-ink-2">Bạn có thể thử lại — nếu vẫn lỗi, refresh trang.</p>
-      <button
-        onClick={reset}
-        className="chunky-btn mt-8 bg-purple text-white shadow-[0_4px_0_var(--purple-deep)]"
-      >
+      <Button onClick={reset} variant="brand" size="md" className="mt-8">
         Thử lại
-      </button>
+      </Button>
     </main>
   )
 }

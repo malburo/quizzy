@@ -8,6 +8,7 @@ import {
   useSession,
 } from '@/stores/quiz-store'
 import { cn } from '@/lib/utils'
+import { Button } from '@/components/ui/button'
 
 export function QuizFooter({ onContinue }: { onContinue: () => void }) {
   const result = useResult()
@@ -38,18 +39,15 @@ export function QuizFooter({ onContinue }: { onContinue: () => void }) {
             >
               Bỏ qua
             </button>
-            <button
+            <Button
               disabled={!canCheck}
               onClick={check}
-              className={cn(
-                'chunky-btn w-full md:w-auto',
-                canCheck
-                  ? 'bg-purple text-white shadow-[0_4px_0_var(--purple-deep)] hover:brightness-110 active:translate-y-0.5 active:shadow-[0_2px_0_var(--purple-deep)]'
-                  : 'bg-paper-2 text-ink-3 shadow-[0_4px_0_var(--line-2)] cursor-not-allowed'
-              )}
+              variant={canCheck ? 'brand' : 'neutral'}
+              size="md"
+              className="w-full md:w-auto"
             >
               Kiểm tra
-            </button>
+            </Button>
           </>
         ) : result === 'correct' ? (
           <>
@@ -69,12 +67,14 @@ export function QuizFooter({ onContinue }: { onContinue: () => void }) {
                 ) : null}
               </div>
             </div>
-            <button
+            <Button
               onClick={onContinue}
-              className="chunky-btn w-full bg-correct text-white shadow-[0_4px_0_var(--correct-deep)] hover:brightness-110 active:translate-y-0.5 active:shadow-[0_2px_0_var(--correct-deep)] md:w-auto"
+              variant="success"
+              size="md"
+              className="w-full md:w-auto"
             >
               Tiếp tục
-            </button>
+            </Button>
           </>
         ) : (
           <>
@@ -94,12 +94,14 @@ export function QuizFooter({ onContinue }: { onContinue: () => void }) {
                 ) : null}
               </div>
             </div>
-            <button
+            <Button
               onClick={onContinue}
-              className="chunky-btn w-full bg-purple text-white shadow-[0_4px_0_var(--purple-deep)] hover:brightness-110 active:translate-y-0.5 active:shadow-[0_2px_0_var(--purple-deep)] md:w-auto"
+              variant="brand"
+              size="md"
+              className="w-full md:w-auto"
             >
               Câu tiếp theo
-            </button>
+            </Button>
           </>
         )}
       </div>

@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { Avatar, type AvatarConfig } from '@/components/avatar/avatar'
-import { cn } from '@/lib/utils'
+import { Button } from '@/components/ui/button'
 
 const PASSING_RATIO = 0.7
 
@@ -55,27 +55,18 @@ export function QuizResults({
       </div>
 
       <div className="flex w-full max-w-100 flex-col gap-3">
-        <button
+        <Button
           type="button"
           onClick={onRetry}
-          className={cn(
-            'chunky-btn w-full',
-            'bg-purple text-white shadow-[0_4px_0_var(--purple-deep)] hover:brightness-110',
-            'active:translate-y-0.5 active:shadow-[0_2px_0_var(--purple-deep)]'
-          )}
+          variant="brand"
+          size="lg"
+          className="w-full"
         >
           Làm lại bộ này
-        </button>
-        <Link
-          href="/quizzes"
-          className={cn(
-            'chunky-btn w-full grid place-items-center no-underline',
-            'bg-paper text-ink border-2 border-line-2 shadow-[0_4px_0_var(--line-2)] hover:bg-paper-2',
-            'active:translate-y-0.5 active:shadow-[0_2px_0_var(--line-2)]'
-          )}
-        >
-          Chọn bộ khác
-        </Link>
+        </Button>
+        <Button asChild variant="neutral" size="lg" className="w-full">
+          <Link href="/quizzes">Chọn bộ khác</Link>
+        </Button>
       </div>
     </div>
   )
