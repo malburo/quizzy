@@ -96,7 +96,6 @@ function parseQuestions(content: string): Question[] {
       const qId = parseInt(match[1], 10)
       const title = match[2].trim()
 
-      let topic: string | undefined
       let stem: string | undefined
       const choices: Choice[] = []
       const bodyLines: string[] = []
@@ -105,16 +104,13 @@ function parseQuestions(content: string): Question[] {
       while (i < qLines.length) {
         const line = qLines[i]
 
-        if (line.startsWith('topic: ')) {
-          topic = line.slice('topic: '.length).trim()
-        } else if (line.startsWith('stem: ')) {
+        if (line.startsWith('stem: ')) {
           stem = line.slice('stem: '.length).trim()
         } else {
           const choiceMatch = CHOICE_LINE.exec(line)
           if (choiceMatch) {
             const key = choiceMatch[1] as ChoiceKey
             const rawText = choiceMatch[2].trim()
-            // Backtick-wrapped text → code: true
             const codeMatch = /^`([^`]+)`$/.exec(rawText)
             const text = codeMatch ? codeMatch[1] : rawText
             const choice: Choice = { key, text }
@@ -128,20 +124,13 @@ function parseQuestions(content: string): Question[] {
         i++
       }
 
-      const body = bodyLines
-        .join('\n')
-        .replace(/^\n+/, '')
-        .replace(/\n+$/, '')
-        .trim()
+      const body = bodyLines.join('\n').replace(/^\n+/, '').replace(/\n+$/, '').trim()
 
       const q: Question = { id: qId, title, section }
-      if (topic) q.topic = topic
       if (stem) q.stem = stem
       if (body) q.body = body
       if (choices.length > 0) q.choices = choices
-      if (detailsInfo.explanation) {
-        q.explanation = detailsInfo.explanation
-      }
+      if (detailsInfo.explanation) q.explanation = detailsInfo.explanation
 
       questions.push(q)
     }

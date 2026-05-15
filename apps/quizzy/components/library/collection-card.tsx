@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { motion } from 'motion/react'
-import type { QuizCard } from '@/models/quiz'
+import type { QuizSet } from '@/models/quiz'
 import { Badge } from '@/components/ui/badge'
 import {
   useAnsweredCount,
@@ -25,7 +25,7 @@ const LEVEL_DOT_CLASS = {
   hard: 'bg-wrong',
 } as const
 
-export function CollectionCard({ c }: { c: QuizCard }) {
+export function CollectionCard({ c }: { c: QuizSet }) {
   useHydrateQuizStore()
   const hasHydrated = useHasHydrated()
   const answered = useAnsweredCount(c.id)

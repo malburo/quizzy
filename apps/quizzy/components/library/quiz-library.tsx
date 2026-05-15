@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { useMemo, useState } from 'react'
 import { motion } from 'motion/react'
-import type { QuizCard, QuizSection } from '@/models/quiz'
+import type { QuizSet, QuizSection } from '@/models/quiz'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { fadeUp, staggerContainer } from '@/lib/motion'
@@ -11,7 +11,7 @@ import { CollectionCard } from './collection-card'
 
 const SECTION_ORDER: QuizSection[] = ['đang học', 'đã hoàn thành', 'khám phá']
 
-export function QuizLibrary({ quizzes }: { quizzes: QuizCard[] }) {
+export function QuizLibrary({ quizzes }: { quizzes: QuizSet[] }) {
   const [query, setQuery] = useState('')
 
   const filtered = useMemo(() => {
@@ -23,7 +23,7 @@ export function QuizLibrary({ quizzes }: { quizzes: QuizCard[] }) {
   }, [query, quizzes])
 
   const grouped = useMemo(() => {
-    const out: Record<QuizSection, QuizCard[]> = {
+    const out: Record<QuizSection, QuizSet[]> = {
       'đang học': [],
       'đã hoàn thành': [],
       'khám phá': [],
