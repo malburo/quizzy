@@ -1,6 +1,9 @@
 'use client'
 
+import { motion } from 'motion/react'
 import { cn } from '@/lib/utils'
+import { Button } from '@/components/ui/button'
+import { fadeUp, staggerContainer } from '@/lib/motion'
 import type { Question, QuizSet } from '@/models/quiz'
 import { useAnsweredCount, useSession, useStatuses } from '@/stores/quiz-store'
 
@@ -73,37 +76,43 @@ export function QuizSidebar({
         >
           {showWide ? (
             <>
-              <span className="font-display font-extrabold text-[17px] tracking-tight text-ink">Quizzy</span>
+              <span className="font-display text-lg font-extrabold tracking-tight text-ink">Quizzy</span>
               <div className="flex items-center gap-0.5">
-                <button
+                <Button
                   type="button"
                   onClick={onReset}
                   disabled={totalAnswered === 0}
-                  className="grid size-8 place-items-center rounded-md text-ink-3 hover:bg-paper-2 hover:text-ink transition-colors disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-ink-3 disabled:cursor-not-allowed"
+                  variant="ghost"
+                  size="icon"
+                  className="size-8"
                   aria-label="Xóa toàn bộ tiến độ"
                   title="Xóa toàn bộ tiến độ"
                 >
                   <ResetIcon />
-                </button>
-                <button
+                </Button>
+                <Button
                   type="button"
                   onClick={onToggle}
-                  className="grid size-8 place-items-center rounded-md text-ink-3 hover:bg-paper-2 hover:text-ink transition-colors"
+                  variant="ghost"
+                  size="icon"
+                  className="size-8"
                   aria-label="Đóng sidebar"
                 >
                   <PanelIcon open />
-                </button>
+                </Button>
               </div>
             </>
           ) : (
-            <button
+            <Button
               type="button"
               onClick={onToggle}
-              className="grid size-8 place-items-center rounded-md text-ink-3 hover:bg-paper-2 hover:text-ink transition-colors"
+              variant="ghost"
+              size="icon"
+              className="size-8"
               aria-label="Mở sidebar"
             >
               <PanelIcon open={false} />
-            </button>
+            </Button>
           )}
         </div>
 
@@ -113,18 +122,18 @@ export function QuizSidebar({
               <div className="flex items-center gap-3 mb-2.5">
                 <span
                   className={cn(
-                    'size-11 shrink-0 rounded-xl bg-paper-2 border-2 border-line-2 shadow-[0_2px_0_var(--line-2)] grid place-items-center text-[20px] leading-none',
-                    quiz.iconMono && 'font-mono font-extrabold text-[15px]'
+                    'size-11 shrink-0 rounded-xl bg-paper-2 border-2 border-line-2 shadow-chunky-sm grid place-items-center text-2xl leading-none',
+                    quiz.iconMono && 'font-mono font-extrabold text-base'
                   )}
                   style={quiz.iconMono ? { color: quiz.inkOfTint } : undefined}
                 >
                   {quiz.icon}
                 </span>
-                <h2 className="min-w-0 text-[14px] font-extrabold text-ink leading-tight tracking-tight text-pretty">
+                <h2 className="min-w-0 t-small font-extrabold text-ink leading-tight text-pretty">
                   {quiz.title}
                 </h2>
               </div>
-              <div className="flex items-center gap-3 font-mono text-[11px] font-bold">
+              <div className="flex items-center gap-3 t-caption">
                 <span className="inline-flex items-center gap-1 text-correct-deep">
                   <CheckIcon />
                   {correctCount}
@@ -137,18 +146,25 @@ export function QuizSidebar({
               </div>
             </div>
 
-            <nav className="flex-1 overflow-y-auto px-2 py-2.5" aria-label="Danh sách câu hỏi">
+            <motion.nav
+              variants={staggerContainer(0.02)}
+              initial="hidden"
+              animate="show"
+              className="flex-1 overflow-y-auto px-2 py-2.5"
+              aria-label="Danh sách câu hỏi"
+            >
               {groupBySection(quiz.questions).map((sec) => (
                 <div key={sec.name} className="mb-2.5">
-                  <div className="font-mono text-[10px] font-bold text-ink-3 uppercase tracking-[0.08em] px-2.5 pt-2.5 pb-1.5">
+                  <div className="t-caption text-ink-3 px-2.5 pt-2.5 pb-1.5">
                     {sec.name}
                   </div>
                   {sec.items.map((q) => {
                     const status = statuses[q.id] ?? 'idle'
                     const isCurrent = q.id === currentId
                     return (
-                      <button
+                      <motion.button
                         key={q.id}
+                        variants={fadeUp}
                         type="button"
                         onClick={() => {
                           onPick(q.id)
@@ -156,14 +172,14 @@ export function QuizSidebar({
                         }}
                         title={q.title}
                         className={cn(
-                          'group flex items-center gap-2.5 w-full px-2.5 py-2.5 rounded-[10px] cursor-pointer text-left font-display text-[13px] font-semibold text-ink-2 transition-[background,color] duration-150 ease-[cubic-bezier(0.22,1,0.36,1)]',
+                          'group flex items-center gap-2.5 w-full px-2.5 py-2.5 rounded-[10px] cursor-pointer text-left font-display t-small font-semibold text-ink-2 transition-[background,color] duration-150 ease-[cubic-bezier(0.22,1,0.36,1)]',
                           'hover:bg-paper-2 hover:text-ink',
                           isCurrent && 'bg-paper-2 text-ink'
                         )}
                       >
                         <span
                           className={cn(
-                            'font-mono text-[11px] font-bold w-5.5 shrink-0 text-center',
+                            't-caption w-5.5 shrink-0 text-center',
                             isCurrent ? 'text-brand-purple font-extrabold' : 'text-ink-3'
                           )}
                         >
@@ -171,15 +187,18 @@ export function QuizSidebar({
                         </span>
                         <span className="flex-1 min-w-0 truncate">{q.title}</span>
                         <StatusDot status={status} isCurrent={isCurrent} />
-                      </button>
+                      </motion.button>
                     )
                   })}
                 </div>
               ))}
-            </nav>
+            </motion.nav>
           </>
         ) : (
-          <nav
+          <motion.nav
+            variants={staggerContainer(0.02)}
+            initial="hidden"
+            animate="show"
             className="flex-1 overflow-y-auto py-2 hidden md:flex md:flex-col md:items-center md:gap-1"
             aria-label="Danh sách câu hỏi"
           >
@@ -187,13 +206,14 @@ export function QuizSidebar({
               const status = statuses[q.id] ?? 'idle'
               const isCurrent = q.id === currentId
               return (
-                <button
+                <motion.button
                   key={q.id}
+                  variants={fadeUp}
                   type="button"
                   onClick={() => onPick(q.id)}
                   title={q.title}
                   className={cn(
-                    'grid size-9 place-items-center rounded-md font-mono text-[10px] font-bold transition-colors',
+                    'grid size-9 place-items-center rounded-md t-caption transition-colors',
                     isCurrent
                       ? 'bg-paper-2 text-brand-purple-deep'
                       : status === 'correct'
@@ -204,10 +224,10 @@ export function QuizSidebar({
                   )}
                 >
                   {String(q.id).padStart(2, '0')}
-                </button>
+                </motion.button>
               )
             })}
-          </nav>
+          </motion.nav>
         )}
       </aside>
     </>
