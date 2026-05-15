@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from 'motion/react'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import type { QuizSet } from '@/models/quiz'
 import { useHasHydrated, useHydrateQuizStore, useQuizActions, useStatuses } from '@/stores/quiz-store'
+import { Button } from '@/components/ui/button'
 import { QuizSidebar } from './quiz-sidebar'
 import { QuizMascotRow } from './quiz-mascot-row'
 import { QuizChoices } from './quiz-choices'
@@ -106,18 +107,20 @@ export function QuizApp({ quiz, bodyMap }: { quiz: QuizSet; bodyMap: Record<numb
           <>
             <main className="flex-1 overflow-y-auto">
               <div className="mx-auto flex min-h-full w-full max-w-220 flex-col px-5 pt-6 pb-6 md:justify-center md:px-8 md:py-6">
-                <button
+                <Button
                   type="button"
                   onClick={toggleSidebar}
+                  variant="neutral"
+                  size="icon"
                   aria-label="Mở sidebar"
-                  className="mb-4 grid size-10 place-items-center self-start rounded-md bg-paper border-2 border-line-2 shadow-[0_2px_0_var(--line-2)] text-ink md:hidden"
+                  className="mb-4 self-start md:hidden"
                 >
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" className="size-5">
                     <line x1="4" y1="6" x2="20" y2="6" />
                     <line x1="4" y1="12" x2="20" y2="12" />
                     <line x1="4" y1="18" x2="20" y2="18" />
                   </svg>
-                </button>
+                </Button>
 
                 <AnimatePresence mode="wait" initial={false}>
                   <motion.div
@@ -173,7 +176,7 @@ function QuizAppLoading() {
     <div aria-busy="true" aria-label="Đang tải bộ câu hỏi" className="grid min-h-screen place-items-center">
       <div className="flex animate-pulse flex-col items-center gap-4">
         <Debby mood="idle" size={120} />
-        <p className="text-ink-3 font-mono text-[12px] font-bold tracking-[0.08em] uppercase">Đang tải tiến độ…</p>
+        <p className="text-ink-3 t-caption">Đang tải tiến độ…</p>
       </div>
     </div>
   )
