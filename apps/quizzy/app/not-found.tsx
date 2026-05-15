@@ -10,7 +10,7 @@ export default function NotFound() {
       <p className="mt-3 text-ink-2">Trang này không tồn tại hoặc đã bị di chuyển.</p>
       <Link
         href="/"
-        className="mt-8 inline-block font-bold text-purple-deep underline decoration-purple-tint underline-offset-4"
+        className="mt-8 inline-block font-bold text-brand-purple-deep underline decoration-brand-purple-tint underline-offset-4"
       >
         Về trang chủ
       </Link>

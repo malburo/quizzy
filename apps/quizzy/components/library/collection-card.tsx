@@ -35,7 +35,7 @@ export function CollectionCard({ c }: { c: QuizCard }) {
     >
       <Link
         href={`/quizzes/${c.id}`}
-        className="relative overflow-hidden chunky-card p-5 flex flex-col gap-3 no-underline text-ink transition-shadow cursor-pointer hover:border-purple-deep hover:shadow-[0_7px_0_var(--line-2)]"
+        className="relative overflow-hidden chunky-card p-5 flex flex-col gap-3 no-underline text-ink transition-shadow cursor-pointer hover:border-brand-purple-deep hover:shadow-[0_7px_0_var(--line-2)]"
         style={{ ['--tint' as string]: c.tint, ['--ink-of-tint' as string]: c.inkOfTint } as React.CSSProperties}
       >
         <span
@@ -45,7 +45,7 @@ export function CollectionCard({ c }: { c: QuizCard }) {
         />
 
         {c.isNew ? (
-          <Badge className="absolute top-3 right-3.5 z-10 bg-pink text-white shadow-[0_2px_0_#c93b78]">
+          <Badge className="absolute top-3 right-3.5 z-10 bg-mask text-white shadow-[0_2px_0_#c93b78]">
             MỚI
           </Badge>
         ) : null}
@@ -85,7 +85,7 @@ export function CollectionCard({ c }: { c: QuizCard }) {
                 className="h-full rounded-full"
                 style={{
                   width: `${pct}%`,
-                  background: 'linear-gradient(180deg, #84e07b 0%, var(--correct) 60%, var(--correct-deep) 100%)',
+                  background: 'linear-gradient(180deg, #84e07b 0%, var(--status-correct) 60%, var(--status-correct-deep) 100%)',
                   transition: 'width 480ms cubic-bezier(0.22, 1, 0.36, 1)',
                 }}
               />

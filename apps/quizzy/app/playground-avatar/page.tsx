@@ -17,7 +17,7 @@ export default function AvatarPlaygroundPage() {
           href="/"
           className="inline-flex items-center gap-3 font-extrabold text-[17px] no-underline text-ink tracking-tight"
         >
-          <span className="size-9.5 rounded-[11px] bg-white border-2 border-line-2 shadow-[0_2px_0_var(--line-2)] grid place-items-center font-mono font-extrabold text-[14px] text-purple-deep">
+          <span className="size-9.5 rounded-[11px] bg-white border-2 border-line-2 shadow-[0_2px_0_var(--line-2)] grid place-items-center font-mono font-extrabold text-[14px] text-brand-purple-deep">
             Q
           </span>
           <span>Quizzy</span>

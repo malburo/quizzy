@@ -83,21 +83,6 @@
   --input: var(--line-2);
   --ring: var(--brand-purple);
 
-  /* Legacy aliases — will be removed in Phase 3 */
-  --purple: var(--brand-purple);
-  --purple-deep: var(--brand-purple-deep);
-  --purple-soft: var(--brand-purple-soft);
-  --purple-tint: var(--brand-purple-tint);
-  --correct: var(--status-correct);
-  --correct-deep: var(--status-correct-deep);
-  --correct-soft: var(--status-correct-soft);
-  --wrong: var(--status-wrong);
-  --wrong-deep: var(--status-wrong-deep);
-  --wrong-soft: var(--status-wrong-soft);
-  --pink: var(--accent-mask);
-  --amber: var(--accent-bee);
-  --ts-blue: var(--accent-macaw);
-  --radius-card: var(--radius-lg);
 }
 
 @theme inline {
@@ -157,15 +142,6 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-
-  /* Legacy Tailwind aliases — will be removed in Phase 3 */
-  --color-purple: var(--brand-purple);
-  --color-purple-deep: var(--brand-purple-deep);
-  --color-purple-soft: var(--brand-purple-soft);
-  --color-purple-tint: var(--brand-purple-tint);
-  --color-pink: var(--accent-mask);
-  --color-amber: var(--accent-bee);
-  --color-ts-blue: var(--accent-macaw);
 
   /* Radius */
   --radius-xs: var(--radius-xs);
@@ -270,7 +246,7 @@ body {
 @utility chunky-card {
   background: var(--paper);
   border: 2px solid var(--line-2);
-  border-radius: var(--radius-card);
+  border-radius: var(--radius-lg);
   box-shadow: 0 4px 0 var(--line-2);
 }
 
@@ -282,7 +258,7 @@ body {
     position: relative;
     background: var(--paper);
     border: 2px solid var(--line-2);
-    border-radius: var(--radius-card);
+    border-radius: var(--radius-lg);
     padding: 18px 22px;
     font-size: 17px;
     line-height: 1.55;
@@ -345,7 +321,7 @@ body {
     border-radius: 3px;
     display: inline-block;
   }
-  .cq-code-lang .swatch.ts { background: var(--ts-blue); }
+  .cq-code-lang .swatch.ts { background: var(--accent-macaw); }
   .cq-code-lang .swatch.js { background: #c9a800; }
   .cq-code-lang .swatch.jsx { background: #0ea5c9; }
   .cq-code-dots {
@@ -389,8 +365,8 @@ body {
     font-family: var(--font-mono);
     font-size: 0.9em;
     font-weight: 600;
-    background: var(--purple-soft);
-    color: var(--purple-deep);
+    background: var(--brand-purple-soft);
+    color: var(--brand-purple-deep);
     padding: 2px 7px;
     border-radius: 6px;
   }

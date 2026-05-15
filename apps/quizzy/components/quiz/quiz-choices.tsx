@@ -44,10 +44,10 @@ export function QuizChoices({ choices }: { choices: Choice[] }) {
                 className={cn(
                   'relative chunky-card text-left font-semibold pl-15 pr-4.5 py-4.5 min-h-16 text-[16px] flex items-center',
                   c.code && 'font-mono text-[14px]',
-                  !isSelected && !isCorrect && !isWrong && 'hover:border-purple-tint',
-                  isSelected && 'border-purple bg-purple-soft shadow-[0_4px_0_var(--purple)] text-purple-deep',
-                  isCorrect && 'border-correct bg-correct-soft shadow-[0_4px_0_var(--correct)] text-[#2a6e22]',
-                  isWrong && 'border-wrong bg-wrong-soft shadow-[0_4px_0_var(--wrong)] text-wrong-deep',
+                  !isSelected && !isCorrect && !isWrong && 'hover:border-brand-purple-tint',
+                  isSelected && 'border-brand-purple bg-brand-purple-soft shadow-[0_4px_0_var(--brand-purple)] text-brand-purple-deep',
+                  isCorrect && 'border-correct bg-correct-soft shadow-[0_4px_0_var(--status-correct)] text-[#2a6e22]',
+                  isWrong && 'border-wrong bg-wrong-soft shadow-[0_4px_0_var(--status-wrong)] text-wrong-deep',
                   checked && 'cursor-not-allowed'
                 )}
               >
@@ -55,7 +55,7 @@ export function QuizChoices({ choices }: { choices: Choice[] }) {
                   className={cn(
                     'absolute left-3.5 top-1/2 -translate-y-1/2 size-8 rounded-[9px] border-2 grid place-items-center font-mono font-extrabold text-[13px] transition-all duration-150',
                     !isSelected && !isCorrect && !isWrong && 'border-line-2 bg-paper text-ink-3',
-                    isSelected && 'border-purple bg-purple text-white',
+                    isSelected && 'border-brand-purple bg-brand-purple text-white',
                     isCorrect && 'border-correct bg-correct text-white',
                     isWrong && 'border-wrong bg-wrong text-white'
                   )}

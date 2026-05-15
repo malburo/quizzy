@@ -10,7 +10,7 @@ export default function LandingPage() {
         Học bằng trắc nghiệm. Đang thiết kế landing —{' '}
         <Link
           href="/quizzes"
-          className="font-bold text-purple-deep underline decoration-purple-tint underline-offset-4 hover:decoration-purple-deep"
+          className="font-bold text-brand-purple-deep underline decoration-brand-purple-tint underline-offset-4 hover:decoration-brand-purple-deep"
         >
           vào /quizzes
         </Link>{' '}

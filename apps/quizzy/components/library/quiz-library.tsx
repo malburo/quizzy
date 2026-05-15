@@ -33,7 +33,7 @@ export function QuizLibrary({ quizzes }: { quizzes: QuizCard[] }) {
       {/* Top nav */}
       <nav className="flex items-center justify-between gap-5 pb-5 mb-7 border-b border-line">
         <Link href="/" className="inline-flex items-center gap-3 font-extrabold text-[17px] no-underline text-ink tracking-tight">
-          <span className="size-9.5 rounded-[11px] bg-white border-2 border-line-2 shadow-[0_2px_0_var(--line-2)] grid place-items-center font-mono font-extrabold text-[14px] text-purple-deep">
+          <span className="size-9.5 rounded-[11px] bg-white border-2 border-line-2 shadow-[0_2px_0_var(--line-2)] grid place-items-center font-mono font-extrabold text-[14px] text-brand-purple-deep">
             Q
           </span>
           <span>Quizzy</span>
@@ -69,7 +69,7 @@ export function QuizLibrary({ quizzes }: { quizzes: QuizCard[] }) {
               placeholder="Tìm bộ câu hỏi..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              className="w-full font-display text-sm font-semibold py-3 pl-10 pr-3.5 rounded-xl border-2 border-line-2 bg-paper text-ink outline-none shadow-[0_2px_0_var(--line-2)] focus:border-purple focus:shadow-[0_2px_0_var(--purple)] transition-[border-color,box-shadow] duration-150 placeholder:text-ink-3 placeholder:font-semibold"
+              className="w-full font-display text-sm font-semibold py-3 pl-10 pr-3.5 rounded-xl border-2 border-line-2 bg-paper text-ink outline-none shadow-[0_2px_0_var(--line-2)] focus:border-brand-purple focus:shadow-[0_2px_0_var(--brand-purple)] transition-[border-color,box-shadow] duration-150 placeholder:text-ink-3 placeholder:font-semibold"
             />
           </div>
         </div>

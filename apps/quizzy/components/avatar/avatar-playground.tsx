@@ -336,7 +336,7 @@ export function AvatarPlayground({ className }: { className?: string }) {
                 className={cn(
                   'grid size-12 shrink-0 place-items-center rounded-xl border-2 text-[22px] transition-[transform,background,border-color]',
                   isActive
-                    ? 'border-purple bg-purple-soft shadow-[0_2px_0_var(--purple-deep)]'
+                    ? 'border-brand-purple bg-brand-purple-soft shadow-[0_2px_0_var(--brand-purple-deep)]'
                     : 'border-line-2 bg-paper hover:bg-paper-2 hover:scale-[1.03]'
                 )}
                 aria-label={cat.label}
@@ -442,7 +442,7 @@ function ColorPicker({
               className={cn(
                 'grid size-8 place-items-center rounded-full border-2 transition-transform',
                 selected
-                  ? 'border-purple-deep scale-110 shadow-[0_2px_0_var(--purple-deep)]'
+                  ? 'border-brand-purple-deep scale-110 shadow-[0_2px_0_var(--brand-purple-deep)]'
                   : 'border-line-2 hover:scale-105'
               )}
               style={bg ? { background: bg } : undefined}
@@ -524,7 +524,7 @@ function ShapePicker({
               className={cn(
                 'grid h-10 place-items-center rounded-lg border-2 font-mono text-[12px] font-bold transition-[transform,background,border-color]',
                 selected
-                  ? 'border-purple-deep bg-purple-soft text-purple-deep shadow-[0_2px_0_var(--purple-deep)]'
+                  ? 'border-brand-purple-deep bg-brand-purple-soft text-brand-purple-deep shadow-[0_2px_0_var(--brand-purple-deep)]'
                   : 'border-line-2 bg-paper text-ink-2 hover:bg-paper-2'
               )}
               aria-label={`${section.label} ${i}`}

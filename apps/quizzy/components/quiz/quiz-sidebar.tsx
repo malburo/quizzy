@@ -164,7 +164,7 @@ export function QuizSidebar({
                         <span
                           className={cn(
                             'font-mono text-[11px] font-bold w-5.5 shrink-0 text-center',
-                            isCurrent ? 'text-purple font-extrabold' : 'text-ink-3'
+                            isCurrent ? 'text-brand-purple font-extrabold' : 'text-ink-3'
                           )}
                         >
                           {String(q.id).padStart(2, '0')}
@@ -195,7 +195,7 @@ export function QuizSidebar({
                   className={cn(
                     'grid size-9 place-items-center rounded-md font-mono text-[10px] font-bold transition-colors',
                     isCurrent
-                      ? 'bg-paper-2 text-purple-deep'
+                      ? 'bg-paper-2 text-brand-purple-deep'
                       : status === 'correct'
                         ? 'text-correct-deep hover:bg-paper-2'
                         : status === 'wrong'
@@ -278,7 +278,7 @@ function StatusDot({ status, isCurrent }: { status: 'idle' | 'correct' | 'wrong'
           <XIcon />
         </span>
       ) : isCurrent ? (
-        <span className="size-2 rounded-full bg-purple animate-[cqpulse_1.6s_ease-in-out_infinite]" />
+        <span className="size-2 rounded-full bg-brand-purple animate-[cqpulse_1.6s_ease-in-out_infinite]" />
       ) : null}
     </span>
   )
