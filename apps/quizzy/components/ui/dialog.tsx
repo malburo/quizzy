@@ -1,7 +1,9 @@
 'use client'
 
 import { useEffect } from 'react'
+import { motion } from 'motion/react'
 import { cn } from '@/lib/utils'
+import { popIn } from '@/lib/motion'
 
 export function Dialog({
   open,
@@ -33,18 +35,18 @@ export function Dialog({
     >
       <div
         onClick={onClose}
-        className="absolute inset-0 bg-black/50 animate-[cqfadeIn_0.15s_ease-out]"
+        className="absolute inset-0 bg-ink/40 animate-[cqfadeIn_0.15s_ease-out]"
         aria-hidden
       />
-      <div
+      <motion.div
+        {...popIn}
         className={cn(
-          'relative w-full max-w-md rounded-2xl border-2 border-line-2 bg-paper p-6 shadow-[0_4px_0_var(--line-2)]',
-          'animate-[cqpop_0.2s_cubic-bezier(0.22,1,0.36,1)]',
+          'relative w-full max-w-md rounded-lg border-2 border-line-2 bg-paper p-6 shadow-chunky-md',
           className
         )}
       >
         {children}
-      </div>
+      </motion.div>
     </div>
   )
 }
