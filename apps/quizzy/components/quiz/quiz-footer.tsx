@@ -33,13 +33,14 @@ export function QuizFooter({ onContinue }: { onContinue: () => void }) {
       <div className="max-w-220 mx-auto flex flex-col gap-3 md:flex-row md:items-center md:justify-between md:gap-4.5 md:flex-wrap">
         {result === 'idle' ? (
           <>
-            <button
-              type="button"
+            <Button
               onClick={onContinue}
-              className="hidden t-caption text-ink-3 py-3 px-4.5 hover:text-ink transition-colors md:inline-block"
+              variant="ghost"
+              size="md"
+              className="hidden md:inline-flex"
             >
               Bỏ qua
-            </button>
+            </Button>
             <Button
               disabled={!canCheck}
               onClick={check}
