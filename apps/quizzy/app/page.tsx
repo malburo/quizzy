@@ -3,10 +3,8 @@ import Link from 'next/link'
 export default function LandingPage() {
   return (
     <main className="mx-auto max-w-2xl px-6 py-24">
-      <h1 className="font-display text-5xl font-black tracking-tight text-ink">
-        Quizzy
-      </h1>
-      <p className="mt-4 text-lg text-ink-2">
+      <h1 className="t-display text-ink">Quizzy</h1>
+      <p className="mt-4 t-body-lg text-ink-2">
         Học bằng trắc nghiệm. Đang thiết kế landing —{' '}
         <Link
           href="/quizzes"
