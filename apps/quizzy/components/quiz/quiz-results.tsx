@@ -1,8 +1,11 @@
 'use client'
 
 import Link from 'next/link'
+import { motion } from 'motion/react'
 import { Avatar, type AvatarConfig } from '@/components/avatar/avatar'
 import { Button } from '@/components/ui/button'
+import { GitHubStarButton } from '@/components/ui/github-star-button'
+import { fadeUp, popIn, staggerContainer } from '@/lib/motion'
 
 const PASSING_RATIO = 0.7
 
@@ -37,24 +40,36 @@ export function QuizResults({
   const percent = Math.round(ratio * 100)
 
   return (
-    <div className="mx-auto flex min-h-full w-full max-w-220 flex-col items-center justify-center gap-8 px-6 py-10 text-center">
-      <Avatar config={passed ? CONFIG_HAPPY : CONFIG_SAD} className="size-50 md:size-60" />
+    <motion.div
+      variants={staggerContainer(0.12)}
+      initial="hidden"
+      animate="show"
+      className="mx-auto flex min-h-full w-full max-w-220 flex-col items-center justify-center gap-8 px-6 py-10 text-center"
+    >
+      <motion.div {...popIn}>
+        <Avatar
+          config={passed ? CONFIG_HAPPY : CONFIG_SAD}
+          className="size-50 md:size-60"
+        />
+      </motion.div>
 
-      <div className="flex flex-col gap-3">
-        <h2 className="m-0 font-display text-[clamp(28px,5vw,42px)] font-black tracking-tight leading-[1.05] text-ink">
+      <motion.div variants={fadeUp} className="flex flex-col gap-3">
+        <h2 className="m-0 t-display text-ink">
           {passed ? 'Hoàn thành! 🎉' : 'Cần ôn thêm 💪'}
         </h2>
-
-        <p className="m-0 font-mono text-[14px] font-bold tracking-[0.04em] text-ink-2">
+        <p className="m-0 t-caption text-ink-2">
           <span className="text-correct-deep">{correctCount} đúng</span>
           <span className="mx-2 text-ink-3">•</span>
           <span className="text-wrong-deep">{wrongCount} sai</span>
           <span className="mx-2 text-ink-3">•</span>
           <span className="text-ink">{percent}%</span>
         </p>
-      </div>
+      </motion.div>
 
-      <div className="flex w-full max-w-100 flex-col gap-3">
+      <motion.div
+        variants={fadeUp}
+        className="flex w-full max-w-100 flex-col gap-3"
+      >
         <Button
           type="button"
           onClick={onRetry}
@@ -67,7 +82,11 @@ export function QuizResults({
         <Button asChild variant="neutral" size="lg" className="w-full">
           <Link href="/quizzes">Chọn bộ khác</Link>
         </Button>
-      </div>
-    </div>
+      </motion.div>
+
+      <motion.div variants={fadeUp}>
+        <GitHubStarButton />
+      </motion.div>
+    </motion.div>
   )
 }
