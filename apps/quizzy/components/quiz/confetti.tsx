@@ -3,7 +3,9 @@
 import { useMemo } from 'react'
 import { motion, useReducedMotion } from 'motion/react'
 
-const COLORS = ['#58cc4a', '#6b5bd2', '#f4a93a', '#ff5fa2', '#3178c6', '#7c6cdc']
+// Hex values mirror the Duolingo-aligned palette in globals.css.
+// Keep inline (not CSS vars) because pieces randomize background via `style.background`.
+const COLORS = ['#58cc02', '#6b5bd2', '#ffc800', '#ff86d0', '#1cb0f6', '#ff9600', '#00cd9c']
 
 type Piece = {
   i: number

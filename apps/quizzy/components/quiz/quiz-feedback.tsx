@@ -54,7 +54,7 @@ export function QuizFeedback({
             className="pointer-events-none fixed inset-0 z-100"
             style={{
               background:
-                'radial-gradient(circle at 50% 40%, rgba(88,204,74,0.35) 0%, rgba(88,204,74,0.12) 40%, transparent 75%)',
+                'radial-gradient(circle at 50% 40%, rgba(88,204,2,0.35) 0%, rgba(88,204,2,0.12) 40%, transparent 75%)',
             }}
             initial={{ opacity: 0 }}
             animate={{ opacity: [0, 1, 0] }}
@@ -68,7 +68,7 @@ export function QuizFeedback({
             className="pointer-events-none fixed inset-0 z-100"
             style={{
               background:
-                'radial-gradient(circle at 50% 40%, rgba(227,90,90,0.35) 0%, rgba(227,90,90,0.12) 40%, transparent 75%)',
+                'radial-gradient(circle at 50% 40%, rgba(255,75,75,0.35) 0%, rgba(255,75,75,0.12) 40%, transparent 75%)',
             }}
             initial={{ opacity: 0 }}
             animate={{ opacity: [0, 1, 0] }}
