@@ -15,7 +15,6 @@ section: đang học
 
 ### 1. Type narrowing với typeof
 
-topic: TypeScript · Type narrowing
 stem: Đoán xem code này in ra cái gì nhỉ? 🐛
 
 Cho hàm `describe` nhận tham số có thể là **string** hoặc **string[]**.
@@ -48,7 +47,6 @@ console.log(describe(["hello", "world"]));
 
 ### 2. Array<T> vs T[]
 
-topic: TypeScript · Arrays
 stem: Hai cách viết kiểu mảng — có khác nhau không?
 
 Trong TypeScript bạn có thể viết:
@@ -76,7 +74,6 @@ Câu nào sau đây mô tả đúng nhất về `number[]` và `Array<number>`?
 
 ### 3. interface vs type alias
 
-topic: TypeScript · Type system
 stem: Khai báo trùng tên — cái nào hợp lệ? 🤔
 
 Trong cùng một file, bạn viết:
@@ -106,7 +103,6 @@ Code này biên dịch thế nào?
 
 ### 4. as const — readonly literal
 
-topic: TypeScript · Const assertion
 stem: `as const` thực sự làm gì với type inference?
 
 ```ts
@@ -136,7 +132,6 @@ type Mode = typeof config.mode
 
 ### 5. keyof + indexed access
 
-topic: TypeScript · keyof
 stem: Lấy union các value type của object — làm thế nào?
 
 ```ts

@@ -15,7 +15,6 @@ section: đang học
 
 ### 1. typeof null
 
-topic: JavaScript · typeof
 stem: Code này in ra cái gì? Cẩn thận có cái bẫy lịch sử nhé 🪤
 
 ```js
@@ -40,7 +39,6 @@ console.log(typeof NaN)
 
 ### 2. NaN equality
 
-topic: JavaScript · NaN
 stem: NaN có bằng chính nó không?
 
 ```js
@@ -67,7 +65,6 @@ Theo IEEE 754, `NaN` không bằng bất cứ gì kể cả chính nó → `===`
 
 ### 3. Hoisting + TDZ
 
-topic: JavaScript · Hoisting
 stem: var và let hoist khác nhau như thế nào?
 
 ```js
@@ -95,7 +92,6 @@ Code in ra gì?
 
 ### 4. this trong arrow vs method
 
-topic: JavaScript · this
 stem: Arrow function bind `this` khác hẳn method thường
 
 ```js
@@ -129,7 +125,6 @@ Method thường (`regular()`) lấy `this` = object đứng trước dấu `.` 
 
 ### 5. Microtask vs macrotask
 
-topic: JavaScript · Event loop
 stem: setTimeout(0) có thực sự "chạy ngay" không?
 
 ```js
