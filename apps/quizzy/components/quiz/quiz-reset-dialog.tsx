@@ -16,10 +16,10 @@ export function QuizResetDialog({
 }) {
   return (
     <Dialog open={open} onClose={onClose}>
-      <h3 className="m-0 mb-2 font-display text-[20px] font-extrabold tracking-tight text-ink">
+      <h3 className="m-0 mb-2 t-h2 text-ink">
         Xóa toàn bộ tiến độ?
       </h3>
-      <p className="m-0 mb-5 text-[14px] font-semibold text-ink-2 leading-relaxed">
+      <p className="m-0 mb-5 t-body text-ink-2">
         Tất cả {answeredCount} câu trả lời sẽ bị xóa. Không hoàn tác được.
       </p>
       <div className="flex flex-col-reverse gap-2.5 md:flex-row md:justify-end">
