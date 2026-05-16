@@ -83,7 +83,7 @@ export function QuizApp({ quiz, bodyMap }: { quiz: QuizSet; bodyMap: Record<numb
   if (!hasHydrated) return <QuizAppLoading />
 
   return (
-    <QuizFeedback className="flex min-h-screen">
+    <QuizFeedback className="flex min-h-dvh">
       <QuizSidebar
         quiz={quiz}
         open={sidebarOpen}
@@ -93,7 +93,7 @@ export function QuizApp({ quiz, bodyMap }: { quiz: QuizSet; bodyMap: Record<numb
         onReset={() => setResetDialogOpen(true)}
       />
 
-      <div className="flex h-screen min-w-0 flex-1 flex-col">
+      <div className="flex h-dvh min-w-0 flex-1 flex-col">
         {showResults ? (
           <main className="flex-1 overflow-y-auto">
             <QuizResults

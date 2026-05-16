@@ -1,7 +1,11 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Nunito, JetBrains_Mono } from 'next/font/google'
 import { cn } from '@/lib/utils'
 import './globals.css'
+
+export const viewport: Viewport = {
+  viewportFit: 'cover',
+}
 
 const nunito = Nunito({
   subsets: ['latin', 'vietnamese'],

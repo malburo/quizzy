@@ -28,7 +28,7 @@ export function QuizFooter({ onContinue }: { onContinue: () => void }) {
     <motion.footer
       layout
       transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
-      className={cn('mt-auto border-t-2 py-4.5 px-6', tint)}
+      className={cn('mt-auto border-t-2 pt-4.5 pb-[max(18px,env(safe-area-inset-bottom))] px-6', tint)}
     >
       <div className="max-w-220 mx-auto flex flex-col gap-3 md:flex-row md:items-center md:justify-between md:gap-4.5 md:flex-wrap">
         {result === 'idle' ? (
