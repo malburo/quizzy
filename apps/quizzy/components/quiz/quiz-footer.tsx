@@ -28,7 +28,7 @@ export function QuizFooter({ onContinue }: { onContinue: () => void }) {
     <motion.footer
       layout
       transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
-      className={cn('mt-auto border-t-2 pt-4.5 pb-[max(18px,env(safe-area-inset-bottom))] px-6 touch-none', tint)}
+      className={cn('mt-auto md:border-t pt-4.5 pb-[max(18px,env(safe-area-inset-bottom))] px-6 touch-none', tint)}
     >
       <div className="max-w-220 mx-auto flex flex-col gap-3 md:flex-row md:items-center md:justify-between md:gap-4.5 md:flex-wrap">
         {result === 'idle' ? (
@@ -69,7 +69,7 @@ export function QuizFooter({ onContinue }: { onContinue: () => void }) {
                     <h4 className="m-0 mb-0.5 t-h2 text-correct-deep">Đúng!</h4>
                     {explanation ? (
                       <p
-                        className="m-0 t-small text-ink-2 [&>code]:font-mono [&>code]:font-semibold [&>code]:bg-paper-3 [&>code]:px-1.5 [&>code]:py-px [&>code]:rounded-xs [&>code]:text-[0.92em]"
+                        className="m-0 t-small leading-relaxed text-correct-deep [&>code]:font-mono [&>code]:font-semibold [&>code]:bg-white/35 [&>code]:px-1.5 [&>code]:py-px [&>code]:rounded-xs [&>code]:text-[0.92em] [&>code]:text-ink"
                         dangerouslySetInnerHTML={{ __html: explanation }}
                       />
                     ) : null}
@@ -100,7 +100,7 @@ export function QuizFooter({ onContinue }: { onContinue: () => void }) {
                     <h4 className="m-0 mb-0.5 t-h2 text-wrong-deep">Sai</h4>
                     {explanation ? (
                       <p
-                        className="m-0 t-small text-ink-2 [&>code]:font-mono [&>code]:font-semibold [&>code]:bg-paper-3 [&>code]:px-1.5 [&>code]:py-px [&>code]:rounded-xs [&>code]:text-[0.92em]"
+                        className="m-0 t-small text-wrong-deep [&>code]:font-mono [&>code]:font-semibold [&>code]:bg-white/35 [&>code]:px-1.5 [&>code]:py-px [&>code]:rounded-xs [&>code]:text-[0.92em] [&>code]:text-ink"
                         dangerouslySetInnerHTML={{ __html: explanation }}
                       />
                     ) : null}
@@ -108,11 +108,11 @@ export function QuizFooter({ onContinue }: { onContinue: () => void }) {
                 </div>
                 <Button
                   onClick={onContinue}
-                  variant="brand"
+                  variant="danger"
                   size="md"
-                  className="w-full md:w-auto"
+                  className="w-full md:w-auto normal-case tracking-normal"
                 >
-                  Câu tiếp theo
+                  Hiểu rồi
                 </Button>
               </motion.div>
             )}

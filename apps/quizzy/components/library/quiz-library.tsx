@@ -4,7 +4,6 @@ import Link from 'next/link'
 import dynamic from 'next/dynamic'
 import { useMemo, useState } from 'react'
 import { motion } from 'motion/react'
-import type { AvatarConfig } from '@/components/avatar/avatar'
 import type { QuizSection, QuizSet } from '@/models/quiz'
 import { Input } from '@/components/ui/input'
 import { GitHubStarButton } from '@/components/ui/github-star-button'
@@ -18,23 +17,10 @@ const SECTION_LABEL: Record<QuizSection, string> = {
   'đã hoàn thành': 'Đã hoàn thành',
 }
 
-const Avatar = dynamic(
-  () => import('@/components/avatar/avatar').then((m) => m.Avatar),
+const RandomAvatar = dynamic(
+  () => import('@/components/avatar/random-avatar').then((m) => m.RandomAvatar),
   { ssr: false }
 )
-
-const HERO_CONFIG: AvatarConfig = {
-  Headshape: 5,
-  SkinTone: 2,
-  Body: 1,
-  EyeColor: 947303,
-  MainHair: 64,
-  MainHairColor: 2,
-  ClothingColor: 1,
-  BackgroundColor: 0,
-  ENG_ONLY_Zoom: 2,
-  Expression: 11,
-}
 
 export function QuizLibrary({ quizzes }: { quizzes: QuizSet[] }) {
   const [query, setQuery] = useState('')
@@ -111,7 +97,7 @@ export function QuizLibrary({ quizzes }: { quizzes: QuizSet[] }) {
 
         {/* Avatar stands at bottom-right */}
         <div className="relative z-10 hidden md:flex items-end shrink-0 pr-6 lg:pr-10">
-          <Avatar config={HERO_CONFIG} className="size-52 lg:size-60" />
+          <RandomAvatar className="size-52 lg:size-60" />
         </div>
       </div>
 

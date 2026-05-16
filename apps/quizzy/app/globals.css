@@ -289,21 +289,21 @@ body {
   }
 
   .cq-code {
-    background: #f6f0e8;
+    background: var(--paper-2);
     color: var(--ink);
     border-radius: var(--radius-sm);
     margin: 14px 0;
     overflow: hidden;
-    border: 2px solid var(--line-2);
-    box-shadow: 0 4px 0 var(--line-2);
+    border: 1px solid var(--line-2);
+    box-shadow: 0 2px 0 var(--line-2);
   }
   .cq-code-head {
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 8px 14px;
-    background: #ede6db;
-    border-bottom: 1px solid var(--line-2);
+    background: var(--paper-3);
+    border-bottom: 1px solid var(--line);
     font-family: var(--font-mono);
     font-size: 11px;
   }
@@ -323,8 +323,8 @@ body {
     display: inline-block;
   }
   .cq-code-lang .swatch.ts { background: var(--accent-macaw); }
-  .cq-code-lang .swatch.js { background: #c9a800; }
-  .cq-code-lang .swatch.jsx { background: #0ea5c9; }
+  .cq-code-lang .swatch.js { background: var(--accent-bee-deep); }
+  .cq-code-lang .swatch.jsx { background: var(--accent-macaw); }
   .cq-code-dots {
     display: inline-flex;
     gap: 5px;

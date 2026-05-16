@@ -110,15 +110,15 @@ export function QuizApp({ quiz, bodyMap }: { quiz: QuizSet; bodyMap: Record<numb
                 <Button
                   type="button"
                   onClick={toggleSidebar}
-                  variant="neutral"
+                  variant="ghost"
                   size="icon"
                   aria-label="Mở sidebar"
                   className="mb-4 self-start md:hidden"
                 >
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" className="size-5">
-                    <line x1="4" y1="6" x2="20" y2="6" />
-                    <line x1="4" y1="12" x2="20" y2="12" />
-                    <line x1="4" y1="18" x2="20" y2="18" />
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="size-5">
+                    <line x1="3" y1="7" x2="21" y2="7" />
+                    <line x1="3" y1="12" x2="15" y2="12" />
+                    <line x1="3" y1="17" x2="18" y2="17" />
                   </svg>
                 </Button>
 

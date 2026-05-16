@@ -44,12 +44,12 @@ export function QuizChoices({ choices }: { choices: Choice[] }) {
                 }}
                 {...(isInteractive ? pressable : {})}
                 className={cn(
-                  'relative chunky-card text-left font-semibold pl-15 pr-4.5 py-4.5 min-h-16 t-body-lg flex items-center',
+                  'relative border-2 border-line-2 rounded-lg shadow-chunky-sm bg-paper text-left font-semibold pl-15 pr-4.5 py-4.5 min-h-16 t-body-lg flex items-center',
                   c.code && 'font-mono t-small',
                   !isSelected && !isCorrect && !isWrong && 'hover:border-brand-purple-tint',
-                  isSelected && 'border-brand-purple bg-brand-purple-soft shadow-chunky-md-brand text-brand-purple-deep',
-                  isCorrect && 'border-correct bg-correct-soft shadow-chunky-md-correct text-correct-deep',
-                  isWrong && 'border-wrong bg-wrong-soft shadow-chunky-md-wrong text-wrong-deep',
+                  isSelected && 'border-brand-purple bg-brand-purple-soft shadow-chunky-sm-brand text-brand-purple-deep',
+                  isCorrect && 'border-correct bg-correct-soft shadow-chunky-sm-correct text-correct-deep',
+                  isWrong && 'border-wrong bg-wrong-soft shadow-chunky-sm-wrong text-wrong-deep',
                   checked && 'cursor-not-allowed'
                 )}
               >

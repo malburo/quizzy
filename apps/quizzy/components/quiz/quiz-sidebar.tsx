@@ -56,9 +56,9 @@ export function QuizSidebar({
 
       <aside
         className={cn(
-          'flex h-dvh flex-col bg-paper border-r-2 border-line',
+          'flex h-dvh flex-col bg-paper border-r border-line-2/60',
           'transition-[width,transform] duration-200 ease-out',
-          'max-md:fixed max-md:inset-y-0 max-md:left-0 max-md:z-40 max-md:w-72 max-md:shadow-2xl',
+          'max-md:fixed max-md:inset-y-0 max-md:left-0 max-md:z-40 max-md:w-72 max-md:shadow-xl',
           'md:sticky md:top-0',
           // Mobile: hide unless user explicitly opens.
           open === true ? 'max-md:translate-x-0' : 'max-md:-translate-x-full',
@@ -68,7 +68,7 @@ export function QuizSidebar({
       >
         <div
           className={cn(
-            'flex items-center h-14 shrink-0 border-b border-line',
+            'flex items-center h-14 shrink-0 border-b border-line-2/60',
             showWide ? 'justify-between gap-2 px-3' : 'justify-center px-2'
           )}
         >
@@ -107,7 +107,7 @@ export function QuizSidebar({
 
         {showWide ? (
           <>
-            <div className="pl-5 pr-3 pt-4 pb-3.5 border-b border-line">
+            <div className="pl-5 pr-3 pt-4 pb-3.5 border-b border-line-2/60">
               <div className="flex items-center gap-3">
                 <h2 className="flex-1 min-w-0 t-small font-extrabold text-ink leading-tight text-pretty">
                   {quiz.title}
@@ -226,9 +226,7 @@ function PanelIcon({ open }: { open: boolean }) {
       strokeLinejoin="round"
       className="size-4.5"
     >
-      <rect x="3" y="3" width="18" height="18" rx="2" />
-      <line x1="9" y1="3" x2="9" y2="21" />
-      {open ? <path d="m16 15-3-3 3-3" /> : <path d="m14 9 3 3-3 3" />}
+      {open ? <path d="m15 18-6-6 6-6" /> : <path d="m9 18 6-6-6-6" />}
     </svg>
   )
 }
