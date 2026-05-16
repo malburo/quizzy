@@ -75,11 +75,11 @@ export function QuizResults({
           onClick={onRetry}
           variant="brand"
           size="lg"
-          className="w-full"
+          className="w-full normal-case tracking-normal"
         >
           Làm lại bộ này
         </Button>
-        <Button asChild variant="neutral" size="lg" className="w-full">
+        <Button asChild variant="neutral" size="lg" className="w-full normal-case tracking-normal">
           <Link href="/quizzes">Chọn bộ khác</Link>
         </Button>
       </motion.div>

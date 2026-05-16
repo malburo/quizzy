@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { motion } from 'motion/react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -39,9 +40,6 @@ export function QuizSidebar({
   const totalAnswered = useAnsweredCount(quiz.id)
   const { currentId } = useSession()
 
-  const correctCount = Object.values(statuses).filter((s) => s === 'correct').length
-  const wrongCount = totalAnswered - correctCount
-
   // Desktop wide = open===true OR open===undefined (CSS default).
   const showWide = open !== false
 
@@ -76,31 +74,22 @@ export function QuizSidebar({
         >
           {showWide ? (
             <>
-              <span className="font-display text-lg font-extrabold tracking-tight text-ink">Quizzy</span>
-              <div className="flex items-center gap-0.5">
-                <Button
-                  type="button"
-                  onClick={onReset}
-                  disabled={totalAnswered === 0}
-                  variant="ghost"
-                  size="icon"
-                  className="size-8"
-                  aria-label="Xóa toàn bộ tiến độ"
-                  title="Xóa toàn bộ tiến độ"
-                >
-                  <ResetIcon />
-                </Button>
-                <Button
-                  type="button"
-                  onClick={onToggle}
-                  variant="ghost"
-                  size="icon"
-                  className="size-8"
-                  aria-label="Đóng sidebar"
-                >
-                  <PanelIcon open />
-                </Button>
-              </div>
+              <Link href="/quizzes" className="group inline-flex items-center gap-2.5 no-underline text-ink">
+                <span className="size-8 rounded-[10px] bg-brand-purple text-white grid place-items-center font-display font-black text-base leading-none -rotate-6 transition-transform duration-220 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:rotate-6 group-hover:scale-105 [box-shadow:0_3px_0_var(--brand-purple-deep),inset_0_-2px_0_rgb(0_0_0/0.12)]">
+                  Q
+                </span>
+                <span className="font-display text-lg font-extrabold tracking-tight">Quizzy</span>
+              </Link>
+              <Button
+                type="button"
+                onClick={onToggle}
+                variant="ghost"
+                size="icon"
+                className="size-8"
+                aria-label="Đóng sidebar"
+              >
+                <PanelIcon open />
+              </Button>
             </>
           ) : (
             <Button
@@ -118,31 +107,23 @@ export function QuizSidebar({
 
         {showWide ? (
           <>
-            <div className="px-4 pt-4 pb-3.5 border-b border-line">
-              <div className="flex items-center gap-3 mb-2.5">
-                <span
-                  className={cn(
-                    'size-11 shrink-0 rounded-xl bg-paper-2 border-2 border-line-2 shadow-chunky-sm grid place-items-center text-2xl leading-none',
-                    quiz.iconMono && 'font-mono font-extrabold text-base'
-                  )}
-                  style={quiz.iconMono ? { color: quiz.inkOfTint } : undefined}
-                >
-                  {quiz.icon}
-                </span>
-                <h2 className="min-w-0 t-small font-extrabold text-ink leading-tight text-pretty">
+            <div className="pl-5 pr-3 pt-4 pb-3.5 border-b border-line">
+              <div className="flex items-center gap-3">
+                <h2 className="flex-1 min-w-0 t-small font-extrabold text-ink leading-tight text-pretty">
                   {quiz.title}
                 </h2>
-              </div>
-              <div className="flex items-center gap-3 t-caption">
-                <span className="inline-flex items-center gap-1 text-correct-deep">
-                  <CheckIcon />
-                  {correctCount}
-                </span>
-                <span className="inline-flex items-center gap-1 text-wrong-deep">
-                  <XIcon />
-                  {wrongCount}
-                </span>
-                <span className="text-ink-3">/ {quiz.questions.length}</span>
+                <Button
+                  type="button"
+                  onClick={onReset}
+                  disabled={totalAnswered === 0}
+                  variant="ghost"
+                  size="icon"
+                  className="size-8 shrink-0"
+                  aria-label="Xóa toàn bộ tiến độ"
+                  title="Xóa toàn bộ tiến độ"
+                >
+                  <ResetIcon />
+                </Button>
               </div>
             </div>
 

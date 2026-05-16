@@ -396,8 +396,8 @@ body {
 
 /* Hero cloud drift */
 @keyframes cqcloud {
-  from { transform: translateX(-15vw); }
-  to   { transform: translateX(115vw); }
+  from { transform: translateX(0); }
+  to   { transform: translateX(130vw); }
 }
 
 .cq-cloud {
