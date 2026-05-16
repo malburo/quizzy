@@ -36,27 +36,20 @@ export function CollectionCard({ c }: { c: QuizSet }) {
   const pct = Math.round((answered / total) * 100)
 
   return (
-    <motion.div {...pressable}>
+    <motion.div {...pressable} className="h-full">
       <Link
         href={`/quizzes/${c.id}`}
-        className="relative overflow-hidden bg-paper border-2 border-line-2 rounded-lg shadow-chunky-md p-5 flex flex-col gap-3 no-underline text-ink transition-shadow cursor-pointer hover:border-brand-purple-deep hover:shadow-chunky-lg"
+        className="h-full relative overflow-hidden bg-paper border-2 border-line-2 rounded-lg shadow-chunky-md p-5 flex flex-col gap-3 no-underline text-ink transition-[border-color,box-shadow] cursor-pointer hover:border-brand-purple-deep hover:shadow-chunky-lg"
         style={{ ['--tint' as string]: c.tint, ['--ink-of-tint' as string]: c.inkOfTint } as React.CSSProperties}
       >
+        {/* Tint wash at the top */}
         <span
           aria-hidden
           className="absolute inset-x-0 top-0 h-18 z-0"
           style={{ background: 'var(--tint)', opacity: 0.55 }}
         />
 
-        {c.isNew ? (
-          <Badge
-            variant="mask"
-            className="absolute top-3 right-3.5 z-10 bg-mask text-white"
-          >
-            MỚI
-          </Badge>
-        ) : null}
-
+        {/* Icon + level badge */}
         <div className="relative z-10 flex items-start justify-between gap-3">
           <div
             className={cn(
@@ -69,20 +62,22 @@ export function CollectionCard({ c }: { c: QuizSet }) {
             {c.icon}
           </div>
           <Badge variant={LEVEL_BADGE_VARIANT[c.level]}>
-            <span
-              className={cn('size-1.5 rounded-full', LEVEL_DOT_CLASS[c.level])}
-            />
+            <span className={cn('size-1.5 rounded-full', LEVEL_DOT_CLASS[c.level])} />
             {LEVEL_LABEL[c.level]}
           </Badge>
         </div>
 
+        {/* Title */}
         <h3 className="relative z-10 t-h3 leading-tight text-pretty">
           {c.title}
         </h3>
+
+        {/* Description — flex-1 pushes footer to the bottom */}
         <p className="relative z-10 t-small font-medium text-ink-2 text-pretty flex-1">
           {c.desc}
         </p>
 
+        {/* Progress bar */}
         {pct > 0 ? (
           <div className="relative z-10 flex flex-col gap-2">
             <div className="flex items-center justify-between t-caption text-ink-2">
@@ -98,6 +93,7 @@ export function CollectionCard({ c }: { c: QuizSet }) {
           </div>
         ) : null}
 
+        {/* Stats footer */}
         <div className="relative z-10 flex items-center gap-3.5 pt-3 border-t border-dashed border-line-2 t-caption text-ink-3">
           <span className="inline-flex items-center gap-1.5">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" className="size-3">
@@ -124,16 +120,17 @@ function CollectionCardSkeleton() {
     <div
       aria-busy="true"
       aria-label="Đang tải bộ câu hỏi"
-      className="bg-paper border-2 border-line-2 rounded-lg shadow-chunky-md p-5 flex flex-col gap-3 animate-pulse"
+      className="h-full bg-paper border-2 border-line-2 rounded-lg shadow-chunky-md p-5 flex flex-col gap-3 animate-pulse"
     >
       <div className="flex items-start justify-between gap-3">
         <div className="size-14 rounded-md bg-paper-2 border-2 border-line-2" />
         <div className="h-6 w-14 rounded-full bg-paper-2" />
       </div>
       <div className="h-5 w-3/4 rounded bg-paper-2" />
-      <div className="h-3.5 w-full rounded bg-paper-2" />
-      <div className="h-3.5 w-5/6 rounded bg-paper-2" />
-      <div className="flex-1" />
+      <div className="flex-1 flex flex-col gap-2">
+        <div className="h-3.5 w-full rounded bg-paper-2" />
+        <div className="h-3.5 w-5/6 rounded bg-paper-2" />
+      </div>
       <div className="flex gap-3.5 pt-3 border-t border-dashed border-line-2">
         <div className="h-3 w-14 rounded bg-paper-2" />
         <div className="h-3 w-14 rounded bg-paper-2" />
