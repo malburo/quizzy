@@ -33,7 +33,7 @@ export function QuizLibrary({ quizzes }: { quizzes: QuizSet[] }) {
   }, [filtered])
 
   return (
-    <div className="mx-auto max-w-310 px-8 pt-6 pb-14">
+    <div className="mx-auto max-w-310 px-4 sm:px-6 md:px-8 pt-6 pb-14">
       {/* Top nav */}
       <nav className="flex items-center justify-between gap-5 pb-5 mb-7 border-b border-line">
         <Link

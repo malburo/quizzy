@@ -58,7 +58,7 @@ export function QuizSidebar({
 
       <aside
         className={cn(
-          'flex h-screen flex-col bg-paper border-r-2 border-line',
+          'flex h-dvh flex-col bg-paper border-r-2 border-line',
           'transition-[width,transform] duration-200 ease-out',
           'max-md:fixed max-md:inset-y-0 max-md:left-0 max-md:z-40 max-md:w-72 max-md:shadow-2xl',
           'md:sticky md:top-0',

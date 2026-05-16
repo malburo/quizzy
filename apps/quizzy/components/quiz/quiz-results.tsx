@@ -44,7 +44,7 @@ export function QuizResults({
       variants={staggerContainer(0.12)}
       initial="hidden"
       animate="show"
-      className="mx-auto flex min-h-full w-full max-w-220 flex-col items-center justify-center gap-8 px-6 py-10 text-center"
+      className="mx-auto flex min-h-full w-full max-w-220 flex-col items-center justify-center gap-8 px-4 md:px-6 py-10 text-center"
     >
       <motion.div {...popIn}>
         <Avatar
