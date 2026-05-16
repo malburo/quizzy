@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react'
 import { Alignment, Fit, Layout, useRive, useStateMachineInput } from '@rive-app/react-webgl2'
+import { cn } from '@/lib/utils'
 
 const STATE_MACHINES = ['SMAvatar', 'SMButtons']
 const TARGET_SM = 'SMButtons'
@@ -102,7 +103,7 @@ export function Avatar({
   return (
     <RiveComponent
       onClick={() => bounce?.fire()}
-      className={className}
+      className={cn('block', className)}
       style={{ cursor: bounce ? 'pointer' : undefined }}
     />
   )

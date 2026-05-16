@@ -1,12 +1,12 @@
 'use client'
 
-import Link from 'next/link'
 import dynamic from 'next/dynamic'
 import { useMemo, useState } from 'react'
 import { motion } from 'motion/react'
 import type { QuizSection, QuizSet } from '@/models/quiz'
 import { Input } from '@/components/ui/input'
 import { GitHubStarButton } from '@/components/ui/github-star-button'
+import { QuizzyLogo } from '@/components/ui/quizzy-logo'
 import { fadeUp, staggerContainer } from '@/lib/motion'
 import { CollectionCard } from './collection-card'
 
@@ -40,15 +40,7 @@ export function QuizLibrary({ quizzes }: { quizzes: QuizSet[] }) {
     <div className="mx-auto max-w-310 px-4 sm:px-6 md:px-8 pb-14">
       {/* Nav */}
       <nav className="flex items-center justify-between gap-5 py-5 border-b border-line">
-        <Link
-          href="/"
-          className="group inline-flex items-center gap-3 t-h3 no-underline text-ink"
-        >
-          <span className="size-10 rounded-[12px] bg-brand-purple text-white grid place-items-center font-display font-black text-[22px] leading-none -rotate-6 transition-transform duration-220 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:rotate-6 group-hover:scale-105 [box-shadow:0_4px_0_var(--brand-purple-deep),inset_0_-3px_0_rgb(0_0_0/0.12)]">
-            Q
-          </span>
-          <span>Quizzy</span>
-        </Link>
+        <QuizzyLogo href="/" />
         <GitHubStarButton />
       </nav>
 
@@ -95,8 +87,8 @@ export function QuizLibrary({ quizzes }: { quizzes: QuizSet[] }) {
           </div>
         </div>
 
-        {/* Avatar stands at bottom-right */}
-        <div className="relative z-10 hidden md:flex items-end shrink-0 pr-6 lg:pr-10">
+        {/* Avatar — fixed size reserves space before hydration, no layout shift */}
+        <div className="relative z-10 hidden md:flex items-end shrink-0 h-57.5 lg:h-65 w-52 lg:w-60 pr-6 lg:pr-10">
           <RandomAvatar className="size-52 lg:size-60" />
         </div>
       </div>

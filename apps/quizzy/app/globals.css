@@ -248,7 +248,7 @@ body {
   background: var(--paper);
   border: 2px solid var(--line-2);
   border-radius: var(--radius-lg);
-  box-shadow: 0 4px 0 var(--line-2);
+  box-shadow: 0 2px 0 var(--line-2);
 }
 
 /* ------------------------------------------------------------------ */

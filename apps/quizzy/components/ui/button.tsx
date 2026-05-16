@@ -9,13 +9,13 @@ const buttonVariants = cva(
     variants: {
       variant: {
         brand:
-          'bg-brand-purple text-white shadow-chunky-md-brand hover:brightness-110 active:translate-y-0.5 active:shadow-chunky-sm-brand',
+          'bg-brand-purple text-white shadow-chunky-sm-brand hover:brightness-110 active:translate-y-0.5 active:shadow-none',
         success:
-          'bg-correct text-white shadow-chunky-md-correct hover:brightness-110 active:translate-y-0.5 active:shadow-chunky-sm-correct',
+          'bg-correct text-white shadow-chunky-sm-correct hover:brightness-110 active:translate-y-0.5 active:shadow-none',
         danger:
-          'bg-wrong text-white shadow-chunky-md-wrong hover:brightness-110 active:translate-y-0.5 active:shadow-chunky-sm-wrong',
+          'bg-wrong text-white shadow-chunky-sm-wrong hover:brightness-110 active:translate-y-0.5 active:shadow-none',
         neutral:
-          'bg-paper text-ink border-2 border-line-2 shadow-chunky-md hover:bg-paper-2 active:translate-y-0.5 active:shadow-chunky-sm',
+          'bg-paper text-ink border-2 border-line-2 shadow-chunky-sm hover:bg-paper-2 active:translate-y-0.5 active:shadow-none',
         ghost: 'bg-transparent text-ink-2 hover:bg-paper-2 hover:text-ink',
         pill:
           'rounded-pill bg-paper text-ink border-2 border-line-2 shadow-chunky-sm font-mono text-[11px] hover:bg-paper-2 active:translate-y-0.5 active:shadow-none',

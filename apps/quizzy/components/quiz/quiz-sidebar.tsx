@@ -1,9 +1,9 @@
 'use client'
 
-import Link from 'next/link'
 import { motion } from 'motion/react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
+import { QuizzyLogo } from '@/components/ui/quizzy-logo'
 import { fadeUp, staggerContainer } from '@/lib/motion'
 import type { Question, QuizSet } from '@/models/quiz'
 import { useAnsweredCount, useSession, useStatuses } from '@/stores/quiz-store'
@@ -56,7 +56,7 @@ export function QuizSidebar({
 
       <aside
         className={cn(
-          'flex h-dvh flex-col bg-paper border-r border-line-2/60',
+          'flex h-dvh flex-col bg-paper border-r border-line',
           'transition-[width,transform] duration-200 ease-out',
           'max-md:fixed max-md:inset-y-0 max-md:left-0 max-md:z-40 max-md:w-72 max-md:shadow-xl',
           'md:sticky md:top-0',
@@ -68,18 +68,13 @@ export function QuizSidebar({
       >
         <div
           className={cn(
-            'flex items-center h-14 shrink-0 border-b border-line-2/60',
+            'flex items-center h-14 shrink-0 border-b border-line',
             showWide ? 'justify-between gap-2 px-3' : 'justify-center px-2'
           )}
         >
           {showWide ? (
             <>
-              <Link href="/quizzes" className="group inline-flex items-center gap-2.5 no-underline text-ink">
-                <span className="size-8 rounded-[10px] bg-brand-purple text-white grid place-items-center font-display font-black text-base leading-none -rotate-6 transition-transform duration-220 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:rotate-6 group-hover:scale-105 [box-shadow:0_3px_0_var(--brand-purple-deep),inset_0_-2px_0_rgb(0_0_0/0.12)]">
-                  Q
-                </span>
-                <span className="font-display text-lg font-extrabold tracking-tight">Quizzy</span>
-              </Link>
+              <QuizzyLogo size="sm" />
               <Button
                 type="button"
                 onClick={onToggle}
@@ -107,7 +102,7 @@ export function QuizSidebar({
 
         {showWide ? (
           <>
-            <div className="pl-5 pr-3 pt-4 pb-3.5 border-b border-line-2/60">
+            <div className="pl-5 pr-3 pt-4 pb-3.5 border-b border-line">
               <div className="flex items-center gap-3">
                 <h2 className="flex-1 min-w-0 t-small font-extrabold text-ink leading-tight text-pretty">
                   {quiz.title}

@@ -39,7 +39,7 @@ export function CollectionCard({ c }: { c: QuizSet }) {
     <motion.div {...pressable} className="h-full">
       <Link
         href={`/quizzes/${c.id}`}
-        className="h-full relative overflow-hidden bg-paper border-2 border-line-2 rounded-lg shadow-chunky-md p-5 flex flex-col gap-3 no-underline text-ink transition-shadow cursor-pointer hover:shadow-chunky-lg"
+        className="h-full relative overflow-hidden bg-paper border-2 border-line-2 rounded-lg shadow-chunky-sm p-5 flex flex-col gap-3 no-underline text-ink transition-shadow cursor-pointer hover:shadow-chunky-md"
         style={{ ['--tint' as string]: c.tint, ['--ink-of-tint' as string]: c.inkOfTint } as React.CSSProperties}
       >
         {/* Tint wash at the top */}

@@ -43,7 +43,7 @@ export function RandomAvatar({ className }: { className?: string }) {
       type="button"
       onClick={handleClick}
       aria-label="Đổi avatar ngẫu nhiên"
-      className={cn('cursor-pointer', className)}
+      className={cn('block cursor-pointer leading-none', className)}
     >
       <Avatar config={config} bounceSignal={bounceSignal} className="size-full" />
     </button>
