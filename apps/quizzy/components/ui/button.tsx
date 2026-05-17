@@ -4,7 +4,7 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/lib/utils'
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center gap-2 whitespace-nowrap font-display font-extrabold uppercase tracking-[0.04em] transition-[transform,box-shadow,filter,background-color] duration-150 disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-purple-tint focus-visible:ring-offset-2 focus-visible:ring-offset-paper [&_svg]:size-4 [&_svg]:shrink-0',
+  'inline-flex items-center justify-center gap-2 whitespace-nowrap font-display font-extrabold transition-[transform,box-shadow,filter,background-color] duration-150 disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-purple-tint focus-visible:ring-offset-2 focus-visible:ring-offset-paper [&_svg]:size-4 [&_svg]:shrink-0',
   {
     variants: {
       variant: {
@@ -16,6 +16,7 @@ const buttonVariants = cva(
           'bg-wrong text-white shadow-chunky-sm-wrong hover:brightness-110 active:translate-y-0.5 active:shadow-none',
         neutral:
           'bg-paper text-ink border-2 border-line-2 shadow-chunky-sm hover:bg-paper-2 active:translate-y-0.5 active:shadow-none',
+        muted: 'bg-paper-3 text-ink-3 disabled:opacity-100',
         ghost: 'bg-transparent text-ink-2 hover:bg-paper-2 hover:text-ink',
         pill:
           'rounded-pill bg-paper text-ink border-2 border-line-2 shadow-chunky-sm font-mono text-[11px] hover:bg-paper-2 active:translate-y-0.5 active:shadow-none',

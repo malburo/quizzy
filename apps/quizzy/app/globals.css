@@ -59,6 +59,7 @@
   --shadow-chunky-md-correct: 0 4px 0 var(--status-correct-deep);
   --shadow-chunky-md-wrong: 0 4px 0 var(--status-wrong-deep);
   --shadow-chunky-sm-brand: 0 2px 0 var(--brand-purple-deep);
+  --shadow-chunky-sm-macaw: 0 2px 0 var(--accent-macaw);
   --shadow-chunky-sm-correct: 0 2px 0 var(--status-correct-deep);
   --shadow-chunky-sm-wrong: 0 2px 0 var(--status-wrong-deep);
 
@@ -159,6 +160,7 @@
   --shadow-chunky-md-correct: var(--shadow-chunky-md-correct);
   --shadow-chunky-md-wrong: var(--shadow-chunky-md-wrong);
   --shadow-chunky-sm-brand: var(--shadow-chunky-sm-brand);
+  --shadow-chunky-sm-macaw: var(--shadow-chunky-sm-macaw);
   --shadow-chunky-sm-correct: var(--shadow-chunky-sm-correct);
   --shadow-chunky-sm-wrong: var(--shadow-chunky-sm-wrong);
 

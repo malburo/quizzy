@@ -11,7 +11,7 @@ const AvatarPlayground = dynamic(
 
 export default function AvatarPlaygroundPage() {
   return (
-    <main className="mx-auto max-w-310 px-8 pt-6 pb-14">
+    <main className="mx-auto max-w-7xl px-8 pt-6 pb-14">
       <nav className="flex items-center justify-between gap-5 pb-5 mb-7 border-b border-line">
         <Link
           href="/"

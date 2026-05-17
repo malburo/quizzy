@@ -8,6 +8,8 @@ import { Input } from '@/components/ui/input'
 import { GitHubStarButton } from '@/components/ui/github-star-button'
 import { QuizzyLogo } from '@/components/ui/quizzy-logo'
 import { fadeUp, staggerContainer } from '@/lib/motion'
+import BeatLoader from 'react-spinners/BeatLoader'
+import { useHasHydrated, useHydrateQuizStore } from '@/stores/quiz-store'
 import { CollectionCard } from './collection-card'
 
 const SECTION_ORDER: QuizSection[] = ['đang học', 'khám phá', 'đã hoàn thành']
@@ -23,6 +25,8 @@ const RandomAvatar = dynamic(
 )
 
 export function QuizLibrary({ quizzes }: { quizzes: QuizSet[] }) {
+  useHydrateQuizStore()
+  const hasHydrated = useHasHydrated()
   const [query, setQuery] = useState('')
 
   const grouped = useMemo(() => {
@@ -36,11 +40,17 @@ export function QuizLibrary({ quizzes }: { quizzes: QuizSet[] }) {
     })).filter((g) => g.items.length > 0)
   }, [query, quizzes])
 
+  if (!hasHydrated) return (
+    <div className="flex min-h-dvh items-center justify-center">
+      <BeatLoader color="var(--ink-4)" size={10} />
+    </div>
+  )
+
   return (
-    <div className="mx-auto max-w-310 px-4 sm:px-6 md:px-8 pb-14">
+    <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8 pb-14">
       {/* Nav */}
       <nav className="flex items-center justify-between gap-5 py-5 border-b border-line">
-        <QuizzyLogo href="/" />
+        <QuizzyLogo />
         <GitHubStarButton />
       </nav>
 
@@ -64,7 +74,7 @@ export function QuizLibrary({ quizzes }: { quizzes: QuizSet[] }) {
           <p className="mt-3 mb-6 t-body text-ink-2">
             Làm vài câu cho nóng máy 🔥
           </p>
-          <div className="relative max-w-100">
+          <div className="relative max-w-sm">
             <svg
               viewBox="0 0 24 24"
               fill="none"
@@ -114,9 +124,7 @@ export function QuizLibrary({ quizzes }: { quizzes: QuizSet[] }) {
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
           >
             {items.map((c) => (
-              <motion.div key={c.id} variants={fadeUp} className="h-full">
-                <CollectionCard c={c} />
-              </motion.div>
+              <CollectionCard key={c.id} c={c} variants={fadeUp} />
             ))}
           </motion.div>
         </div>

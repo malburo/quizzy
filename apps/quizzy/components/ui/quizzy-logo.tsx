@@ -5,18 +5,18 @@ type QuizzyLogoSize = 'sm' | 'md'
 
 const SIZE: Record<QuizzyLogoSize, { badge: string; text: string }> = {
   sm: {
-    badge: 'size-8 rounded-[10px] text-base [box-shadow:0_3px_0_var(--brand-purple-deep),inset_0_-2px_0_rgb(0_0_0/0.12)]',
+    badge: 'size-8 rounded-sm text-base [box-shadow:0_3px_0_var(--brand-purple-deep),inset_0_-2px_0_rgb(0_0_0/0.12)]',
     text: 'text-lg',
   },
   md: {
-    badge: 'size-10 rounded-[12px] text-[22px] [box-shadow:0_4px_0_var(--brand-purple-deep),inset_0_-3px_0_rgb(0_0_0/0.12)]',
+    badge: 'size-10 rounded-md text-2xl [box-shadow:0_4px_0_var(--brand-purple-deep),inset_0_-3px_0_rgb(0_0_0/0.12)]',
     text: '',
   },
 }
 
 export function QuizzyLogo({
   size = 'md',
-  href = '/quizzes',
+  href = '/',
   className,
 }: {
   size?: QuizzyLogoSize

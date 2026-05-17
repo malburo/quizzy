@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import BeatLoader from 'react-spinners/BeatLoader'
 import { AnimatePresence, motion } from 'motion/react'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import type { QuizSet } from '@/models/quiz'
@@ -11,9 +12,10 @@ import { QuizMascotRow } from './quiz-mascot-row'
 import { QuizChoices } from './quiz-choices'
 import { QuizFooter } from './quiz-footer'
 import { QuizFeedback } from './quiz-feedback'
+import { QuizExplanation } from './quiz-explanation'
 import { QuizResetDialog } from './quiz-reset-dialog'
 import { QuizResults } from './quiz-results'
-import { Debby } from '@/components/debby/debby'
+import { Avatar } from '@/components/avatar/avatar'
 
 export function QuizApp({ quiz, bodyMap }: { quiz: QuizSet; bodyMap: Record<number, string | null> }) {
   useHydrateQuizStore()
@@ -106,7 +108,7 @@ export function QuizApp({ quiz, bodyMap }: { quiz: QuizSet; bodyMap: Record<numb
         ) : (
           <>
             <main className="flex-1 overflow-y-auto">
-              <div className="mx-auto flex min-h-full w-full max-w-220 flex-col px-5 pt-6 pb-6 md:justify-center md:px-8 md:py-6">
+              <div className="mx-auto flex min-h-full w-full max-w-4xl flex-col px-5 pt-6 pb-6 md:justify-center md:px-8 md:py-6">
                 <Button
                   type="button"
                   onClick={toggleSidebar}
@@ -138,6 +140,7 @@ export function QuizApp({ quiz, bodyMap }: { quiz: QuizSet; bodyMap: Record<numb
                     ) : null}
 
                     {current.choices && correctKey ? <QuizChoices choices={current.choices} /> : null}
+                    <QuizExplanation />
                   </motion.div>
                 </AnimatePresence>
               </div>
@@ -158,14 +161,20 @@ export function QuizApp({ quiz, bodyMap }: { quiz: QuizSet; bodyMap: Record<numb
   )
 }
 
+const EMPTY_AVATAR_CONFIG = {
+  Headshape: 5, SkinTone: 2, Body: 1, EyeColor: 947303,
+  MainHair: 64, MainHairColor: 2, ClothingColor: 1, BackgroundColor: 0,
+  ENG_ONLY_Zoom: 1, Expression: 5,
+}
+
 function EmptyQuestion() {
   return (
     <div className="flex flex-col items-center justify-center gap-4 py-16 text-center">
-      <Debby mood="idle" size={120} />
+      <Avatar config={EMPTY_AVATAR_CONFIG} className="size-28" />
       <p className="text-ink-3 text-base font-semibold">
         Câu này chưa có nội dung.
         <br />
-        Debby đang chuẩn bị thêm câu hỏi! 🐛
+        Đang chuẩn bị thêm câu hỏi! 🐛
       </p>
     </div>
   )
@@ -173,11 +182,8 @@ function EmptyQuestion() {
 
 function QuizAppLoading() {
   return (
-    <div aria-busy="true" aria-label="Đang tải bộ câu hỏi" className="grid min-h-dvh place-items-center">
-      <div className="flex animate-pulse flex-col items-center gap-4">
-        <Debby mood="idle" size={120} />
-        <p className="text-ink-3 t-caption">Đang tải tiến độ…</p>
-      </div>
+    <div aria-busy="true" aria-label="Đang tải bộ câu hỏi" className="flex min-h-dvh items-center justify-center">
+      <BeatLoader color="var(--ink-4)" size={10} />
     </div>
   )
 }
