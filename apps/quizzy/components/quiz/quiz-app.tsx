@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
-import { AnimatePresence, motion } from 'motion/react'
 import { useSearchParams } from 'next/navigation'
 import type { QuizSet } from '@/models/quiz'
 import {
@@ -10,7 +9,7 @@ import {
   getQuestionById,
   isQuizCompleted,
   parseQuestionId,
-} from '@/lib/questions'
+} from '@/lib/questions/quiz-helpers'
 import { useHasHydrated, useHydrateQuizStore, useQuizActions, useStatuses } from '@/stores/quiz-store'
 import { useQuizNavigation } from '@/hooks/use-quiz-navigation'
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
@@ -79,25 +78,16 @@ export function QuizApp({ quiz, bodyMap }: { quiz: QuizSet; bodyMap: Record<numb
                       <QuizEmptyQuestion />
                     )}
 
-                    <AnimatePresence mode="wait" initial={false}>
-                      <motion.div
-                        key={currentId}
-                        initial={{ opacity: 0, y: 8 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -8 }}
-                        transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
-                        className="flex flex-col gap-7"
-                      >
-                        {bodyMap[currentId] ? (
-                          <div className="cq-md" dangerouslySetInnerHTML={{ __html: bodyMap[currentId]! }} />
-                        ) : null}
+                    <div className="flex flex-col gap-7">
+                      {bodyMap[currentId] ? (
+                        <div className="cq-md" dangerouslySetInnerHTML={{ __html: bodyMap[currentId]! }} />
+                      ) : null}
 
-                        {current.choices && correctKey ? (
-                          <QuizChoices choices={current.choices} correctKey={correctKey} currentId={currentId} />
-                        ) : null}
-                        <QuizExplanation correctKey={correctKey} explanation={current.explanation ?? null} />
-                      </motion.div>
-                    </AnimatePresence>
+                      {current.choices && correctKey ? (
+                        <QuizChoices choices={current.choices} correctKey={correctKey} currentId={currentId} />
+                      ) : null}
+                      <QuizExplanation correctKey={correctKey} explanation={current.explanation ?? null} />
+                    </div>
                   </div>
                 </div>
               </main>

@@ -1,15 +1,11 @@
 'use client'
 
 import { useEffect, useState, type ReactNode } from 'react'
-import dynamic from 'next/dynamic'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import type { ChoiceKey } from '@/models/quiz'
 import { useResult } from '@/stores/quiz-store'
 import { cn } from '@/lib/utils'
 
-const Confetti = dynamic(() => import('./confetti').then((m) => m.Confetti), { ssr: false })
-
-const BURST_MS = 2200
 const SHAKE_MS = 600
 
 export function QuizFeedback({
@@ -23,18 +19,14 @@ export function QuizFeedback({
 }) {
   const result = useResult(correctKey)
   const reduce = useReducedMotion()
-  const [burst, setBurst] = useState(false)
   const [shake, setShake] = useState(false)
 
   useEffect(() => {
-    if (result === 'idle') return
-
-    if (result === 'correct') {
-      setBurst(true)
-      const t = window.setTimeout(() => setBurst(false), BURST_MS)
-      return () => window.clearTimeout(t)
+    if (result === 'idle') {
+      setShake(false)
+      return
     }
-
+    if (result === 'correct') return
     if (reduce) return
     setShake(true)
     const t = window.setTimeout(() => setShake(false), SHAKE_MS)
@@ -48,8 +40,6 @@ export function QuizFeedback({
         shake && 'animate-[cqshake_500ms_cubic-bezier(.36,.07,.19,.97)]'
       )}
     >
-      <Confetti active={burst} />
-
       <AnimatePresence>
         {result === 'correct' ? (
           <motion.div

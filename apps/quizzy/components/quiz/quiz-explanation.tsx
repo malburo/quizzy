@@ -1,11 +1,8 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
-import { AnimatePresence, motion } from 'motion/react'
 import type { ChoiceKey } from '@/models/quiz'
 import { useResult } from '@/stores/quiz-store'
 import { cn } from '@/lib/utils'
-import { slideUp } from '@/lib/motion'
 
 export function QuizExplanation({
   correctKey,
@@ -16,33 +13,10 @@ export function QuizExplanation({
 }) {
   const result = useResult(correctKey)
 
-  return (
-    <AnimatePresence>
-      {result !== 'idle' ? (
-        <ExplanationCard key={result} result={result} explanation={explanation} />
-      ) : null}
-    </AnimatePresence>
-  )
-}
-
-function ExplanationCard({
-  result,
-  explanation,
-}: {
-  result: 'correct' | 'wrong'
-  explanation: string | null
-}) {
-  const ref = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    if (window.innerWidth >= 768) return
-    ref.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
-  }, [])
+  if (result === 'idle') return null
 
   return (
-    <motion.div
-      ref={ref}
-      {...slideUp}
+    <div
       className={cn(
         'rounded-lg border-2 bg-paper p-4',
         result === 'correct' ? 'border-correct shadow-chunky-sm-correct' : 'border-wrong shadow-chunky-sm-wrong'
@@ -57,6 +31,6 @@ function ExplanationCard({
           dangerouslySetInnerHTML={{ __html: explanation }}
         />
       ) : null}
-    </motion.div>
+    </div>
   )
 }
