@@ -179,6 +179,7 @@ html {
 body {
   min-height: 100dvh;
   overflow-x: hidden;
+  padding-top: env(safe-area-inset-top);
 }
 
 /* ------------------------------------------------------------------ */
