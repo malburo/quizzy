@@ -2,11 +2,23 @@
 
 import { motion } from 'motion/react'
 import { cn } from '@/lib/utils'
-import { Button } from '@/components/ui/button'
 import { QuizzyLogo } from '@/components/ui/quizzy-logo'
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  useSidebar,
+} from '@/components/ui/sidebar'
 import { fadeUp, staggerContainer } from '@/lib/motion'
 import type { Question, QuizSet } from '@/models/quiz'
-import { useAnsweredCount, useSession, useStatuses } from '@/stores/quiz-store'
+import { useStatuses } from '@/stores/quiz-store'
+import { QuizResetDialog } from './quiz-reset-dialog'
 
 type Section = { name: string; items: Question[] }
 
@@ -22,225 +34,78 @@ function groupBySection(questions: Question[]): Section[] {
 
 export function QuizSidebar({
   quiz,
+  currentId,
   onPick,
-  onReset,
-  open,
-  onToggle,
-  onClose,
 }: {
   quiz: QuizSet
+  currentId: number
   onPick: (id: number) => void
-  onReset: () => void
-  /** `undefined` → use viewport CSS default (mobile hidden, desktop wide). */
-  open: boolean | undefined
-  onToggle: () => void
-  onClose: () => void
 }) {
   const statuses = useStatuses(quiz.id)
-  const totalAnswered = useAnsweredCount(quiz.id)
-  const { currentId } = useSession()
+  const { isMobile, setOpenMobile } = useSidebar()
 
-  // Desktop wide = open===true OR open===undefined (CSS default).
-  const showWide = open !== false
+  const handlePick = (id: number) => {
+    onPick(id)
+    if (isMobile) setOpenMobile(false)
+  }
 
   return (
-    <>
-      <div
-        onClick={onClose}
-        className={cn(
-          'fixed inset-0 z-30 bg-black/50 transition-opacity md:hidden',
-          open === true ? 'opacity-100' : 'pointer-events-none opacity-0'
-        )}
-        aria-hidden
-      />
-
-      <aside
-        className={cn(
-          'flex h-dvh flex-col bg-paper border-r border-line',
-          'transition-[width,transform] duration-200 ease-out',
-          'max-md:fixed max-md:inset-y-0 max-md:left-0 max-md:z-40 max-md:w-72 max-md:shadow-xl max-md:pt-[env(safe-area-inset-top)]',
-          'md:sticky md:top-0',
-          // Mobile: hide unless user explicitly opens.
-          open === true ? 'max-md:translate-x-0' : 'max-md:-translate-x-full',
-          // Desktop: wide unless user explicitly closes.
-          showWide ? 'md:w-72' : 'md:w-16'
-        )}
-      >
-        <div
-          className={cn(
-            'flex items-center h-14 shrink-0 border-b border-line',
-            showWide ? 'justify-between gap-2 px-3' : 'justify-center px-2'
-          )}
-        >
-          {showWide ? (
-            <>
-              <QuizzyLogo size="sm" />
-              <Button
-                type="button"
-                onClick={onToggle}
-                variant="ghost"
-                size="icon"
-                className="size-8"
-                aria-label="Đóng sidebar"
-              >
-                <PanelIcon open />
-              </Button>
-            </>
-          ) : (
-            <Button
-              type="button"
-              onClick={onToggle}
-              variant="ghost"
-              size="icon"
-              className="size-8"
-              aria-label="Mở sidebar"
-            >
-              <PanelIcon open={false} />
-            </Button>
-          )}
+    <Sidebar collapsible="offcanvas" className="max-md:pt-[env(safe-area-inset-top)]">
+      <SidebarHeader>
+        <div className="flex h-12 items-center justify-between gap-2 px-1">
+          <QuizzyLogo size="sm" />
+          <QuizResetDialog quizId={quiz.id} />
         </div>
+        <h2 className="px-2 pb-1 t-small font-extrabold text-ink leading-tight text-pretty">
+          {quiz.title}
+        </h2>
+      </SidebarHeader>
 
-        {showWide ? (
-          <>
-            <div className="pl-5 pr-3 pt-4 pb-3.5 border-b border-line">
-              <div className="flex items-center gap-3">
-                <h2 className="flex-1 min-w-0 t-small font-extrabold text-ink leading-tight text-pretty">
-                  {quiz.title}
-                </h2>
-                <Button
-                  type="button"
-                  onClick={onReset}
-                  disabled={totalAnswered === 0}
-                  variant="ghost"
-                  size="icon"
-                  className="size-8 shrink-0"
-                  aria-label="Xóa toàn bộ tiến độ"
-                  title="Xóa toàn bộ tiến độ"
-                >
-                  <ResetIcon />
-                </Button>
-              </div>
-            </div>
-
-            <motion.nav
-              variants={staggerContainer(0.02)}
-              initial="hidden"
-              animate="show"
-              className="flex-1 overflow-y-auto px-2 py-2.5"
-              aria-label="Danh sách câu hỏi"
-            >
-              {groupBySection(quiz.questions).map((sec) => (
-                <div key={sec.name} className="mb-2.5">
-                  <div className="t-caption text-ink-3 px-2.5 pt-2.5 pb-1.5">
-                    {sec.name}
-                  </div>
+      <SidebarContent>
+        {groupBySection(quiz.questions).map((sec) => (
+          <SidebarGroup key={sec.name}>
+            <SidebarGroupLabel>{sec.name}</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <motion.div
+                variants={staggerContainer(0.02)}
+                initial="hidden"
+                animate="show"
+              >
+                <SidebarMenu>
                   {sec.items.map((q) => {
                     const status = statuses[q.id] ?? 'idle'
                     const isCurrent = q.id === currentId
                     return (
-                      <motion.button
-                        key={q.id}
-                        variants={fadeUp}
-                        type="button"
-                        onClick={() => {
-                          onPick(q.id)
-                          if (window.innerWidth < 768) onClose()
-                        }}
-                        title={q.title}
-                        className={cn(
-                          'group flex items-center gap-2.5 w-full px-2.5 py-2.5 rounded-sm cursor-pointer text-left font-display t-small font-semibold text-ink-2 transition-[background,color] duration-150 ease-out',
-                          'hover:bg-paper-2 hover:text-ink',
-                          isCurrent && 'bg-paper-2 text-ink'
-                        )}
-                      >
-                        <span
-                          className={cn(
-                            't-caption w-5.5 shrink-0 text-center',
-                            isCurrent ? 'text-brand-purple font-extrabold' : 'text-ink-3'
-                          )}
-                        >
-                          {String(q.id).padStart(2, '0')}
-                        </span>
-                        <span className="flex-1 min-w-0 truncate">{q.title}</span>
-                        <StatusDot status={status} isCurrent={isCurrent} />
-                      </motion.button>
+                      <motion.div key={q.id} variants={fadeUp}>
+                        <SidebarMenuItem>
+                          <SidebarMenuButton
+                            isActive={isCurrent}
+                            onClick={() => handlePick(q.id)}
+                            title={q.title}
+                            className="t-small font-display font-semibold"
+                          >
+                            <span
+                              className={cn(
+                                't-caption w-5.5 shrink-0 text-center',
+                                isCurrent ? 'text-brand-purple font-extrabold' : 'text-ink-3'
+                              )}
+                            >
+                              {String(q.id).padStart(2, '0')}
+                            </span>
+                            <span className="flex-1 min-w-0 truncate">{q.title}</span>
+                            <StatusDot status={status} isCurrent={isCurrent} />
+                          </SidebarMenuButton>
+                        </SidebarMenuItem>
+                      </motion.div>
                     )
                   })}
-                </div>
-              ))}
-            </motion.nav>
-          </>
-        ) : (
-          <motion.nav
-            variants={staggerContainer(0.02)}
-            initial="hidden"
-            animate="show"
-            className="flex-1 overflow-y-auto py-2 hidden md:flex md:flex-col md:items-center md:gap-1"
-            aria-label="Danh sách câu hỏi"
-          >
-            {quiz.questions.map((q) => {
-              const status = statuses[q.id] ?? 'idle'
-              const isCurrent = q.id === currentId
-              return (
-                <motion.button
-                  key={q.id}
-                  variants={fadeUp}
-                  type="button"
-                  onClick={() => onPick(q.id)}
-                  title={q.title}
-                  className={cn(
-                    'grid size-9 place-items-center rounded-md t-caption transition-colors',
-                    isCurrent
-                      ? 'bg-paper-2 text-brand-purple-deep'
-                      : status === 'correct'
-                        ? 'text-correct-deep hover:bg-paper-2'
-                        : status === 'wrong'
-                          ? 'text-wrong-deep hover:bg-paper-2'
-                          : 'text-ink-3 hover:bg-paper-2 hover:text-ink'
-                  )}
-                >
-                  {String(q.id).padStart(2, '0')}
-                </motion.button>
-              )
-            })}
-          </motion.nav>
-        )}
-      </aside>
-    </>
-  )
-}
-
-function PanelIcon({ open }: { open: boolean }) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className="size-4.5"
-    >
-      {open ? <path d="m15 18-6-6 6-6" /> : <path d="m9 18 6-6-6-6" />}
-    </svg>
-  )
-}
-
-
-function ResetIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className="size-4.5"
-    >
-      <path d="M3 12a9 9 0 1 0 3-6.7" />
-      <path d="M3 4v5h5" />
-    </svg>
+                </SidebarMenu>
+              </motion.div>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        ))}
+      </SidebarContent>
+    </Sidebar>
   )
 }
 

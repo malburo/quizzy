@@ -2,10 +2,13 @@
 
 import Link from 'next/link'
 import { motion } from 'motion/react'
+import { usePathname, useRouter } from 'next/navigation'
 import { Avatar, type AvatarConfig } from '@/components/avatar/avatar'
 import { Button } from '@/components/ui/button'
 import { GitHubStarButton } from '@/components/ui/github-star-button'
 import { fadeUp, popIn, staggerContainer } from '@/lib/motion'
+import type { QuizSet } from '@/models/quiz'
+import { useQuizActions, useStatuses } from '@/stores/quiz-store'
 
 const PASSING_RATIO = 0.7
 
@@ -24,20 +27,25 @@ const BASE: AvatarConfig = {
 const CONFIG_HAPPY: AvatarConfig = { ...BASE, Expression: 11 }
 const CONFIG_SAD: AvatarConfig = { ...BASE, Expression: 12 }
 
-export function QuizResults({
-  correctCount,
-  wrongCount,
-  total,
-  onRetry,
-}: {
-  correctCount: number
-  wrongCount: number
-  total: number
-  onRetry: () => void
-}) {
+export function QuizResults({ quiz }: { quiz: QuizSet }) {
+  const statuses = useStatuses(quiz.id)
+  const { resetQuiz } = useQuizActions()
+  const router = useRouter()
+  const pathname = usePathname()
+
+  const answerable = quiz.questions.filter((q) => q.body)
+  const correctCount = answerable.filter((q) => statuses[q.id] === 'correct').length
+  const wrongCount = answerable.filter((q) => statuses[q.id] === 'wrong').length
+  const total = answerable.length
+
   const ratio = total > 0 ? correctCount / total : 0
   const passed = ratio >= PASSING_RATIO
   const percent = Math.round(ratio * 100)
+
+  const handleRetry = () => {
+    resetQuiz(quiz.id)
+    router.replace(pathname, { scroll: false })
+  }
 
   return (
     <motion.div
@@ -72,7 +80,7 @@ export function QuizResults({
       >
         <Button
           type="button"
-          onClick={onRetry}
+          onClick={handleRetry}
           variant="brand"
           size="lg"
           className="w-full"

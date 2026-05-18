@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { Avatar, type AvatarConfig } from '@/components/avatar/avatar'
+import type { ChoiceKey } from '@/models/quiz'
 import { useResult } from '@/stores/quiz-store'
 
 const BASE: Omit<AvatarConfig, 'ENG_ONLY_Zoom'> = {
@@ -37,8 +38,8 @@ const CONFIG_IDLE_SM: AvatarConfig = { ...BASE, ENG_ONLY_Zoom: 0, Expression: 5 
 const CONFIG_CORRECT_SM: AvatarConfig = { ...BASE, ENG_ONLY_Zoom: 0, Expression: 11 }
 const CONFIG_WRONG_SM: AvatarConfig = { ...BASE, ENG_ONLY_Zoom: 0, Expression: 12 }
 
-export function QuizMascotRow({ stem }: { stem?: string }) {
-  const result = useResult()
+export function QuizMascotRow({ stem, correctKey }: { stem?: string; correctKey: ChoiceKey | null }) {
+  const result = useResult(correctKey)
 
   const configMd = result === 'correct' ? CONFIG_CORRECT_MD : result === 'wrong' ? CONFIG_WRONG_MD : CONFIG_IDLE_MD
   const configSm = result === 'correct' ? CONFIG_CORRECT_SM : result === 'wrong' ? CONFIG_WRONG_SM : CONFIG_IDLE_SM

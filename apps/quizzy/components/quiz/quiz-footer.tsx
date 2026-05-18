@@ -1,15 +1,27 @@
 'use client'
 
 import { AnimatePresence, motion } from 'motion/react'
-import { useQuizActions, useResult, useSession } from '@/stores/quiz-store'
+import type { ChoiceKey } from '@/models/quiz'
+import { useQuizActions, useResult, useSelected } from '@/stores/quiz-store'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { slideUp } from '@/lib/motion'
 
-export function QuizFooter({ onContinue }: { onContinue: () => void }) {
-  const result = useResult()
-  const { canCheck } = useSession()
-  const { check } = useQuizActions()
+export function QuizFooter({
+  onContinue,
+  quizId,
+  questionId,
+  correctKey,
+}: {
+  onContinue: () => void
+  quizId: string
+  questionId: number
+  correctKey: ChoiceKey | null
+}) {
+  const result = useResult(correctKey)
+  const selected = useSelected()
+  const canCheck = selected != null
+  const { submit } = useQuizActions()
 
   const tint =
     result === 'correct'
@@ -37,7 +49,7 @@ export function QuizFooter({ onContinue }: { onContinue: () => void }) {
             </Button>
             <Button
               disabled={!canCheck}
-              onClick={check}
+              onClick={() => correctKey && submit({ quizId, questionId, correctKey })}
               variant={canCheck ? 'brand' : 'muted'}
               size="md"
               className="w-full md:w-auto"

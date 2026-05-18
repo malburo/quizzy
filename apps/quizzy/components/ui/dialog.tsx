@@ -1,29 +1,102 @@
 'use client'
 
-import { useEffect } from 'react'
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+  type ReactNode,
+} from 'react'
+import { Slot } from '@radix-ui/react-slot'
 import { motion } from 'motion/react'
 import { cn } from '@/lib/utils'
 import { popIn } from '@/lib/motion'
 
+type DialogContextValue = {
+  open: boolean
+  setOpen: (open: boolean) => void
+}
+
+const DialogContext = createContext<DialogContextValue | null>(null)
+
+function useDialog() {
+  const ctx = useContext(DialogContext)
+  if (!ctx) throw new Error('Dialog subcomponents must be used inside <Dialog>')
+  return ctx
+}
+
 export function Dialog({
-  open,
-  onClose,
+  defaultOpen = false,
+  open: controlledOpen,
+  onOpenChange,
+  children,
+}: {
+  defaultOpen?: boolean
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
+  children: ReactNode
+}) {
+  const [internalOpen, setInternalOpen] = useState(defaultOpen)
+  const isControlled = controlledOpen !== undefined
+  const open = isControlled ? controlledOpen : internalOpen
+
+  const setOpen = useCallback(
+    (v: boolean) => {
+      if (!isControlled) setInternalOpen(v)
+      onOpenChange?.(v)
+    },
+    [isControlled, onOpenChange]
+  )
+
+  return <DialogContext.Provider value={{ open, setOpen }}>{children}</DialogContext.Provider>
+}
+
+export function DialogTrigger({
+  asChild,
+  children,
+  ...props
+}: React.ButtonHTMLAttributes<HTMLButtonElement> & { asChild?: boolean }) {
+  const { setOpen } = useDialog()
+  const Comp = asChild ? Slot : 'button'
+  return (
+    <Comp {...props} onClick={() => setOpen(true)}>
+      {children}
+    </Comp>
+  )
+}
+
+export function DialogClose({
+  asChild,
+  children,
+  ...props
+}: React.ButtonHTMLAttributes<HTMLButtonElement> & { asChild?: boolean }) {
+  const { setOpen } = useDialog()
+  const Comp = asChild ? Slot : 'button'
+  return (
+    <Comp {...props} onClick={() => setOpen(false)}>
+      {children}
+    </Comp>
+  )
+}
+
+export function DialogContent({
   className,
   children,
 }: {
-  open: boolean
-  onClose: () => void
   className?: string
-  children: React.ReactNode
+  children: ReactNode
 }) {
+  const { open, setOpen } = useDialog()
+
   useEffect(() => {
     if (!open) return
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose()
+      if (e.key === 'Escape') setOpen(false)
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [open, onClose])
+  }, [open, setOpen])
 
   if (!open) return null
 
@@ -34,7 +107,7 @@ export function Dialog({
       className="fixed inset-0 z-50 grid place-items-center px-4"
     >
       <div
-        onClick={onClose}
+        onClick={() => setOpen(false)}
         className="absolute inset-0 bg-ink/40 animate-[cqfadeIn_0.15s_ease-out]"
         aria-hidden
       />

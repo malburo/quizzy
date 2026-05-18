@@ -3,6 +3,7 @@
 import { useEffect, useState, type ReactNode } from 'react'
 import dynamic from 'next/dynamic'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
+import type { ChoiceKey } from '@/models/quiz'
 import { useResult } from '@/stores/quiz-store'
 import { cn } from '@/lib/utils'
 
@@ -14,11 +15,13 @@ const SHAKE_MS = 600
 export function QuizFeedback({
   className,
   children,
+  correctKey,
 }: {
   className?: string
   children: ReactNode
+  correctKey: ChoiceKey | null
 }) {
-  const result = useResult()
+  const result = useResult(correctKey)
   const reduce = useReducedMotion()
   const [burst, setBurst] = useState(false)
   const [shake, setShake] = useState(false)

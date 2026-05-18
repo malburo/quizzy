@@ -1,21 +1,20 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
-import BeatLoader from 'react-spinners/BeatLoader'
+import { useEffect, useRef } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import type { QuizSet } from '@/models/quiz'
 import { useHasHydrated, useHydrateQuizStore, useQuizActions, useStatuses } from '@/stores/quiz-store'
-import { Button } from '@/components/ui/button'
+import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
 import { QuizSidebar } from './quiz-sidebar'
 import { QuizMascotRow } from './quiz-mascot-row'
 import { QuizChoices } from './quiz-choices'
 import { QuizFooter } from './quiz-footer'
 import { QuizFeedback } from './quiz-feedback'
 import { QuizExplanation } from './quiz-explanation'
-import { QuizResetDialog } from './quiz-reset-dialog'
 import { QuizResults } from './quiz-results'
-import { Avatar } from '@/components/avatar/avatar'
+import { EmptyQuestion } from './empty-question'
+import { QuizAppLoading } from './quiz-app-loading'
 
 export function QuizApp({ quiz, bodyMap }: { quiz: QuizSet; bodyMap: Record<number, string | null> }) {
   useHydrateQuizStore()
@@ -26,45 +25,25 @@ export function QuizApp({ quiz, bodyMap }: { quiz: QuizSet; bodyMap: Record<numb
   const mainRef = useRef<HTMLElement>(null)
 
   const hasHydrated = useHasHydrated()
-  const { setSession, resetQuiz } = useQuizActions()
+  const { resetActive } = useQuizActions()
   const statuses = useStatuses(quiz.id)
-  // `undefined` = follow viewport default (mobile hidden, desktop wide) via CSS.
-  // Toggling reads the viewport once, then flips explicitly.
-  const [sidebarOpen, setSidebarOpen] = useState<boolean | undefined>(undefined)
-  const [resetDialogOpen, setResetDialogOpen] = useState(false)
-  const toggleSidebar = () =>
-    setSidebarOpen((prev) => (prev === undefined ? window.innerWidth < 768 : !prev))
 
-  // Resolve current question from URL, falling back to first answerable.
   const rawId = parseInt(searchParams.get('id') ?? '', 10)
   const knownId = quiz.questions.some((q) => q.id === rawId) ? rawId : null
   const currentId = knownId ?? quiz.questions.find((q) => q.body)?.id ?? quiz.questions[0]?.id ?? 0
   const current = quiz.questions.find((q) => q.id === currentId) ?? quiz.questions[0]
   const correctKey = current.choices?.find((c) => c.correct)?.key ?? null
 
-  // Answerable = questions that actually have content to answer.
   const answerable = quiz.questions.filter((q) => q.body)
   const isCompleted = answerable.length > 0 && answerable.every((q) => statuses[q.id])
   const showResults = isCompleted && knownId === null
 
-  const correctCount = answerable.filter((q) => statuses[q.id] === 'correct').length
-  const wrongCount = answerable.filter((q) => statuses[q.id] === 'wrong').length
-  const totalAnswered = correctCount + wrongCount
-
-  // Sync URL → store on every navigation. Skip when showing results (no active question).
   useEffect(() => {
-    if (showResults) return
-    setSession({
-      quizId: quiz.id,
-      questionId: currentId,
-      correctKey,
-      explanation: current.explanation ?? null,
-    })
-  }, [quiz.id, currentId, correctKey, current.explanation, setSession, showResults])
+    resetActive()
+  }, [currentId, resetActive])
 
   const handleNext = () => {
     mainRef.current?.scrollTo({ top: 0 })
-    // 1) Try forward unanswered, 2) wrap to backward unanswered, 3) all done → clear `?id=` to show results.
     const forward = answerable.find((q) => q.id > currentId && !statuses[q.id])
     if (forward) {
       router.replace(`${pathname}?id=${forward.id}`, { scroll: false })
@@ -78,114 +57,57 @@ export function QuizApp({ quiz, bodyMap }: { quiz: QuizSet; bodyMap: Record<numb
     router.replace(pathname, { scroll: false })
   }
 
-  const handleReset = () => {
-    resetQuiz(quiz.id)
-    setResetDialogOpen(false)
-    router.replace(pathname, { scroll: false })
-  }
-
   if (!hasHydrated) return <QuizAppLoading />
 
   return (
-    <QuizFeedback className="flex min-h-svh">
-      <QuizSidebar
-        quiz={quiz}
-        open={sidebarOpen}
-        onToggle={toggleSidebar}
-        onClose={() => setSidebarOpen(false)}
-        onPick={(id) => router.replace(`${pathname}?id=${id}`, { scroll: false })}
-        onReset={() => setResetDialogOpen(true)}
-      />
+    <SidebarProvider>
+      <QuizFeedback className="flex min-h-svh w-full" correctKey={correctKey}>
+        <QuizSidebar
+          quiz={quiz}
+          currentId={currentId}
+          onPick={(id) => router.replace(`${pathname}?id=${id}`, { scroll: false })}
+        />
 
-      <div className="flex min-w-0 flex-1 flex-col max-md:h-svh md:h-dvh">
-        {showResults ? (
-          <main className="flex-1 overflow-y-auto">
-            <QuizResults
-              correctCount={correctCount}
-              wrongCount={wrongCount}
-              total={answerable.length}
-              onRetry={handleReset}
-            />
-          </main>
-        ) : (
-          <>
-            <main ref={mainRef} className="flex-1 overflow-y-auto">
-              <div className="mx-auto flex min-h-full w-full max-w-4xl flex-col px-5 pt-6 pb-6 md:justify-center md:px-8 md:py-6">
-                <Button
-                  type="button"
-                  onClick={toggleSidebar}
-                  variant="ghost"
-                  size="icon"
-                  aria-label="Mở sidebar"
-                  className="mb-4 self-start md:hidden"
-                >
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="size-5">
-                    <line x1="3" y1="7" x2="21" y2="7" />
-                    <line x1="3" y1="12" x2="15" y2="12" />
-                    <line x1="3" y1="17" x2="18" y2="17" />
-                  </svg>
-                </Button>
-
-                <AnimatePresence mode="wait" initial={false}>
-                  <motion.div
-                    key={currentId}
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -8 }}
-                    transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-                    className="flex flex-col gap-7"
-                  >
-                    {current.stem ? <QuizMascotRow stem={current.stem} /> : <EmptyQuestion />}
-
-                    {bodyMap[currentId] ? (
-                      <div className="cq-md" dangerouslySetInnerHTML={{ __html: bodyMap[currentId]! }} />
-                    ) : null}
-
-                    {current.choices && correctKey ? <QuizChoices choices={current.choices} /> : null}
-                    <QuizExplanation />
-                  </motion.div>
-                </AnimatePresence>
-              </div>
+        <div className="flex min-w-0 flex-1 flex-col max-md:h-svh md:h-dvh">
+          {showResults ? (
+            <main className="flex-1 overflow-y-auto">
+              <QuizResults quiz={quiz} />
             </main>
+          ) : (
+            <>
+              <main ref={mainRef} className="flex-1 overflow-y-auto">
+                <div className="mx-auto flex min-h-full w-full max-w-4xl flex-col px-5 pt-6 pb-6 md:justify-center md:px-8 md:py-6">
+                  <SidebarTrigger className="mb-4 self-start md:hidden" />
 
-            <QuizFooter onContinue={handleNext} />
-          </>
-        )}
-      </div>
+                  <AnimatePresence mode="wait" initial={false}>
+                    <motion.div
+                      key={currentId}
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -8 }}
+                      transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+                      className="flex flex-col gap-7"
+                    >
+                      {current.stem ? <QuizMascotRow stem={current.stem} correctKey={correctKey} /> : <EmptyQuestion />}
 
-      <QuizResetDialog
-        open={resetDialogOpen}
-        onClose={() => setResetDialogOpen(false)}
-        onConfirm={handleReset}
-        answeredCount={totalAnswered}
-      />
-    </QuizFeedback>
-  )
-}
+                      {bodyMap[currentId] ? (
+                        <div className="cq-md" dangerouslySetInnerHTML={{ __html: bodyMap[currentId]! }} />
+                      ) : null}
 
-const EMPTY_AVATAR_CONFIG = {
-  Headshape: 5, SkinTone: 2, Body: 1, EyeColor: 947303,
-  MainHair: 64, MainHairColor: 2, ClothingColor: 1, BackgroundColor: 0,
-  ENG_ONLY_Zoom: 1, Expression: 5,
-}
+                      {current.choices && correctKey ? (
+                        <QuizChoices choices={current.choices} correctKey={correctKey} currentId={currentId} />
+                      ) : null}
+                      <QuizExplanation correctKey={correctKey} explanation={current.explanation ?? null} />
+                    </motion.div>
+                  </AnimatePresence>
+                </div>
+              </main>
 
-function EmptyQuestion() {
-  return (
-    <div className="flex flex-col items-center justify-center gap-4 py-16 text-center">
-      <Avatar config={EMPTY_AVATAR_CONFIG} className="size-28" />
-      <p className="text-ink-3 text-base font-semibold">
-        Câu này chưa có nội dung.
-        <br />
-        Đang chuẩn bị thêm câu hỏi! 🐛
-      </p>
-    </div>
-  )
-}
-
-function QuizAppLoading() {
-  return (
-    <div aria-busy="true" aria-label="Đang tải bộ câu hỏi" className="flex min-h-dvh items-center justify-center">
-      <BeatLoader color="var(--ink-4)" size={10} />
-    </div>
+              <QuizFooter onContinue={handleNext} quizId={quiz.id} questionId={currentId} correctKey={correctKey} />
+            </>
+          )}
+        </div>
+      </QuizFeedback>
+    </SidebarProvider>
   )
 }

@@ -1,14 +1,23 @@
 'use client'
 
 import { motion, AnimatePresence } from 'motion/react'
-import type { Choice } from '@/models/quiz'
-import { useQuizActions, useSession } from '@/stores/quiz-store'
+import type { Choice, ChoiceKey } from '@/models/quiz'
+import { useChecked, useQuizActions, useSelected } from '@/stores/quiz-store'
 import { cn } from '@/lib/utils'
 
 
-export function QuizChoices({ choices }: { choices: Choice[] }) {
-  const { selected, checked, correctKey, currentId } = useSession()
-  const { select } = useQuizActions()
+export function QuizChoices({
+  choices,
+  correctKey,
+  currentId,
+}: {
+  choices: Choice[]
+  correctKey: ChoiceKey
+  currentId: number
+}) {
+  const selected = useSelected()
+  const checked = useChecked()
+  const { pick } = useQuizActions()
 
   return (
     <div role="radiogroup" aria-label="Đáp án" className="grid grid-cols-1 md:grid-cols-2 gap-3.5 mt-1">
@@ -35,7 +44,7 @@ export function QuizChoices({ choices }: { choices: Choice[] }) {
                 role="radio"
                 aria-checked={selected === c.key}
                 disabled={checked}
-                onClick={() => !checked && select(c.key)}
+                onClick={() => !checked && pick(c.key)}
                 variants={{
                   hidden: { opacity: 0, y: 10 },
                   show: { opacity: 1, y: 0, transition: { duration: 0.28, ease: [0.22, 1, 0.36, 1] } },

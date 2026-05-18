@@ -2,13 +2,19 @@
 
 import { useEffect, useRef } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
-import { useExplanation, useResult } from '@/stores/quiz-store'
+import type { ChoiceKey } from '@/models/quiz'
+import { useResult } from '@/stores/quiz-store'
 import { cn } from '@/lib/utils'
 import { slideUp } from '@/lib/motion'
 
-export function QuizExplanation() {
-  const result = useResult()
-  const explanation = useExplanation()
+export function QuizExplanation({
+  correctKey,
+  explanation,
+}: {
+  correctKey: ChoiceKey | null
+  explanation: string | null
+}) {
+  const result = useResult(correctKey)
 
   return (
     <AnimatePresence>
@@ -24,7 +30,7 @@ function ExplanationCard({
   explanation,
 }: {
   result: 'correct' | 'wrong'
-  explanation: string | undefined
+  explanation: string | null
 }) {
   const ref = useRef<HTMLDivElement>(null)
 
