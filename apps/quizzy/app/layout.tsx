@@ -5,6 +5,7 @@ import './globals.css'
 
 export const viewport: Viewport = {
   viewportFit: 'cover',
+  themeColor: '#6b5bd2',
 }
 
 const nunito = Nunito({
@@ -27,6 +28,11 @@ export const metadata: Metadata = {
     template: '%s | Quizzy',
   },
   description: 'Học code, tiếng Anh và nhiều thứ vui khác bằng trắc nghiệm cùng Debby.',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'Quizzy',
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
