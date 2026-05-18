@@ -2,13 +2,14 @@
 
 import Link from 'next/link'
 import { motion } from 'motion/react'
-import { usePathname, useRouter } from 'next/navigation'
 import { Avatar, type AvatarConfig } from '@/components/avatar/avatar'
 import { Button } from '@/components/ui/button'
-import { GitHubStarButton } from '@/components/ui/github-star-button'
+import { GitHubStarButton } from '@/components/brand/github-star-button'
 import { fadeUp, popIn, staggerContainer } from '@/lib/motion'
+import { getAnswerableQuestions } from '@/lib/questions'
 import type { QuizSet } from '@/models/quiz'
 import { useQuizActions, useStatuses } from '@/stores/quiz-store'
+import { useQuizNavigation } from '@/hooks/use-quiz-navigation'
 
 const PASSING_RATIO = 0.7
 
@@ -30,10 +31,9 @@ const CONFIG_SAD: AvatarConfig = { ...BASE, Expression: 12 }
 export function QuizResults({ quiz }: { quiz: QuizSet }) {
   const statuses = useStatuses(quiz.id)
   const { resetQuiz } = useQuizActions()
-  const router = useRouter()
-  const pathname = usePathname()
+  const { clearQuestion } = useQuizNavigation(quiz)
 
-  const answerable = quiz.questions.filter((q) => q.body)
+  const answerable = getAnswerableQuestions(quiz)
   const correctCount = answerable.filter((q) => statuses[q.id] === 'correct').length
   const wrongCount = answerable.filter((q) => statuses[q.id] === 'wrong').length
   const total = answerable.length
@@ -44,7 +44,7 @@ export function QuizResults({ quiz }: { quiz: QuizSet }) {
 
   const handleRetry = () => {
     resetQuiz(quiz.id)
-    router.replace(pathname, { scroll: false })
+    clearQuestion()
   }
 
   return (

@@ -2,7 +2,7 @@
 
 import { motion } from 'motion/react'
 import { cn } from '@/lib/utils'
-import { QuizzyLogo } from '@/components/ui/quizzy-logo'
+import { QuizzyLogo } from '@/components/brand/quizzy-logo'
 import {
   Sidebar,
   SidebarContent,
@@ -19,6 +19,7 @@ import { fadeUp, staggerContainer } from '@/lib/motion'
 import type { Question, QuizSet } from '@/models/quiz'
 import { useStatuses } from '@/stores/quiz-store'
 import { QuizResetDialog } from './quiz-reset-dialog'
+import { StatusDot } from './status-dot'
 
 type Section = { name: string; items: Question[] }
 
@@ -54,7 +55,7 @@ export function QuizSidebar({
       <SidebarHeader>
         <div className="flex h-12 items-center justify-between gap-2 px-1">
           <QuizzyLogo size="sm" />
-          <QuizResetDialog quizId={quiz.id} />
+          <QuizResetDialog quiz={quiz} />
         </div>
         <h2 className="px-2 pb-1 t-small font-extrabold text-ink leading-tight text-pretty">
           {quiz.title}
@@ -109,36 +110,3 @@ export function QuizSidebar({
   )
 }
 
-function CheckIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.4" strokeLinecap="round" strokeLinejoin="round" className="size-3">
-      <path d="M5 12.5l5 5 9-11" />
-    </svg>
-  )
-}
-
-function XIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.4" strokeLinecap="round" className="size-3">
-      <path d="M6 6l12 12M18 6L6 18" />
-    </svg>
-  )
-}
-
-function StatusDot({ status, isCurrent }: { status: 'idle' | 'correct' | 'wrong'; isCurrent: boolean }) {
-  return (
-    <span className="size-5 shrink-0 grid place-items-center">
-      {status === 'correct' ? (
-        <span className="text-correct">
-          <CheckIcon />
-        </span>
-      ) : status === 'wrong' ? (
-        <span className="text-wrong">
-          <XIcon />
-        </span>
-      ) : isCurrent ? (
-        <span className="size-2 rounded-full bg-brand-purple animate-[cqpulse_1.6s_ease-in-out_infinite]" />
-      ) : null}
-    </span>
-  )
-}

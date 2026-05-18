@@ -15,7 +15,7 @@ const CONFIG: AvatarConfig = {
   Expression: 5,
 }
 
-export function EmptyQuestion() {
+export function QuizEmptyQuestion() {
   return (
     <div className="flex flex-col items-center justify-center gap-4 py-16 text-center">
       <Avatar config={CONFIG} className="size-28" />

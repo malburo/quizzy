@@ -1,19 +1,19 @@
 'use client'
 
-import { usePathname, useRouter } from 'next/navigation'
 import { Dialog, DialogClose, DialogContent, DialogTrigger } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
+import type { QuizSet } from '@/models/quiz'
 import { useAnsweredCount, useQuizActions } from '@/stores/quiz-store'
+import { useQuizNavigation } from '@/hooks/use-quiz-navigation'
 
-export function QuizResetDialog({ quizId }: { quizId: string }) {
-  const answeredCount = useAnsweredCount(quizId)
+export function QuizResetDialog({ quiz }: { quiz: QuizSet }) {
+  const answeredCount = useAnsweredCount(quiz.id)
   const { resetQuiz } = useQuizActions()
-  const router = useRouter()
-  const pathname = usePathname()
+  const { clearQuestion } = useQuizNavigation(quiz)
 
   const handleConfirm = () => {
-    resetQuiz(quizId)
-    router.replace(pathname, { scroll: false })
+    resetQuiz(quiz.id)
+    clearQuestion()
   }
 
   return (
