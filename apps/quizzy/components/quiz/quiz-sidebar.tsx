@@ -58,7 +58,7 @@ export function QuizSidebar({
         className={cn(
           'flex h-dvh flex-col bg-paper border-r border-line',
           'transition-[width,transform] duration-200 ease-out',
-          'max-md:fixed max-md:inset-y-0 max-md:left-0 max-md:z-40 max-md:w-72 max-md:shadow-xl',
+          'max-md:fixed max-md:inset-y-0 max-md:left-0 max-md:z-40 max-md:w-72 max-md:shadow-xl max-md:pt-[env(safe-area-inset-top)]',
           'md:sticky md:top-0',
           // Mobile: hide unless user explicitly opens.
           open === true ? 'max-md:translate-x-0' : 'max-md:-translate-x-full',
