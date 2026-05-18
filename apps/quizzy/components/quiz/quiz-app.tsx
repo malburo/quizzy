@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import BeatLoader from 'react-spinners/BeatLoader'
 import { AnimatePresence, motion } from 'motion/react'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
@@ -23,6 +23,7 @@ export function QuizApp({ quiz, bodyMap }: { quiz: QuizSet; bodyMap: Record<numb
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
+  const mainRef = useRef<HTMLElement>(null)
 
   const hasHydrated = useHasHydrated()
   const { setSession, resetQuiz } = useQuizActions()
@@ -62,6 +63,7 @@ export function QuizApp({ quiz, bodyMap }: { quiz: QuizSet; bodyMap: Record<numb
   }, [quiz.id, currentId, correctKey, current.explanation, setSession, showResults])
 
   const handleNext = () => {
+    mainRef.current?.scrollTo({ top: 0 })
     // 1) Try forward unanswered, 2) wrap to backward unanswered, 3) all done → clear `?id=` to show results.
     const forward = answerable.find((q) => q.id > currentId && !statuses[q.id])
     if (forward) {
@@ -107,7 +109,7 @@ export function QuizApp({ quiz, bodyMap }: { quiz: QuizSet; bodyMap: Record<numb
           </main>
         ) : (
           <>
-            <main className="flex-1 overflow-y-auto">
+            <main ref={mainRef} className="flex-1 overflow-y-auto">
               <div className="mx-auto flex min-h-full w-full max-w-4xl flex-col px-5 pt-6 pb-6 md:justify-center md:px-8 md:py-6">
                 <Button
                   type="button"
