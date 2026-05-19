@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect, useRef } from 'react'
 import type { ChoiceKey } from '@/models/quiz'
 import { useResult } from '@/stores/quiz-store'
 import { cn } from '@/lib/utils'
@@ -12,11 +13,19 @@ export function QuizExplanation({
   explanation: string | null
 }) {
   const result = useResult(correctKey)
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (result === 'idle') return
+    if (window.innerWidth >= 768) return
+    ref.current?.scrollIntoView({ behavior: 'smooth', block: 'end' })
+  }, [result])
 
   if (result === 'idle') return null
 
   return (
     <div
+      ref={ref}
       className={cn(
         'rounded-lg border-2 bg-paper p-4',
         result === 'correct' ? 'border-correct shadow-chunky-sm-correct' : 'border-wrong shadow-chunky-sm-wrong'
