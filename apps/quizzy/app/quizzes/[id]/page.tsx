@@ -6,7 +6,7 @@ import { renderQuestionBody } from '@/lib/highlight'
 import { QuizApp } from '@/components/quiz/quiz-app'
 
 export async function generateStaticParams() {
-  return getAvailableQuizIds().map((id) => ({ id }))
+  return (await getAvailableQuizIds()).map((id) => ({ id }))
 }
 
 export async function generateMetadata({
@@ -15,7 +15,7 @@ export async function generateMetadata({
   params: Promise<{ id: string }>
 }): Promise<Metadata> {
   const { id } = await params
-  const quiz = getQuizById(id)
+  const quiz = await getQuizById(id)
   if (!quiz) return {}
   return { title: quiz.title, description: quiz.desc }
 }
@@ -26,7 +26,7 @@ export default async function QuizDetailPage({
   params: Promise<{ id: string }>
 }) {
   const { id } = await params
-  const quiz = getQuizById(id)
+  const quiz = await getQuizById(id)
   if (!quiz) notFound()
 
   const bodyEntries = await Promise.all(

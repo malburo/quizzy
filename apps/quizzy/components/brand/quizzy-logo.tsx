@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import type { Route } from 'next'
 import { cn } from '@/lib/utils'
 
 type QuizzyLogoSize = 'sm' | 'md'
@@ -20,7 +21,7 @@ export function QuizzyLogo({
   className,
 }: {
   size?: QuizzyLogoSize
-  href?: string
+  href?: Route
   className?: string
 }) {
   const s = SIZE[size]

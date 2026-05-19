@@ -1,4 +1,3 @@
-import { cache } from 'react'
 import { createHighlighter, type Highlighter } from 'shiki'
 
 let highlighterPromise: Promise<Highlighter> | null = null
@@ -45,7 +44,8 @@ function renderInline(text: string): string {
   return segments.join('')
 }
 
-export const renderQuestionBody = cache(async (markdown: string): Promise<string> => {
+export async function renderQuestionBody(markdown: string): Promise<string> {
+  'use cache'
   const hl = await getHighlighter()
   const lines = markdown.split('\n')
   const out: string[] = []
@@ -89,4 +89,4 @@ export const renderQuestionBody = cache(async (markdown: string): Promise<string
     }
   }
   return out.join('')
-})
+}

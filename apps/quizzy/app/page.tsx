@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   description: 'Chọn một bộ câu hỏi để bắt đầu học.',
 }
 
-export default function HomePage() {
-  const quizzes = getAllQuizzes()
+export default async function HomePage() {
+  const quizzes = await getAllQuizzes()
   return <QuizLibrary quizzes={quizzes} />
 }

@@ -1,6 +1,7 @@
 'use client'
 
 import { usePathname, useRouter } from 'next/navigation'
+import type { Route } from 'next'
 import type { QuestionStatuses, QuizSet } from '@/models/quiz'
 import { findNextUnanswered } from '@/lib/questions/quiz-helpers'
 import { useQuizActions } from '@/stores/quiz-store'
@@ -15,7 +16,7 @@ export function useQuizNavigation(quiz: QuizSet) {
   // (which would flash a fake 'wrong' result for one frame).
   const navigate = (path: string) => {
     resetActive()
-    router.replace(path, { scroll: false })
+    router.replace(path as Route, { scroll: false })
   }
 
   return {
