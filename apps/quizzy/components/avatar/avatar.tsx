@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils'
 
 const STATE_MACHINES = ['SMAvatar', 'SMButtons']
 const TARGET_SM = 'SMButtons'
+const RIVE_LAYOUT = new Layout({ fit: Fit.Cover, alignment: Alignment.Center })
 
 export type AvatarConfig = Partial<{
   Headshape: number
@@ -72,7 +73,7 @@ export function Avatar({
     src: '/avatar_builder_25_sept2025.riv',
     stateMachines: STATE_MACHINES,
     autoplay: true,
-    layout: new Layout({ fit: Fit.Cover, alignment: Alignment.Center }),
+    layout: RIVE_LAYOUT,
   })
 
   const bounce = useStateMachineInput(rive, 'SMAvatar', 'bounce_trig')

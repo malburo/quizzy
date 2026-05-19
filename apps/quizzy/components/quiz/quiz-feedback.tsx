@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState, type ReactNode } from 'react'
-import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
+import { useReducedMotion } from 'motion/react'
 import type { ChoiceKey } from '@/models/quiz'
 import { useResult } from '@/stores/quiz-store'
 import { cn } from '@/lib/utils'
@@ -40,37 +40,6 @@ export function QuizFeedback({
         shake && 'animate-[cqshake_500ms_cubic-bezier(.36,.07,.19,.97)]'
       )}
     >
-      <AnimatePresence>
-        {result === 'correct' ? (
-          <motion.div
-            key="flash-correct"
-            className="pointer-events-none fixed inset-0 z-100"
-            style={{
-              background:
-                'radial-gradient(circle at 50% 40%, rgba(88,204,2,0.35) 0%, rgba(88,204,2,0.12) 40%, transparent 75%)',
-            }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: [0, 1, 0] }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 1.1, times: [0, 0.2, 1] }}
-          />
-        ) : null}
-        {result === 'wrong' ? (
-          <motion.div
-            key="flash-wrong"
-            className="pointer-events-none fixed inset-0 z-100"
-            style={{
-              background:
-                'radial-gradient(circle at 50% 40%, rgba(255,75,75,0.35) 0%, rgba(255,75,75,0.12) 40%, transparent 75%)',
-            }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: [0, 1, 0] }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.6, times: [0, 0.2, 1] }}
-          />
-        ) : null}
-      </AnimatePresence>
-
       {children}
     </div>
   )

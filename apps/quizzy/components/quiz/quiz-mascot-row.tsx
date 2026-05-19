@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { Avatar, type AvatarConfig } from '@/components/avatar/avatar'
+import { useIsMobile } from '@/hooks/use-mobile'
 import type { ChoiceKey } from '@/models/quiz'
 import { useResult } from '@/stores/quiz-store'
 
@@ -38,35 +39,33 @@ const CONFIG_IDLE_SM: AvatarConfig = { ...BASE, ENG_ONLY_Zoom: 0, Expression: 5 
 const CONFIG_CORRECT_SM: AvatarConfig = { ...BASE, ENG_ONLY_Zoom: 0, Expression: 11 }
 const CONFIG_WRONG_SM: AvatarConfig = { ...BASE, ENG_ONLY_Zoom: 0, Expression: 12 }
 
-export function QuizMascotRow({ stem, correctKey }: { stem?: string; correctKey: ChoiceKey | null }) {
+/** Persistent mascot — render once and keep mounted across question changes. */
+export function QuizMascot({ correctKey }: { correctKey: ChoiceKey | null }) {
   const result = useResult(correctKey)
+  const isMobile = useIsMobile()
 
-  const configMd = result === 'correct' ? CONFIG_CORRECT_MD : result === 'wrong' ? CONFIG_WRONG_MD : CONFIG_IDLE_MD
-  const configSm = result === 'correct' ? CONFIG_CORRECT_SM : result === 'wrong' ? CONFIG_WRONG_SM : CONFIG_IDLE_SM
+  const config = isMobile
+    ? (result === 'correct' ? CONFIG_CORRECT_SM : result === 'wrong' ? CONFIG_WRONG_SM : CONFIG_IDLE_SM)
+    : (result === 'correct' ? CONFIG_CORRECT_MD : result === 'wrong' ? CONFIG_WRONG_MD : CONFIG_IDLE_MD)
 
-  // Bounce only on non-idle transitions (i.e. when an answer is judged).
   const [bounceSignal, setBounceSignal] = useState(0)
   useEffect(() => {
     if (result !== 'idle') setBounceSignal((n) => n + 1)
   }, [result])
 
   return (
-    <div className="flex items-center gap-3.5 md:gap-6">
-      <Avatar
-        config={configSm}
-        bounceSignal={bounceSignal}
-        className="size-20 shrink-0 md:hidden"
-      />
-      <Avatar
-        config={configMd}
-        bounceSignal={bounceSignal}
-        className="hidden size-45 shrink-0 md:block"
-      />
-      <div className="cq-bubble flex-1 min-w-0 pb-6 pr-8">
-        <div className="t-h3 md:t-h2 text-ink text-pretty">
-          {stem}
-        </div>
-      </div>
+    <Avatar
+      config={config}
+      bounceSignal={bounceSignal}
+      className="size-20 shrink-0 md:size-45"
+    />
+  )
+}
+
+export function QuizBubble({ stem }: { stem?: string }) {
+  return (
+    <div className="cq-bubble flex-1 min-w-0 pb-6 pr-8">
+      <div className="t-h3 md:t-h2 text-ink text-pretty">{stem}</div>
     </div>
   )
 }

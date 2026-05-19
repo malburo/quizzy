@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
+import { motion } from 'motion/react'
 import { useSearchParams } from 'next/navigation'
 import type { QuizSet } from '@/models/quiz'
 import {
@@ -12,9 +13,10 @@ import {
 } from '@/lib/questions/quiz-helpers'
 import { useHasHydrated, useHydrateQuizStore, useQuizActions, useStatuses } from '@/stores/quiz-store'
 import { useQuizNavigation } from '@/hooks/use-quiz-navigation'
+import { useCrossfade } from '@/hooks/use-crossfade'
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
 import { QuizSidebar } from './quiz-sidebar'
-import { QuizMascotRow } from './quiz-mascot-row'
+import { QuizBubble, QuizMascot } from './quiz-mascot-row'
 import { QuizChoices } from './quiz-choices'
 import { QuizFooter } from './quiz-footer'
 import { QuizFeedback } from './quiz-feedback'
@@ -44,6 +46,12 @@ export function QuizApp({ quiz, bodyMap }: { quiz: QuizSet; bodyMap: Record<numb
     resetActive()
   }, [currentId, resetActive])
 
+  const { controls: contentControls, displayed: displayedId } = useCrossfade(currentId)
+  const displayed = getQuestionById(quiz, displayedId)
+  const displayedCorrectKey = getCorrectKey(displayed)
+  const displayedBody = bodyMap[displayedId]
+
+
   const handleNext = () => {
     mainRef.current?.scrollTo({ top: 0 })
     nav.goToNext(currentId, statuses)
@@ -67,28 +75,33 @@ export function QuizApp({ quiz, bodyMap }: { quiz: QuizSet; bodyMap: Record<numb
             </main>
           ) : (
             <>
-              <main ref={mainRef} className="flex-1 overflow-y-auto">
+              <main ref={mainRef} className="flex-1 overflow-x-hidden overflow-y-auto">
                 <div className="mx-auto flex min-h-full w-full max-w-4xl flex-col px-5 pt-6 pb-6 md:justify-center md:px-8 md:py-6">
                   <SidebarTrigger className="mb-4 self-start md:hidden" />
 
-                  <div className="flex flex-col gap-7">
-                    {current.stem ? (
-                      <QuizMascotRow stem={current.stem} correctKey={correctKey} />
-                    ) : (
-                      <QuizEmptyQuestion />
-                    )}
+                  {displayed.stem ? (
+                    <motion.div
+                      animate={contentControls}
+                      initial={{ opacity: 1 }}
+                      className="flex flex-col gap-7"
+                    >
+                      <div className="flex items-center gap-3.5 md:gap-6">
+                        <QuizMascot correctKey={displayedCorrectKey} />
+                        <QuizBubble stem={displayed.stem} />
+                      </div>
 
-                    <div className="flex flex-col gap-7">
-                      {bodyMap[currentId] ? (
-                        <div className="cq-md" dangerouslySetInnerHTML={{ __html: bodyMap[currentId]! }} />
+                      {displayedBody ? (
+                        <div className="cq-md" dangerouslySetInnerHTML={{ __html: displayedBody }} />
                       ) : null}
 
-                      {current.choices && correctKey ? (
-                        <QuizChoices choices={current.choices} correctKey={correctKey} currentId={currentId} />
+                      {displayed.choices && displayedCorrectKey ? (
+                        <QuizChoices choices={displayed.choices} correctKey={displayedCorrectKey} currentId={displayedId} />
                       ) : null}
-                      <QuizExplanation correctKey={correctKey} explanation={current.explanation ?? null} />
-                    </div>
-                  </div>
+                      <QuizExplanation correctKey={displayedCorrectKey} explanation={displayed.explanation ?? null} />
+                    </motion.div>
+                  ) : (
+                    <QuizEmptyQuestion />
+                  )}
                 </div>
               </main>
 
