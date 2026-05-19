@@ -4,7 +4,7 @@ FROM node:20.18-alpine AS pruner
 WORKDIR /app
 RUN npm install -g corepack@latest && corepack enable && corepack prepare pnpm@10.17.0 --activate
 COPY . .
-RUN pnpm dlx turbo@2.5.0 prune @malburo/quizzy --docker
+RUN pnpm dlx turbo@2.9.14 prune @malburo/quizzy --docker
 
 FROM node:20.18-alpine AS deps
 WORKDIR /app
