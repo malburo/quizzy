@@ -1,10 +1,10 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Avatar, type AvatarConfig } from '@/components/avatar/avatar'
-import { useIsMobile } from '@/hooks/use-mobile'
-import type { ChoiceKey } from '@/models/quiz'
-import { useResult } from '@/stores/quiz-store'
+import { Avatar, type AvatarConfig } from '@/components/avatar'
+import { useIsMobile } from '@/hooks'
+import type { ChoiceKey } from '@/models'
+import { useResult } from '@/stores'
 
 const BASE: Omit<AvatarConfig, 'ENG_ONLY_Zoom'> = {
   Headshape: 5,

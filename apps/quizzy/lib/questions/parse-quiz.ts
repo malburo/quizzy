@@ -1,5 +1,5 @@
 import matter from 'gray-matter'
-import type { Choice, ChoiceKey, Question, QuizSet } from '@/models/quiz'
+import type { Choice, ChoiceKey, Question, QuizSet } from '@/models'
 
 // Match: ### 7. Title text
 const Q_HEADING = /^###\s+(\d+)\.\s+(.+)$/

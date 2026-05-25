@@ -1,9 +1,9 @@
 'use client'
 
-import type { ChoiceKey } from '@/models/quiz'
-import { useQuizActions, useResult, useSelected } from '@/stores/quiz-store'
+import type { ChoiceKey } from '@/models'
+import { useQuizActions, useResult, useSelected } from '@/stores'
 import { cn } from '@/lib/utils'
-import { Button } from '@/components/ui/button'
+import { Button } from '@/components/ui'
 
 export function QuizFooter({
   onContinue,

@@ -1,8 +1,8 @@
 'use client'
 
 import { motion } from 'motion/react'
-import type { Choice, ChoiceKey } from '@/models/quiz'
-import { useChecked, useQuizActions, useSelected } from '@/stores/quiz-store'
+import type { Choice, ChoiceKey } from '@/models'
+import { useChecked, useQuizActions, useSelected } from '@/stores'
 import { cn } from '@/lib/utils'
 
 

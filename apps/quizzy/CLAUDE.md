@@ -15,14 +15,21 @@ No test suite.
 
 ## Architecture
 
-Next.js 15 App Router, React 19, TypeScript, Tailwind v4. Self-contained: no shared portfolio code beyond the monorepo tooling.
+Next.js 16 App Router, React 19, TypeScript, Tailwind v4. Self-contained: no shared portfolio code beyond the monorepo tooling.
 
-### Routes
+### Next.js 16 features enabled (`next.config.ts`)
 
-- `/` — library (grid of `CollectionCard`) — the landing page
-- `/quizzes` — redirects to `/`
-- `/quizzes/[id]` — quiz page; `?id=<questionId>` selects current question
-- `/playground-avatar` — Rive avatar tuner (config builder + JSON export)
+- `reactCompiler: true` — React Compiler auto-memoizes; do NOT hand-write `useMemo`/`useCallback`/`memo` for pure perf.
+- `cacheComponents: true` — opts into Next 16's component-level caching (PPR-style). Server Components are statically prerendered where possible, with dynamic boundaries for `useSearchParams`/cookies.
+- `typedRoutes: true` — `Link`/`router.push` get type-safe routes. `link.d.ts` is regenerated lazily by Turbopack on first visit, or eagerly by `next build`.
+- `output: 'standalone'` — Docker-friendly self-contained build.
+
+### Routes (Server Components by default)
+
+- `/` — RSC. Calls `getAllQuizzes()` (server), renders `<QuizLibrary>` (client island for hydration-gated UI).
+- `/quizzes` — RSC. `redirect('/')`.
+- `/quizzes/[id]` — RSC. `generateStaticParams` + `generateMetadata`. Renders body markdown to HTML server-side via Shiki/marked, passes `bodyMap` into `<QuizApp>` client island. `params` is `Promise<{ id: string }>` (Next 15+ async).
+- `/playground-avatar` — Client page (Rive needs `canvas`, dynamic-imports `AvatarPlayground` with `ssr: false`).
 
 ### Data layer
 
@@ -140,7 +147,46 @@ These cannot easily become React components due to pseudo-element/nested selecto
 
 ## Conventions
 
-- Pages are Client Components when they need hooks/browser APIs. The quiz pages dynamically import `QuizApp` and `AvatarPlayground` (`ssr: false`) because they use `localStorage`/`canvas`.
+### Folder structure + barrels
+
+Components are grouped by **feature** (`avatar/`, `brand/`, `debby/`, `library/`, `quiz/`, `ui/`), not by route — many components are shared across pages (e.g. `Avatar` lives in both library hero and quiz mascot row).
+
+```
+components/
+  avatar/   brand/   debby/   library/   quiz/   ui/
+hooks/
+models/
+stores/
+lib/
+  questions/
+```
+
+Every folder has an `index.ts` barrel **except** `app/` (Next routing). Import via the barrel, not the deep path:
+
+```ts
+import { Button, Input } from '@/components/ui'         // ✅
+import { Button } from '@/components/ui/button'         // ❌
+
+import type { QuizSet } from '@/models'                 // ✅
+import { useStatuses } from '@/stores'                  // ✅
+import { useQuizNavigation } from '@/hooks'             // ✅
+import { getAllQuizzes } from '@/lib/questions'         // ✅
+```
+
+**Exception — `dynamic()` imports keep deep paths** to preserve code splitting. Importing through a barrel pulls the whole chunk:
+
+```ts
+// app/playground-avatar/page.tsx
+const AvatarPlayground = dynamic(
+  () => import('@/components/avatar/avatar-playground').then((m) => m.AvatarPlayground),
+  { ssr: false },
+)
+```
+
+### Other rules
+
+- React Compiler is on — do NOT hand-write `useMemo`/`useCallback`/`memo` for pure perf wins (only when needed for non-perf reasons like ref-equality).
+- Pages are Server Components by default. Switch to `'use client'` only when the page needs hooks/browser APIs. Heavy client-only widgets (Rive, canvas) are dynamic-imported with `ssr: false`.
 - Form-style controlled inputs use shadcn `Input` + `Label`. Validation state via `aria-invalid` (not class swap).
 - `cn()` from `@/lib/utils` for all conditional class merging. Never template literals — Tailwind v4 scanner needs literal classes (the `LEVEL` map in `collection-card.tsx` is the pattern for variant-driven classes).
 - File naming: kebab-case, singular for one-item components (`collection-card`), plural/descriptive for collections (`quiz-library`).

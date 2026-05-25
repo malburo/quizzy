@@ -2,7 +2,7 @@
 
 import { motion } from 'motion/react'
 import { cn } from '@/lib/utils'
-import { QuizzyLogo } from '@/components/brand/quizzy-logo'
+import { QuizzyLogo } from '@/components/brand'
 import {
   Sidebar,
   SidebarContent,
@@ -14,10 +14,10 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from '@/components/ui/sidebar'
+} from '@/components/ui'
 import { fadeUp, staggerContainer } from '@/lib/motion'
-import type { Question, QuizSet } from '@/models/quiz'
-import { useStatuses } from '@/stores/quiz-store'
+import type { Question, QuizSet } from '@/models'
+import { useStatuses } from '@/stores'
 import { QuizResetDialog } from './quiz-reset-dialog'
 import { StatusDot } from './status-dot'
 

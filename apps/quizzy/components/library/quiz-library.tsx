@@ -3,13 +3,13 @@
 import dynamic from 'next/dynamic'
 import { useMemo, useState } from 'react'
 import { motion } from 'motion/react'
-import type { QuizSection, QuizSet } from '@/models/quiz'
-import { Input } from '@/components/ui/input'
-import { GitHubStarButton } from '@/components/brand/github-star-button'
-import { QuizzyLogo } from '@/components/brand/quizzy-logo'
+import type { QuizSection, QuizSet } from '@/models'
+import { Input } from '@/components/ui'
+import { GitHubStarButton } from '@/components/brand'
+import { QuizzyLogo } from '@/components/brand'
 import { fadeUp, staggerContainer } from '@/lib/motion'
 import BeatLoader from 'react-spinners/BeatLoader'
-import { useHasHydrated, useHydrateQuizStore } from '@/stores/quiz-store'
+import { useHasHydrated, useHydrateQuizStore } from '@/stores'
 import { CollectionCard } from './collection-card'
 
 const SECTION_ORDER: QuizSection[] = ['đang học', 'khám phá', 'đã hoàn thành']

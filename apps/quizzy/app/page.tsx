@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { getAllQuizzes } from '@/lib/questions'
-import { QuizLibrary } from '@/components/library/quiz-library'
+import { QuizLibrary } from '@/components/library'
 
 export const metadata: Metadata = {
   title: 'Quizzy — Quiz nhỏ mỗi ngày',

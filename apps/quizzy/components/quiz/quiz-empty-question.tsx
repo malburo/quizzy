@@ -1,6 +1,6 @@
 'use client'
 
-import { Avatar, type AvatarConfig } from '@/components/avatar/avatar'
+import { Avatar, type AvatarConfig } from '@/components/avatar'
 
 const CONFIG: AvatarConfig = {
   Headshape: 5,

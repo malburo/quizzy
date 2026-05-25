@@ -1,10 +1,10 @@
 'use client'
 
-import { Dialog, DialogClose, DialogContent, DialogTrigger } from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
-import type { QuizSet } from '@/models/quiz'
-import { useAnsweredCount, useQuizActions } from '@/stores/quiz-store'
-import { useQuizNavigation } from '@/hooks/use-quiz-navigation'
+import { Dialog, DialogClose, DialogContent, DialogTrigger } from '@/components/ui'
+import { Button } from '@/components/ui'
+import type { QuizSet } from '@/models'
+import { useAnsweredCount, useQuizActions } from '@/stores'
+import { useQuizNavigation } from '@/hooks'
 
 export function QuizResetDialog({ quiz }: { quiz: QuizSet }) {
   const answeredCount = useAnsweredCount(quiz.id)

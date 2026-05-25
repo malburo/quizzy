@@ -2,14 +2,14 @@
 
 import Link from 'next/link'
 import { motion } from 'motion/react'
-import { Avatar, type AvatarConfig } from '@/components/avatar/avatar'
-import { Button } from '@/components/ui/button'
-import { GitHubStarButton } from '@/components/brand/github-star-button'
+import { Avatar, type AvatarConfig } from '@/components/avatar'
+import { Button } from '@/components/ui'
+import { GitHubStarButton } from '@/components/brand'
 import { fadeUp, popIn, staggerContainer } from '@/lib/motion'
-import { getAnswerableQuestions } from '@/lib/questions/quiz-helpers'
-import type { QuizSet } from '@/models/quiz'
-import { useQuizActions, useStatuses } from '@/stores/quiz-store'
-import { useQuizNavigation } from '@/hooks/use-quiz-navigation'
+import { getAnswerableQuestions } from '@/lib/questions'
+import type { QuizSet } from '@/models'
+import { useQuizActions, useStatuses } from '@/stores'
+import { useQuizNavigation } from '@/hooks'
 
 const PASSING_RATIO = 0.7
 

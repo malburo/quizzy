@@ -1,8 +1,8 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
-import type { ChoiceKey } from '@/models/quiz'
-import { useResult } from '@/stores/quiz-store'
+import type { ChoiceKey } from '@/models'
+import { useResult } from '@/stores'
 import { cn } from '@/lib/utils'
 
 export function QuizExplanation({

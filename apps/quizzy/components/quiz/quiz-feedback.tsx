@@ -2,8 +2,8 @@
 
 import { useEffect, useState, type ReactNode } from 'react'
 import { useReducedMotion } from 'motion/react'
-import type { ChoiceKey } from '@/models/quiz'
-import { useResult } from '@/stores/quiz-store'
+import type { ChoiceKey } from '@/models'
+import { useResult } from '@/stores'
 import { cn } from '@/lib/utils'
 
 const SHAKE_MS = 600

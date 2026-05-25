@@ -2,9 +2,9 @@
 
 import { usePathname, useRouter } from 'next/navigation'
 import type { Route } from 'next'
-import type { QuestionStatuses, QuizSet } from '@/models/quiz'
-import { findNextUnanswered } from '@/lib/questions/quiz-helpers'
-import { useQuizActions } from '@/stores/quiz-store'
+import type { QuestionStatuses, QuizSet } from '@/models'
+import { findNextUnanswered } from '@/lib/questions'
+import { useQuizActions } from '@/stores'
 
 export function useQuizNavigation(quiz: QuizSet) {
   const router = useRouter()

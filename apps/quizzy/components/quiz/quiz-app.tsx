@@ -3,18 +3,18 @@
 import { useEffect, useRef } from 'react'
 import { motion } from 'motion/react'
 import { useSearchParams } from 'next/navigation'
-import type { QuizSet } from '@/models/quiz'
+import type { QuizSet } from '@/models'
 import {
   getCorrectKey,
   getFirstAnswerableId,
   getQuestionById,
   isQuizCompleted,
   parseQuestionId,
-} from '@/lib/questions/quiz-helpers'
-import { useHasHydrated, useHydrateQuizStore, useQuizActions, useStatuses } from '@/stores/quiz-store'
-import { useQuizNavigation } from '@/hooks/use-quiz-navigation'
-import { useCrossfade } from '@/hooks/use-crossfade'
-import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
+} from '@/lib/questions'
+import { useHasHydrated, useHydrateQuizStore, useQuizActions, useStatuses } from '@/stores'
+import { useQuizNavigation } from '@/hooks'
+import { useCrossfade } from '@/hooks'
+import { SidebarProvider, SidebarTrigger } from '@/components/ui'
 import { QuizSidebar } from './quiz-sidebar'
 import { QuizBubble, QuizMascot } from './quiz-mascot-row'
 import { QuizChoices } from './quiz-choices'

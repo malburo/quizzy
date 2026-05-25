@@ -2,7 +2,7 @@ import 'server-only'
 import { readFileSync, readdirSync } from 'fs'
 import { join } from 'path'
 import { parseQuiz } from './parse-quiz'
-import type { QuizSet } from '@/models/quiz'
+import type { QuizSet } from '@/models'
 
 const CONTENT_DIR = join(process.cwd(), 'content/quizzes')
 

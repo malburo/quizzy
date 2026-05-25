@@ -3,7 +3,7 @@
 import { useEffect } from 'react'
 import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
-import type { ChoiceKey, QuestionStatuses } from '@/models/quiz'
+import type { ChoiceKey, QuestionStatuses } from '@/models'
 
 type Status = 'correct' | 'wrong'
 type Result = 'idle' | 'correct' | 'wrong'

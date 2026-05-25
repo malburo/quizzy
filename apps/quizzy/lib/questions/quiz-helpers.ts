@@ -1,4 +1,4 @@
-import type { ChoiceKey, Question, QuestionStatuses, QuizSet } from '@/models/quiz'
+import type { ChoiceKey, Question, QuestionStatuses, QuizSet } from '@/models'
 
 export function getAnswerableQuestions(quiz: QuizSet): Question[] {
   return quiz.questions.filter((q) => q.body)

@@ -2,9 +2,9 @@
 
 import Link from 'next/link'
 import { motion, type Variants } from 'motion/react'
-import type { QuizSet } from '@/models/quiz'
-import { Badge } from '@/components/ui/badge'
-import { useAnsweredCount } from '@/stores/quiz-store'
+import type { QuizSet } from '@/models'
+import { Badge } from '@/components/ui'
+import { useAnsweredCount } from '@/stores'
 import { cn } from '@/lib/utils'
 import { pressable } from '@/lib/motion'
 

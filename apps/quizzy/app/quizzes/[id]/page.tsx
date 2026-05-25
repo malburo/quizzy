@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { getAvailableQuizIds, getQuizById } from '@/lib/questions'
 import { renderQuestionBody } from '@/lib/highlight'
-import { QuizApp } from '@/components/quiz/quiz-app'
+import { QuizApp } from '@/components/quiz'
 
 export async function generateStaticParams() {
   return (await getAvailableQuizIds()).map((id) => ({ id }))
