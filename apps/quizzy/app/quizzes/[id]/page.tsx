@@ -1,8 +1,8 @@
 import { Suspense } from 'react'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { getAvailableQuizIds, getQuizById } from '@/lib/questions'
-import { renderQuestionBody } from '@/lib/highlight'
+import { loadAllQuizIds as getAvailableQuizIds, loadQuiz as getQuizById } from '@/lib/server/load-quiz'
+import { renderQuestionBody } from '@/lib/server/highlight'
 import { QuizApp } from '@/components/quiz'
 
 export async function generateStaticParams() {

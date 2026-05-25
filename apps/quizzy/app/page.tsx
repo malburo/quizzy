@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { getAllQuizzes } from '@/lib/questions'
+import { loadAllQuizzes as getAllQuizzes } from '@/lib/server/load-quiz'
 import { QuizLibrary } from '@/components/library'
 
 export const metadata: Metadata = {

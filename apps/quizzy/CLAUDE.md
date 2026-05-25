@@ -35,7 +35,9 @@ Next.js 16 App Router, React 19, TypeScript, Tailwind v4. Self-contained: no sha
 
 Quizzes live as markdown files in `content/quizzes/<slug>.md` with frontmatter (`title`, `desc`, `category`, `icon`, `tint`, `level`, `section`, `minutes`, `isNew`). Questions are `### N. Title` headings inside `## Section Name` blocks. Answer + explanation live inside a `<details>` block per question.
 
-`lib/questions/parse-quiz.ts` reads frontmatter via gray-matter and parses question blocks into `Question[]`. `load-quiz.ts` caches the parsed result with React `cache()`.
+`lib/server/parse-quiz.ts` reads frontmatter via gray-matter and parses question blocks into `Question[]`. `lib/server/load-quiz.ts` reads markdown files from disk (`node:fs`) and uses `'use cache'` so reads are memoized across requests. Both live under `lib/server/` because they import `node:fs` / use `'server-only'` — barreling them would pull `fs` into client bundles.
+
+`lib/questions/quiz-helpers.ts` is the pure helpers module (find next unanswered, get correct key, etc.) — safe for both server and client. The `lib/questions/index.ts` barrel re-exports ONLY these helpers; server-side loaders are deep-imported from `@/lib/server/load-quiz` directly in RSC pages.
 
 Body content is converted to HTML by `marked` (server-side) and injected via `dangerouslySetInnerHTML` into `.cq-md` containers — styled by the `.cq-md` block in `globals.css`.
 
@@ -158,19 +160,23 @@ hooks/
 models/
 stores/
 lib/
-  questions/
+  questions/          (quiz-helpers + barrel — pure, client-safe)
+  server/             (load-quiz, parse-quiz, highlight — NO barrel)
 ```
 
-Every folder has an `index.ts` barrel **except** `app/` (Next routing). Import via the barrel, not the deep path:
+Every folder has an `index.ts` barrel **except** `app/` (Next routing) and `lib/server/` (server-only safety — importing a barrel would pull `node:fs` / Shiki into client bundles). Import via the barrel, not the deep path:
 
 ```ts
-import { Button, Input } from '@/components/ui'         // ✅
-import { Button } from '@/components/ui/button'         // ❌
+import { Button, Input } from '@/components/ui'                     // ✅
+import { Button } from '@/components/ui/button'                     // ❌
 
-import type { QuizSet } from '@/models'                 // ✅
-import { useStatuses } from '@/stores'                  // ✅
-import { useQuizNavigation } from '@/hooks'             // ✅
-import { getAllQuizzes } from '@/lib/questions'         // ✅
+import type { QuizSet } from '@/models'                             // ✅
+import { useStatuses } from '@/stores'                              // ✅
+import { useQuizNavigation } from '@/hooks'                         // ✅
+import { findNextUnanswered } from '@/lib/questions'                // ✅ client-safe helpers
+
+import { loadAllQuizzes } from '@/lib/server/load-quiz'             // ✅ deep — by design
+import { renderQuestionBody } from '@/lib/server/highlight'         // ✅ deep — by design
 ```
 
 **Exception — `dynamic()` imports keep deep paths** to preserve code splitting. Importing through a barrel pulls the whole chunk:
@@ -201,8 +207,10 @@ const AvatarPlayground = dynamic(
 | Motion presets | `lib/motion.ts` |
 | Store | `stores/quiz-store.ts` |
 | Models | `models/quiz.ts` |
-| Quiz parser | `lib/questions/parse-quiz.ts` |
-| Quiz loader (cached) | `lib/questions/load-quiz.ts` |
+| Quiz parser (server) | `lib/server/parse-quiz.ts` |
+| Quiz loader (server, cached) | `lib/server/load-quiz.ts` |
+| Quiz helpers (client-safe) | `lib/questions/quiz-helpers.ts` |
+| Markdown highlighter (server) | `lib/server/highlight.ts` |
 | Library page | `components/library/quiz-library.tsx` |
 | Collection card | `components/library/collection-card.tsx` |
 | Quiz page orchestrator | `components/quiz/quiz-app.tsx` |
