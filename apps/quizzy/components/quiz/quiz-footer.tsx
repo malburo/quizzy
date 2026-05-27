@@ -10,11 +10,15 @@ export function QuizFooter({
   quizId,
   questionId,
   correctKey,
+  mobileShowExplanation,
+  onShowExplanation,
 }: {
   onContinue: () => void
   quizId: string
   questionId: number
   correctKey: ChoiceKey | null
+  mobileShowExplanation: boolean
+  onShowExplanation: () => void
 }) {
   const result = useResult(correctKey)
   const selected = useSelected()
@@ -58,9 +62,21 @@ export function QuizFooter({
               </div>
               <h4 className="t-h2 text-correct-deep">Đúng!</h4>
             </div>
-            <Button onClick={onContinue} variant="success" size="md" className="w-fit">
-              Tiếp tục
-            </Button>
+            <div className="flex items-center gap-2">
+              {!mobileShowExplanation && (
+                <Button
+                  onClick={onShowExplanation}
+                  variant="ghost"
+                  size="sm"
+                  className="md:hidden text-correct-deep"
+                >
+                  Giải thích
+                </Button>
+              )}
+              <Button onClick={onContinue} variant="success" size="md" className="w-fit">
+                Tiếp tục
+              </Button>
+            </div>
           </div>
         ) : (
           <div className="flex w-full items-center justify-between gap-4">
@@ -72,9 +88,21 @@ export function QuizFooter({
               </div>
               <h4 className="t-h2 text-wrong-deep">Sai</h4>
             </div>
-            <Button onClick={onContinue} variant="danger" size="md" className="w-fit">
-              Hiểu rồi
-            </Button>
+            <div className="flex items-center gap-2">
+              {!mobileShowExplanation && (
+                <Button
+                  onClick={onShowExplanation}
+                  variant="ghost"
+                  size="sm"
+                  className="md:hidden text-wrong-deep"
+                >
+                  Giải thích
+                </Button>
+              )}
+              <Button onClick={onContinue} variant="danger" size="md" className="w-fit">
+                Hiểu rồi
+              </Button>
+            </div>
           </div>
         )}
       </div>

@@ -8,18 +8,20 @@ import { cn } from '@/lib/utils'
 export function QuizExplanation({
   correctKey,
   explanation,
+  mobileShow,
 }: {
   correctKey: ChoiceKey | null
   explanation: string | null
+  mobileShow: boolean
 }) {
   const result = useResult(correctKey)
   const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    if (result === 'idle') return
+    if (!mobileShow) return
     if (window.innerWidth >= 768) return
     ref.current?.scrollIntoView({ behavior: 'smooth', block: 'end' })
-  }, [result])
+  }, [mobileShow])
 
   if (result === 'idle') return null
 
@@ -27,7 +29,8 @@ export function QuizExplanation({
     <div
       ref={ref}
       className={cn(
-        'rounded-lg border-2 bg-paper p-4',
+        'rounded-lg border-2 bg-paper p-4 md:block',
+        mobileShow ? 'block' : 'hidden',
         result === 'correct' ? 'border-correct shadow-chunky-sm-correct' : 'border-wrong shadow-chunky-sm-wrong'
       )}
     >

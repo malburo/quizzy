@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { motion } from 'motion/react'
 import { useSearchParams } from 'next/navigation'
 import type { QuizSet } from '@/models'
@@ -42,8 +42,11 @@ export function QuizApp({ quiz, bodyMap }: { quiz: QuizSet; bodyMap: Record<numb
   const correctKey = getCorrectKey(current)
   const showResults = knownId === null && isQuizCompleted(quiz, statuses)
 
+  const [mobileShowExplanation, setMobileShowExplanation] = useState(false)
+
   useEffect(() => {
     resetActive()
+    setMobileShowExplanation(false)
   }, [currentId, resetActive])
 
   const { controls: contentControls, displayed: displayedId } = useCrossfade(currentId)
@@ -97,7 +100,11 @@ export function QuizApp({ quiz, bodyMap }: { quiz: QuizSet; bodyMap: Record<numb
                       {displayed.choices && displayedCorrectKey ? (
                         <QuizChoices choices={displayed.choices} correctKey={displayedCorrectKey} currentId={displayedId} />
                       ) : null}
-                      <QuizExplanation correctKey={displayedCorrectKey} explanation={displayed.explanation ?? null} />
+                      <QuizExplanation
+                        correctKey={displayedCorrectKey}
+                        explanation={displayed.explanation ?? null}
+                        mobileShow={mobileShowExplanation}
+                      />
                     </motion.div>
                   ) : (
                     <QuizEmptyQuestion />
@@ -105,7 +112,14 @@ export function QuizApp({ quiz, bodyMap }: { quiz: QuizSet; bodyMap: Record<numb
                 </div>
               </main>
 
-              <QuizFooter onContinue={handleNext} quizId={quiz.id} questionId={currentId} correctKey={correctKey} />
+              <QuizFooter
+                onContinue={handleNext}
+                quizId={quiz.id}
+                questionId={currentId}
+                correctKey={correctKey}
+                mobileShowExplanation={mobileShowExplanation}
+                onShowExplanation={() => setMobileShowExplanation(true)}
+              />
             </>
           )}
         </div>
