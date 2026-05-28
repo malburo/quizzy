@@ -48,7 +48,7 @@ export function QuizLibrary({ quizzes }: { quizzes: QuizSet[] }) {
       </nav>
 
       {/* Hero banner */}
-      <div className="relative overflow-hidden rounded-xl bg-brand-purple-tint border-2 border-brand-purple-soft mt-6 mb-8 flex items-stretch">
+      <div className="relative overflow-hidden rounded-lg bg-brand-purple-tint mt-6 mb-8 flex items-stretch">
         {/* Clouds */}
         <div aria-hidden className="absolute inset-y-0 right-0 w-2/3 overflow-hidden pointer-events-none">
           <div className="cq-cloud ck1" />
@@ -85,7 +85,7 @@ export function QuizLibrary({ quizzes }: { quizzes: QuizSet[] }) {
               placeholder="Tìm bộ câu hỏi..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              className="pl-10 bg-paper border-line-2"
+              className="pl-10"
             />
           </div>
         </div>
@@ -129,8 +129,9 @@ export function QuizLibrary({ quizzes }: { quizzes: QuizSet[] }) {
       )}
 
       {/* Footer */}
-      <footer className="mt-16 pt-5 border-t border-line t-caption text-ink-3">
-        Made with Next.js & Claude Code
+      <footer className="mt-16 pt-5 border-t border-line flex items-center justify-between gap-4 t-caption text-ink-3">
+        <span>Made with Next.js & Claude Code</span>
+        <span>@malburo</span>
       </footer>
     </div>
   )

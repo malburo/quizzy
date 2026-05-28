@@ -33,9 +33,13 @@ Next.js 16 App Router, React 19, TypeScript, Tailwind v4. Self-contained: no sha
 
 ### Data layer
 
-Quizzes live as markdown files in `content/quizzes/<slug>.md` with frontmatter (`title`, `desc`, `category`, `icon`, `tint`, `level`, `section`, `minutes`, `isNew`). Questions are `### N. Title` headings inside `## Section Name` blocks. Answer + explanation live inside a `<details>` block per question.
+Quizzes live as markdown files in `content/quizzes/<slug>.md` with frontmatter (`title`, `desc`, `category`, `icon`, `iconMono`, `tint`, `inkOfTint`, `level`, `section`, `minutes`, `isNew`). Questions are `### N. Title` headings inside `## Section Name` blocks. Answer + explanation live inside a `<details>` block per question.
 
 `lib/server/parse-quiz.ts` reads frontmatter via gray-matter and parses question blocks into `Question[]`. `lib/server/load-quiz.ts` reads markdown files from disk (`node:fs`) and uses `'use cache'` so reads are memoized across requests. Both live under `lib/server/` because they import `node:fs` / use `'server-only'` — barreling them would pull `fs` into client bundles.
+
+### Library icons + grouping (`components/library/quiz-icon.tsx`)
+
+Library cards render official **colored brand SVG logos** (Devicon) from `public/logos/<tech>.svg`, mapped by quiz id in `quiz-icon.tsx` (the frontmatter `icon`/`iconMono` is only a fallback for unmapped ids). The same module owns the library ordering: `groupQuizzes()` splits quizzes into **Frontend** / **Backend** domains and sorts each by a fixed tech order (html → css → js → ts → react → nextjs, then express → mongo → socketio). `QuizLibrary` renders these groups as a flat search-filtered grid with a borderless heading + count per domain.
 
 `lib/questions/quiz-helpers.ts` is the pure helpers module (find next unanswered, get correct key, etc.) — safe for both server and client. The `lib/questions/index.ts` barrel re-exports ONLY these helpers; server-side loaders are deep-imported from `@/lib/server/load-quiz` directly in RSC pages.
 
@@ -97,7 +101,9 @@ shadcn semantic tokens (`--primary`, `--destructive`, etc.) are mapped to the Qu
 
 ### Typography utilities
 
-Defined as `@utility` blocks: `.t-display` (clamp 28–42px), `.t-h1` (32), `.t-h2` (24), `.t-h3` (18), `.t-body-lg` (17), `.t-body` (15), `.t-small` (13, display font semibold), `.t-caption` (11 mono uppercase), `.t-mono` (inline mono).
+Defined as `@utility` blocks: `.t-display` (clamp 28–42px), `.t-h1` (32), `.t-h2` (24), `.t-h3` (18), `.t-body-lg` (17), `.t-body` (15), `.t-small` (13, display font semibold), `.t-caption` (11, display font, normal case), `.t-mono` (inline mono).
+
+**One UI font.** All interface text uses the display font (Nunito) — including `.t-caption`, which is no longer mono/uppercase. JetBrains Mono is reserved for **code only**: fenced code blocks (`.cq-code`), inline code (`.cq-md code`), and code-valued answer choices. Don't apply `font-mono` or `uppercase` to chrome/labels.
 
 Never use `text-[Npx]` / `tracking-[N]` for typography — use a utility. Exceptions: relative `em` for inline code (`text-[0.92em]`) and clamp expressions for responsive display headings.
 
@@ -144,7 +150,7 @@ These cannot easily become React components due to pseudo-element/nested selecto
 1. User selects a choice → card highlights in **macaw** (blue): `border-macaw bg-macaw-soft shadow-chunky-sm-macaw text-macaw-deep`. ABCD badge is `bg-transparent` (inherits card bg). No framer animation on hover/tap for choices.
 2. User clicks "Kiểm tra" → `check()` action sets `session.checked = true`.
 3. Footer shows result: icon + "Đúng!" / "Sai" + action button on colored `bg-correct-soft` / `bg-wrong-soft`.
-4. `QuizExplanation` animates in below the choices — `bg-paper`, colored border, explanation text. On mobile it auto-scrolls into view.
+4. `QuizExplanation` shows below the choices — `bg-paper`, colored border, explanation text. **Desktop**: visible immediately after checking. **Mobile**: hidden by default; the footer shows a "Giải thích" button that reveals it and smooth-scrolls to it (`scroll-mb-8` leaves breathing room above the footer). `mobileShowExplanation` state lives in `QuizApp` and resets per question.
 5. "Tiếp tục" / "Hiểu rồi" → `handleNext()` navigates to next unanswered question via URL.
 
 ## Conventions
@@ -194,10 +200,11 @@ const AvatarPlayground = dynamic(
 - React Compiler is on — do NOT hand-write `useMemo`/`useCallback`/`memo` for pure perf wins (only when needed for non-perf reasons like ref-equality).
 - Pages are Server Components by default. Switch to `'use client'` only when the page needs hooks/browser APIs. Heavy client-only widgets (Rive, canvas) are dynamic-imported with `ssr: false`.
 - Form-style controlled inputs use shadcn `Input` + `Label`. Validation state via `aria-invalid` (not class swap).
-- `cn()` from `@/lib/utils` for all conditional class merging. Never template literals — Tailwind v4 scanner needs literal classes (the `LEVEL` map in `collection-card.tsx` is the pattern for variant-driven classes).
+- `cn()` from `@/lib/utils` for all conditional class merging. Never template literals — Tailwind v4 scanner needs literal classes (the cva variant maps in `components/ui/button.tsx` are the pattern for variant-driven classes).
 - File naming: kebab-case, singular for one-item components (`collection-card`), plural/descriptive for collections (`quiz-library`).
 - `cq-bubble` / `cq-md` / `cq-code` utilities are retained from the pre-refactor design; do not delete or rename — markdown content rendering depends on them.
 - Dynamic per-card CSS vars (`--tint`, `--ink-of-tint`) are set via `style=` on the parent element and consumed in children with `bg-(--tint)` Tailwind v4 syntax. This is the only acceptable use of `style=` for color — all other styling goes through Tailwind classes.
+- **Tailwind v4 CSS-var syntax**: read a CSS variable with the `(--var)` shorthand — e.g. `w-(--sidebar-width)`. The v3 `[--var]` form compiles to invalid CSS in v4 and is silently dropped (this once made the sidebar collapse to content width). Watch for it when pasting shadcn components. The sidebar width is `18rem` (`SIDEBAR_WIDTH` in `components/ui/sidebar.tsx`); long question titles `truncate` rather than widen it.
 
 ## Key files (cheat sheet)
 
@@ -213,6 +220,8 @@ const AvatarPlayground = dynamic(
 | Markdown highlighter (server) | `lib/server/highlight.ts` |
 | Library page | `components/library/quiz-library.tsx` |
 | Collection card | `components/library/collection-card.tsx` |
+| Quiz logos + domain grouping | `components/library/quiz-icon.tsx` |
+| Brand logo SVGs | `public/logos/` |
 | Quiz page orchestrator | `components/quiz/quiz-app.tsx` |
 | Quiz choices | `components/quiz/quiz-choices.tsx` |
 | Quiz explanation (below choices) | `components/quiz/quiz-explanation.tsx` |

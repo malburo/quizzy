@@ -58,7 +58,7 @@ export function QuizSidebar({
         </div>
         <div className="-mx-2 border-t border-line" />
         <div className="flex items-center justify-between gap-2 px-2 pt-1.5">
-          <h2 className="flex-1 min-w-0 t-small font-extrabold text-ink leading-tight text-pretty">
+          <h2 className="flex-1 min-w-0 t-small font-extrabold text-ink leading-tight line-clamp-2">
             {quiz.title}
           </h2>
           <QuizResetDialog quiz={quiz} />
