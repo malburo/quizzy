@@ -19,6 +19,7 @@ export function CollectionCard({ c, variants }: { c: QuizSet; variants?: Variant
     <motion.div {...pressable} variants={variants} className="h-full">
       <Link
         href={`/quizzes/${c.id}`}
+        prefetch={false}
         className="h-full relative overflow-hidden bg-paper border border-line rounded-md shadow-sm p-5 flex flex-col gap-3 no-underline text-ink transition-shadow cursor-pointer hover:shadow-lg"
         style={{ '--tint': c.tint, '--ink-of-tint': c.inkOfTint } as React.CSSProperties}
       >

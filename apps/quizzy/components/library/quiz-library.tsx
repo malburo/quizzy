@@ -10,6 +10,7 @@ import { QuizzyLogo } from '@/components/brand'
 import { fadeUp, staggerContainer } from '@/lib/motion'
 import BeatLoader from 'react-spinners/BeatLoader'
 import { useHasHydrated, useHydrateQuizStore } from '@/stores'
+import { useIsMobile } from '@/hooks/use-mobile'
 import { CollectionCard } from './collection-card'
 import { groupQuizzes } from './quiz-icon'
 
@@ -21,6 +22,7 @@ const RandomAvatar = dynamic(
 export function QuizLibrary({ quizzes }: { quizzes: QuizSet[] }) {
   useHydrateQuizStore()
   const hasHydrated = useHasHydrated()
+  const isMobile = useIsMobile()
   const [query, setQuery] = useState('')
 
   const groups = useMemo(() => {
@@ -40,13 +42,16 @@ export function QuizLibrary({ quizzes }: { quizzes: QuizSet[] }) {
   )
 
   return (
-    <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8 pb-14">
-      {/* Nav */}
-      <nav className="flex items-center justify-between gap-5 py-5 border-b border-line">
-        <QuizzyLogo />
-        <GitHubStarButton />
-      </nav>
+    <>
+      {/* Header — sticky frosted bar (Next.js / Vercel style) */}
+      <header className="sticky top-0 z-50 border-b border-line bg-paper/70 backdrop-blur-xl backdrop-saturate-150">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-5 px-4 py-4 sm:px-6 md:px-8">
+          <QuizzyLogo />
+          <GitHubStarButton />
+        </div>
+      </header>
 
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8 pb-14">
       {/* Hero banner */}
       <div className="relative overflow-hidden rounded-lg bg-brand-purple-tint mt-6 mb-8 flex items-stretch">
         {/* Clouds */}
@@ -90,9 +95,9 @@ export function QuizLibrary({ quizzes }: { quizzes: QuizSet[] }) {
           </div>
         </div>
 
-        {/* Avatar — fixed size reserves space before hydration, no layout shift */}
+        {/* Avatar — desktop only; skip the 2.4MB Rive payload on mobile where it's hidden */}
         <div className="relative z-10 hidden md:flex items-end shrink-0 h-57.5 lg:h-65 w-52 lg:w-60 pr-6 lg:pr-10">
-          <RandomAvatar className="size-52 lg:size-60" />
+          {!isMobile && <RandomAvatar className="size-52 lg:size-60" />}
         </div>
       </div>
 
@@ -133,6 +138,7 @@ export function QuizLibrary({ quizzes }: { quizzes: QuizSet[] }) {
         <span>Made with Next.js & Claude Code</span>
         <span>@malburo</span>
       </footer>
-    </div>
+      </div>
+    </>
   )
 }

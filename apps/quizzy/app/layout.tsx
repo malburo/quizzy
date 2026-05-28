@@ -38,6 +38,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="vi" className={cn(nunito.variable, jetbrainsMono.variable)}>
+      <head>
+        {/* Rive runtime fetches its wasm from unpkg — warm the connection early */}
+        <link rel="preconnect" href="https://unpkg.com" crossOrigin="anonymous" />
+      </head>
       <body>{children}</body>
     </html>
   )
