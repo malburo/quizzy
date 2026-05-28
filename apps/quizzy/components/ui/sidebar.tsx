@@ -185,6 +185,7 @@ function Sidebar({
           }
           side={side}
           showCloseButton={false}
+          onOpenAutoFocus={(e) => e.preventDefault()}
         >
           <SheetHeader className="sr-only">
             <SheetTitle>Sidebar</SheetTitle>
