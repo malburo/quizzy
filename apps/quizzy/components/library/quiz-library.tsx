@@ -54,8 +54,8 @@ export function QuizLibrary({ quizzes }: { quizzes: QuizSet[] }) {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8 pb-14">
       {/* Hero banner */}
       <div className="relative overflow-hidden rounded-lg bg-brand-purple-tint mt-6 mb-8 flex items-stretch">
-        {/* Clouds */}
-        <div aria-hidden className="absolute inset-y-0 right-0 w-2/3 overflow-hidden pointer-events-none">
+        {/* Clouds — desktop only */}
+        <div aria-hidden className="hidden md:block absolute inset-y-0 right-0 w-2/3 overflow-hidden pointer-events-none">
           <div className="cq-cloud ck1" />
           <div className="cq-cloud ck2" />
           <div className="cq-cloud ck3" />

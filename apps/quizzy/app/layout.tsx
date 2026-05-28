@@ -4,7 +4,6 @@ import { cn } from '@/lib/utils'
 import './globals.css'
 
 export const viewport: Viewport = {
-  viewportFit: 'cover',
   themeColor: '#6b5bd2',
 }
 
