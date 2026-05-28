@@ -1,6 +1,5 @@
 'use client'
 
-import { motion } from 'motion/react'
 import { cn } from '@/lib/utils'
 import { QuizzyLogo } from '@/components/brand'
 import {
@@ -15,7 +14,6 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/components/ui'
-import { fadeUp, staggerContainer } from '@/lib/motion'
 import type { Question, QuizSet } from '@/models'
 import { useStatuses } from '@/stores'
 import { QuizResetDialog } from './quiz-reset-dialog'
@@ -70,41 +68,33 @@ export function QuizSidebar({
           <SidebarGroup key={sec.name}>
             <SidebarGroupLabel>{sec.name}</SidebarGroupLabel>
             <SidebarGroupContent>
-              <motion.div
-                variants={staggerContainer(0.02)}
-                initial="hidden"
-                animate="show"
-              >
-                <SidebarMenu>
-                  {sec.items.map((q) => {
-                    const status = statuses[q.id] ?? 'idle'
-                    const isCurrent = q.id === currentId
-                    return (
-                      <motion.div key={q.id} variants={fadeUp}>
-                        <SidebarMenuItem>
-                          <SidebarMenuButton
-                            isActive={isCurrent}
-                            onClick={() => handlePick(q.id)}
-                            title={q.title}
-                            className="t-small font-display font-semibold"
-                          >
-                            <span
-                              className={cn(
-                                't-caption w-5.5 shrink-0 text-center',
-                                isCurrent ? 'text-brand-purple font-extrabold' : 'text-ink-3'
-                              )}
-                            >
-                              {String(q.id).padStart(2, '0')}
-                            </span>
-                            <span className="flex-1 min-w-0 truncate">{q.title}</span>
-                            <StatusDot status={status} isCurrent={isCurrent} />
-                          </SidebarMenuButton>
-                        </SidebarMenuItem>
-                      </motion.div>
-                    )
-                  })}
-                </SidebarMenu>
-              </motion.div>
+              <SidebarMenu>
+                {sec.items.map((q) => {
+                  const status = statuses[q.id] ?? 'idle'
+                  const isCurrent = q.id === currentId
+                  return (
+                    <SidebarMenuItem key={q.id}>
+                      <SidebarMenuButton
+                        isActive={isCurrent}
+                        onClick={() => handlePick(q.id)}
+                        title={q.title}
+                        className="t-small font-display font-semibold"
+                      >
+                        <span
+                          className={cn(
+                            't-caption w-5.5 shrink-0 text-center',
+                            isCurrent ? 'text-brand-purple font-extrabold' : 'text-ink-3'
+                          )}
+                        >
+                          {String(q.id).padStart(2, '0')}
+                        </span>
+                        <span className="flex-1 min-w-0 truncate">{q.title}</span>
+                        <StatusDot status={status} isCurrent={isCurrent} />
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  )
+                })}
+              </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
         ))}
