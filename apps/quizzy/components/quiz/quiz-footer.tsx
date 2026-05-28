@@ -34,7 +34,7 @@ export function QuizFooter({
 
   return (
     <footer
-      className={cn('mt-auto md:border-t pt-4.5 pb-[max(18px,env(safe-area-inset-bottom))] px-6 touch-none', tint)}
+      className={cn('mt-auto md:border-t pt-4.5 pb-[calc(2rem+env(safe-area-inset-bottom))] px-6 touch-none', tint)}
     >
       <div className="max-w-4xl mx-auto flex items-center justify-between gap-4">
         {result === 'idle' ? (

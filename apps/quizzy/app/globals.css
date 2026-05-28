@@ -430,18 +430,19 @@ body {
 @keyframes cq-sheet-in-bottom { from { transform: translate3d(0, 100%, 0) } to { transform: translate3d(0, 0, 0) } }
 @keyframes cq-sheet-out-bottom{ from { transform: translate3d(0, 0, 0) } to { transform: translate3d(0, 100%, 0) } }
 
-.cq-scrim[data-state="open"]   { animation: cq-scrim-in  0.42s cubic-bezier(0.32, 0.72, 0, 1) }
-.cq-scrim[data-state="closed"] { animation: cq-scrim-out 0.3s  cubic-bezier(0.32, 0.72, 0, 1) }
+.cq-scrim { transform: translateZ(0); backface-visibility: hidden; }
+.cq-scrim[data-state="open"]   { animation: cq-scrim-in  0.42s cubic-bezier(0.32, 0.72, 0, 1) both }
+.cq-scrim[data-state="closed"] { animation: cq-scrim-out 0.3s  cubic-bezier(0.32, 0.72, 0, 1) both }
 
-.cq-sheet { will-change: transform; }
-.cq-sheet-left[data-state="open"]    { animation: cq-sheet-in-left    0.45s cubic-bezier(0.32, 0.72, 0, 1) }
-.cq-sheet-left[data-state="closed"]  { animation: cq-sheet-out-left   0.3s  cubic-bezier(0.32, 0.72, 0, 1) }
-.cq-sheet-right[data-state="open"]   { animation: cq-sheet-in-right   0.45s cubic-bezier(0.32, 0.72, 0, 1) }
-.cq-sheet-right[data-state="closed"] { animation: cq-sheet-out-right  0.3s  cubic-bezier(0.32, 0.72, 0, 1) }
-.cq-sheet-top[data-state="open"]     { animation: cq-sheet-in-top     0.45s cubic-bezier(0.32, 0.72, 0, 1) }
-.cq-sheet-top[data-state="closed"]   { animation: cq-sheet-out-top    0.3s  cubic-bezier(0.32, 0.72, 0, 1) }
-.cq-sheet-bottom[data-state="open"]  { animation: cq-sheet-in-bottom  0.45s cubic-bezier(0.32, 0.72, 0, 1) }
-.cq-sheet-bottom[data-state="closed"]{ animation: cq-sheet-out-bottom 0.3s  cubic-bezier(0.32, 0.72, 0, 1) }
+.cq-sheet { will-change: transform; backface-visibility: hidden; }
+.cq-sheet-left[data-state="open"]    { animation: cq-sheet-in-left    0.45s cubic-bezier(0.32, 0.72, 0, 1) both }
+.cq-sheet-left[data-state="closed"]  { animation: cq-sheet-out-left   0.3s  cubic-bezier(0.32, 0.72, 0, 1) both }
+.cq-sheet-right[data-state="open"]   { animation: cq-sheet-in-right   0.45s cubic-bezier(0.32, 0.72, 0, 1) both }
+.cq-sheet-right[data-state="closed"] { animation: cq-sheet-out-right  0.3s  cubic-bezier(0.32, 0.72, 0, 1) both }
+.cq-sheet-top[data-state="open"]     { animation: cq-sheet-in-top     0.45s cubic-bezier(0.32, 0.72, 0, 1) both }
+.cq-sheet-top[data-state="closed"]   { animation: cq-sheet-out-top    0.3s  cubic-bezier(0.32, 0.72, 0, 1) both }
+.cq-sheet-bottom[data-state="open"]  { animation: cq-sheet-in-bottom  0.45s cubic-bezier(0.32, 0.72, 0, 1) both }
+.cq-sheet-bottom[data-state="closed"]{ animation: cq-sheet-out-bottom 0.3s  cubic-bezier(0.32, 0.72, 0, 1) both }
 
 @media (prefers-reduced-motion: reduce) {
   .cq-cloud { animation: none; }
