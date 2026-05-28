@@ -36,7 +36,7 @@ function SheetOverlay({
     <SheetPrimitive.Overlay
       data-slot="sheet-overlay"
       className={cn(
-        "cq-scrim fixed inset-0 z-50 bg-black/40",
+        "fixed inset-0 z-50 bg-black/40",
         className
       )}
       {...props}
@@ -60,15 +60,13 @@ function SheetContent({
       <SheetPrimitive.Content
         data-slot="sheet-content"
         className={cn(
-          "cq-sheet fixed z-50 flex flex-col gap-4 bg-paper shadow-lg",
+          "fixed z-50 flex flex-col gap-4 bg-paper shadow-lg",
           side === "right" &&
-            "cq-sheet-right inset-y-0 right-0 h-full w-3/4 border-l border-line sm:max-w-sm",
+            "inset-y-0 right-0 h-full w-3/4 border-l border-line sm:max-w-sm",
           side === "left" &&
-            "cq-sheet-left inset-y-0 left-0 h-full w-3/4 border-r border-line sm:max-w-sm",
-          side === "top" &&
-            "cq-sheet-top inset-x-0 top-0 h-auto border-b border-line",
-          side === "bottom" &&
-            "cq-sheet-bottom inset-x-0 bottom-0 h-auto border-t border-line",
+            "inset-y-0 left-0 h-full w-3/4 border-r border-line sm:max-w-sm",
+          side === "top" && "inset-x-0 top-0 h-auto border-b border-line",
+          side === "bottom" && "inset-x-0 bottom-0 h-auto border-t border-line",
           className
         )}
         {...props}
