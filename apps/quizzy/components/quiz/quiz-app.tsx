@@ -63,15 +63,15 @@ export function QuizApp({ quiz, bodyMap }: { quiz: QuizSet; bodyMap: Record<numb
   if (!hasHydrated) return <QuizAppLoading />
 
   return (
-    <SidebarProvider>
-      <QuizFeedback className="flex min-h-svh w-full" correctKey={correctKey}>
+    <SidebarProvider className="max-md:fixed max-md:inset-0 max-md:min-h-0">
+      <QuizFeedback className="flex min-h-svh w-full max-md:min-h-0 max-md:h-full" correctKey={correctKey}>
         <QuizSidebar
           quiz={quiz}
           currentId={currentId}
           onPick={nav.goToQuestion}
         />
 
-        <div className="flex min-w-0 flex-1 flex-col max-md:h-svh md:h-dvh">
+        <div className="flex min-w-0 flex-1 flex-col max-md:h-full md:h-dvh">
           {showResults ? (
             <main className="flex-1 overflow-y-auto">
               <QuizResults quiz={quiz} />
@@ -79,7 +79,7 @@ export function QuizApp({ quiz, bodyMap }: { quiz: QuizSet; bodyMap: Record<numb
           ) : (
             <>
               <main ref={mainRef} className="flex-1 overflow-x-hidden overflow-y-auto">
-                <div className="mx-auto flex min-h-full w-full max-w-4xl flex-col px-5 pt-6 pb-12 md:justify-center md:px-8 md:py-6">
+                <div className="mx-auto flex min-h-full w-full max-w-4xl flex-col px-5 pt-[calc(env(safe-area-inset-top)+1.5rem)] pb-12 md:justify-center md:px-8 md:py-6">
                   <SidebarTrigger className="mb-4 self-start md:hidden" />
 
                   {displayed.stem ? (
