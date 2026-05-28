@@ -3,24 +3,17 @@
 import Link from 'next/link'
 import { motion, type Variants } from 'motion/react'
 import type { QuizSet } from '@/models'
-import { Badge } from '@/components/ui'
 import { useAnsweredCount } from '@/stores'
 import { cn } from '@/lib/utils'
 import { pressable } from '@/lib/motion'
-
-// Tailwind v4 scanner needs literal class names in this map.
-const LEVEL = {
-  easy: { label: 'Dễ',  badge: 'correct' as const, dot: 'bg-correct' },
-  mid:  { label: 'Vừa', badge: 'bee'     as const, dot: 'bg-bee'     },
-  hard: { label: 'Khó', badge: 'wrong'   as const, dot: 'bg-wrong'   },
-}
+import { getQuizLogo } from './quiz-icon'
 
 export function CollectionCard({ c, variants }: { c: QuizSet; variants?: Variants }) {
   const answered = useAnsweredCount(c.id)
 
-  const level = LEVEL[c.level]
   const total = c.questions.length || 50
   const pct = Math.round((answered / total) * 100)
+  const logo = getQuizLogo(c.id)
 
   return (
     <motion.div {...pressable} variants={variants} className="h-full">
@@ -32,21 +25,24 @@ export function CollectionCard({ c, variants }: { c: QuizSet; variants?: Variant
         {/* Tint wash */}
         <span aria-hidden className="absolute inset-x-0 top-0 h-18 z-0 bg-(--tint)/55" />
 
-        {/* Icon + level badge */}
-        <div className="relative z-10 flex items-start justify-between gap-3">
-          <div
-            className={cn(
-              'size-14 rounded-md grid place-items-center text-2xl leading-none shrink-0',
-              'bg-paper border-2 border-line-2 shadow-chunky-sm',
-              c.iconMono && 'font-mono font-extrabold text-lg text-(--ink-of-tint)'
-            )}
-          >
-            {c.icon}
-          </div>
-          <Badge variant={level.badge}>
-            <span className={cn('size-1.5 rounded-full', level.dot)} />
-            {level.label}
-          </Badge>
+        {/* Logo */}
+        <div className="relative z-10">
+          {logo ? (
+            <div className="size-14 rounded-md grid place-items-center shrink-0 bg-paper border-2 border-line-2 shadow-chunky-sm p-2.5">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={logo} alt="" className="size-full object-contain" />
+            </div>
+          ) : (
+            <div
+              className={cn(
+                'size-14 rounded-md grid place-items-center text-2xl leading-none shrink-0',
+                'bg-paper border-2 border-line-2 shadow-chunky-sm',
+                c.iconMono && 'font-mono font-extrabold text-lg text-(--ink-of-tint)'
+              )}
+            >
+              {c.icon}
+            </div>
+          )}
         </div>
 
         {/* Title */}

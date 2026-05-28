@@ -59,7 +59,7 @@ export function QuizChoices({
             >
               <span
                 className={cn(
-                  'absolute left-3.5 top-1/2 -translate-y-1/2 size-8 rounded-sm border-2 grid place-items-center font-mono font-extrabold t-small transition-all duration-150',
+                  'absolute left-3.5 top-1/2 -translate-y-1/2 size-8 rounded-sm border-2 grid place-items-center font-extrabold t-small transition-all duration-150',
                   !isSelected && !isCorrect && !isWrong && 'border-line-2 bg-transparent text-ink-3',
                   isSelected && 'border-macaw bg-transparent text-macaw-deep',
                   isCorrect && 'border-correct bg-correct text-white',

@@ -28,11 +28,11 @@ export function QuizzyLogo({
   return (
     <Link
       href={href}
-      className={cn('group inline-flex items-center gap-2.5 no-underline text-ink', className)}
+      className={cn('group/logo inline-flex items-center gap-2.5 no-underline text-ink', className)}
     >
       <span
         className={cn(
-          'bg-brand-purple text-white grid place-items-center font-display font-black leading-none -rotate-6 transition-transform duration-220 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:rotate-6 group-hover:scale-105',
+          'bg-brand-purple text-white grid place-items-center font-display font-black leading-none -rotate-6 transition-transform duration-220 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover/logo:rotate-6 group-hover/logo:scale-105',
           s.badge
         )}
       >

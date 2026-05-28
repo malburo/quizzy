@@ -23,12 +23,13 @@ export function QuizResetDialog({ quiz }: { quiz: QuizSet }) {
           type="button"
           disabled={answeredCount === 0}
           variant="ghost"
-          size="icon"
-          className="size-8 shrink-0"
+          size="sm"
+          className="h-8 shrink-0 gap-1.5 px-2 min-w-0 text-ink-3 hover:text-ink"
           aria-label="Xóa toàn bộ tiến độ"
           title="Xóa toàn bộ tiến độ"
         >
           <ResetIcon />
+          <span className="t-caption">Reset</span>
         </Button>
       </DialogTrigger>
 

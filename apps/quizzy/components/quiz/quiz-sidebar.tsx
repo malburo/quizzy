@@ -53,13 +53,16 @@ export function QuizSidebar({
   return (
     <Sidebar collapsible="offcanvas" className="max-md:pt-[env(safe-area-inset-top)]">
       <SidebarHeader>
-        <div className="flex h-12 items-center justify-between gap-2 px-1">
+        <div className="flex h-12 items-center px-1">
           <QuizzyLogo size="sm" />
+        </div>
+        <div className="-mx-2 border-t border-line" />
+        <div className="flex items-center justify-between gap-2 px-2 pt-1.5">
+          <h2 className="flex-1 min-w-0 t-small font-extrabold text-ink leading-tight text-pretty">
+            {quiz.title}
+          </h2>
           <QuizResetDialog quiz={quiz} />
         </div>
-        <h2 className="px-2 pb-1 t-small font-extrabold text-ink leading-tight text-pretty">
-          {quiz.title}
-        </h2>
       </SidebarHeader>
 
       <SidebarContent>

@@ -29,7 +29,7 @@ export function QuizExplanation({
     <div
       ref={ref}
       className={cn(
-        'rounded-lg border-2 bg-paper p-4 md:block',
+        'scroll-mb-8 rounded-lg border-2 bg-paper p-4 md:block',
         mobileShow ? 'block' : 'hidden',
         result === 'correct' ? 'border-correct shadow-chunky-sm-correct' : 'border-wrong shadow-chunky-sm-wrong'
       )}

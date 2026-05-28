@@ -79,7 +79,7 @@ export function QuizApp({ quiz, bodyMap }: { quiz: QuizSet; bodyMap: Record<numb
           ) : (
             <>
               <main ref={mainRef} className="flex-1 overflow-x-hidden overflow-y-auto">
-                <div className="mx-auto flex min-h-full w-full max-w-4xl flex-col px-5 pt-6 pb-6 md:justify-center md:px-8 md:py-6">
+                <div className="mx-auto flex min-h-full w-full max-w-4xl flex-col px-5 pt-6 pb-12 md:justify-center md:px-8 md:py-6">
                   <SidebarTrigger className="mb-4 self-start md:hidden" />
 
                   {displayed.stem ? (

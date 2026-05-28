@@ -3,7 +3,7 @@
 import dynamic from 'next/dynamic'
 import { useMemo, useState } from 'react'
 import { motion } from 'motion/react'
-import type { QuizSection, QuizSet } from '@/models'
+import type { QuizSet } from '@/models'
 import { Input } from '@/components/ui'
 import { GitHubStarButton } from '@/components/brand'
 import { QuizzyLogo } from '@/components/brand'
@@ -11,13 +11,7 @@ import { fadeUp, staggerContainer } from '@/lib/motion'
 import BeatLoader from 'react-spinners/BeatLoader'
 import { useHasHydrated, useHydrateQuizStore } from '@/stores'
 import { CollectionCard } from './collection-card'
-
-const SECTION_ORDER: QuizSection[] = ['đang học', 'khám phá', 'đã hoàn thành']
-const SECTION_LABEL: Record<QuizSection, string> = {
-  'đang học': 'Đang học',
-  'khám phá': 'Khám phá',
-  'đã hoàn thành': 'Đã hoàn thành',
-}
+import { groupQuizzes } from './quiz-icon'
 
 const RandomAvatar = dynamic(
   () => import('@/components/avatar/random-avatar').then((m) => m.RandomAvatar),
@@ -29,16 +23,15 @@ export function QuizLibrary({ quizzes }: { quizzes: QuizSet[] }) {
   const hasHydrated = useHasHydrated()
   const [query, setQuery] = useState('')
 
-  const grouped = useMemo(() => {
+  const groups = useMemo(() => {
     const q = query.trim().toLowerCase()
-    const filtered = q
+    const list = q
       ? quizzes.filter((c) => c.title.toLowerCase().includes(q) || c.desc.toLowerCase().includes(q))
       : quizzes
-    return SECTION_ORDER.map((section) => ({
-      section,
-      items: filtered.filter((c) => c.section === section),
-    })).filter((g) => g.items.length > 0)
+    return groupQuizzes(list)
   }, [query, quizzes])
+
+  const total = groups.reduce((n, g) => n + g.items.length, 0)
 
   if (!hasHydrated) return (
     <div className="flex min-h-dvh items-center justify-center">
@@ -104,31 +97,41 @@ export function QuizLibrary({ quizzes }: { quizzes: QuizSet[] }) {
       </div>
 
       {/* Empty state */}
-      {grouped.length === 0 ? (
+      {total === 0 ? (
         <div className="text-center py-20 t-body text-ink-3">
           <div className="text-5xl mb-2">🔍</div>
           Không tìm thấy bộ câu hỏi nào khớp
         </div>
-      ) : null}
+      ) : (
+        groups.map(({ domain, label, items }, i) => (
+          <div key={domain} className={i === 0 ? '' : 'mt-10'}>
+            {/* Domain heading */}
+            <div className="flex items-center gap-3 mb-5">
+              <h2 className="t-h3 text-ink whitespace-nowrap">{label}</h2>
+              <span className="grid place-items-center min-w-6 h-6 px-1.5 rounded-full bg-brand-purple-tint t-caption text-brand-purple-deep">
+                {items.length}
+              </span>
+            </div>
 
-      {/* Grouped grid */}
-      {grouped.map(({ section, items }, i) => (
-        <div key={section} className={i === 0 ? '' : 'mt-10'}>
-          <h2 className="t-h3 mb-4 capitalize text-ink">
-            {SECTION_LABEL[section]}
-          </h2>
-          <motion.div
-            variants={staggerContainer(0.05)}
-            initial="hidden"
-            animate="show"
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
-          >
-            {items.map((c) => (
-              <CollectionCard key={c.id} c={c} variants={fadeUp} />
-            ))}
-          </motion.div>
-        </div>
-      ))}
+            <motion.div
+              key={query + domain}
+              variants={staggerContainer(0.05)}
+              initial="hidden"
+              animate="show"
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
+            >
+              {items.map((c) => (
+                <CollectionCard key={c.id} c={c} variants={fadeUp} />
+              ))}
+            </motion.div>
+          </div>
+        ))
+      )}
+
+      {/* Footer */}
+      <footer className="mt-16 pt-5 border-t border-line t-caption text-ink-3">
+        Made with Next.js & Claude Code
+      </footer>
     </div>
   )
 }

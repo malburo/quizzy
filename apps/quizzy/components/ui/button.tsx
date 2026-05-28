@@ -19,7 +19,7 @@ const buttonVariants = cva(
         muted: 'bg-paper-3 text-ink-3 disabled:opacity-100',
         ghost: 'bg-transparent text-ink-2 hover:bg-paper-2 hover:text-ink',
         pill:
-          'rounded-pill bg-paper text-ink border-2 border-line-2 shadow-chunky-sm font-mono text-[11px] hover:bg-paper-2 active:translate-y-0.5 active:shadow-none',
+          'rounded-pill bg-paper text-ink border-2 border-line-2 shadow-chunky-sm text-[12px] font-bold hover:bg-paper-2 active:translate-y-0.5 active:shadow-none',
       },
       size: {
         sm: 'h-9 px-3.5 text-xs rounded-md min-w-25',
