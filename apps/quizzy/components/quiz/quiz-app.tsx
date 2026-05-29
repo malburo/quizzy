@@ -6,7 +6,7 @@ import { useSearchParams } from 'next/navigation'
 import type { QuizSet } from '@/models'
 import {
   getCorrectKey,
-  getFirstAnswerableId,
+  getFirstUnansweredId,
   getQuestionById,
   isQuizCompleted,
   parseQuestionId,
@@ -37,7 +37,7 @@ export function QuizApp({ quiz, bodyMap }: { quiz: QuizSet; bodyMap: Record<numb
   const statuses = useStatuses(quiz.id)
 
   const knownId = parseQuestionId(quiz, searchParams.get('id'))
-  const currentId = knownId ?? getFirstAnswerableId(quiz)
+  const currentId = knownId ?? getFirstUnansweredId(quiz, statuses)
   const current = getQuestionById(quiz, currentId)
   const correctKey = getCorrectKey(current)
   const showResults = knownId === null && isQuizCompleted(quiz, statuses)

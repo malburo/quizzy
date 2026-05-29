@@ -1,6 +1,7 @@
 export {
   getAnswerableQuestions,
   getFirstAnswerableId,
+  getFirstUnansweredId,
   getQuestionById,
   parseQuestionId,
   getCorrectKey,

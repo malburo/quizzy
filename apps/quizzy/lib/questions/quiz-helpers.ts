@@ -8,6 +8,10 @@ export function getFirstAnswerableId(quiz: QuizSet): number {
   return getAnswerableQuestions(quiz)[0]?.id ?? quiz.questions[0]?.id ?? 0
 }
 
+export function getFirstUnansweredId(quiz: QuizSet, statuses: QuestionStatuses): number {
+  return getAnswerableQuestions(quiz).find((q) => !statuses[q.id])?.id ?? getFirstAnswerableId(quiz)
+}
+
 export function getQuestionById(quiz: QuizSet, id: number): Question {
   return (
     quiz.questions.find((q) => q.id === id) ??

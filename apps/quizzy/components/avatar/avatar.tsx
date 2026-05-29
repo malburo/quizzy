@@ -79,7 +79,14 @@ export function Avatar({
   const bounce = useStateMachineInput(rive, 'SMAvatar', 'bounce_trig')
 
   useEffect(() => {
-    if (bounceSignal && bounce) bounce.fire()
+    if (!bounceSignal || !bounce) return
+    // Rive can be mid teardown/re-init during navigation: the wrapper is still
+    // truthy but its runtime input is null, so fire() throws. Skip it then.
+    try {
+      bounce.fire()
+    } catch {
+      /* Rive not ready — drop the bounce */
+    }
   }, [bounceSignal, bounce])
 
   useEffect(() => {
@@ -103,7 +110,13 @@ export function Avatar({
 
   return (
     <RiveComponent
-      onClick={() => bounce?.fire()}
+      onClick={() => {
+        try {
+          bounce?.fire()
+        } catch {
+          /* Rive not ready */
+        }
+      }}
       className={cn('block', className)}
       style={{ cursor: bounce ? 'pointer' : undefined }}
     />
