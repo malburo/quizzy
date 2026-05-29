@@ -26,7 +26,7 @@ Next.js 16 App Router, React 19, TypeScript, Tailwind v4. Self-contained: no sha
 
 ### Routes (Server Components by default)
 
-- `/` — RSC. Calls `getAllQuizzes()` (server), renders `<QuizLibrary>` (client island for hydration-gated UI).
+- `/` — RSC, statically prerendered (**SSG**). Calls `getAllQuizzes()` (server), renders the static shell (header/footer markup lives in `page.tsx`) + `<LibraryContent>` client island (search + cards + motion). Per-card progress fills in after hydration.
 - `/quizzes` — RSC. `redirect('/')`.
 - `/quizzes/[id]` — RSC. `generateStaticParams` + `generateMetadata`. Renders body markdown to HTML server-side via Shiki/marked, passes `bodyMap` into `<QuizApp>` client island. `params` is `Promise<{ id: string }>` (Next 15+ async).
 - `/playground-avatar` — Client page (Rive needs `canvas`, dynamic-imports `AvatarPlayground` with `ssr: false`).
@@ -37,9 +37,9 @@ Quizzes live as markdown files in `content/quizzes/<slug>.md` with frontmatter (
 
 `lib/server/parse-quiz.ts` reads frontmatter via gray-matter and parses question blocks into `Question[]`. `lib/server/load-quiz.ts` reads markdown files from disk (`node:fs`) and uses `'use cache'` so reads are memoized across requests. Both live under `lib/server/` because they import `node:fs` / use `'server-only'` — barreling them would pull `fs` into client bundles.
 
-### Library icons + grouping (`components/library/quiz-icon.tsx`)
+### Library logos + grouping (`components/library/`)
 
-Library cards render official **colored brand SVG logos** (Devicon) from `public/logos/<tech>.svg`, mapped by quiz id in `quiz-icon.tsx` (the frontmatter `icon`/`iconMono` is only a fallback for unmapped ids). The same module owns the library ordering: `groupQuizzes()` splits quizzes into **Frontend** / **Backend** domains and sorts each by a fixed tech order (html → css → js → ts → react → nextjs, then express → mongo → socketio). `QuizLibrary` renders these groups as a flat search-filtered grid with a borderless heading + count per domain.
+Library cards render official **colored brand SVG logos** (Devicon) from `public/logos/<tech>.svg`, mapped by quiz id in `quiz-logo.tsx` (the frontmatter `icon`/`iconMono` is only a fallback for unmapped ids). `quiz-groups.tsx` owns the library ordering: `groupQuizzes()` splits quizzes into **Frontend** / **Backend** domains and sorts each by a fixed tech order (html → css → js → ts → react → nextjs, then express → mongo → socketio). `LibraryContent` renders these groups as a flat search-filtered grid with a borderless heading + count per domain.
 
 `lib/questions/quiz-helpers.ts` is the pure helpers module (find next unanswered, get correct key, etc.) — safe for both server and client. The `lib/questions/index.ts` barrel re-exports ONLY these helpers; server-side loaders are deep-imported from `@/lib/server/load-quiz` directly in RSC pages.
 
@@ -55,7 +55,7 @@ Derived selectors: `useResult()` (returns `'idle' | 'correct' | 'wrong'`), `useE
 
 Hooks exposed: `useStatuses(quizId)`, `useAnsweredCount(quizId)`, `useResult()`, `useSession()`, `useExplanation()`, `useQuizActions()` (returns `{ select, check, setSession, resetQuiz }`).
 
-**Hydration gate**: components that depend on persisted state must guard with `useHasHydrated()` (returns true after `onRehydrateStorage`). `QuizLibrary` and `QuizApp` both gate on this — showing `BeatLoader` until hydrated.
+**Hydration gate**: `QuizApp` (quiz page) guards with `useHasHydrated()` (true after `onRehydrateStorage`), showing `QuizAppLoading` until hydrated. The home page does **not** gate — it's SSG; `QuizCard` progress just renders nothing until the store rehydrates (server + first client render both read an empty store → no mismatch).
 
 ### Models (`models/quiz.ts`)
 
@@ -204,7 +204,7 @@ const AvatarPlayground = dynamic(
 - Pages are Server Components by default. Switch to `'use client'` only when the page needs hooks/browser APIs. Heavy client-only widgets (Rive, canvas) are dynamic-imported with `ssr: false`.
 - Form-style controlled inputs use shadcn `Input` + `Label`. Validation state via `aria-invalid` (not class swap).
 - `cn()` from `@/lib/utils` for all conditional class merging. Never template literals — Tailwind v4 scanner needs literal classes (the cva variant maps in `components/ui/button.tsx` are the pattern for variant-driven classes).
-- File naming: kebab-case, singular for one-item components (`collection-card`), plural/descriptive for collections (`quiz-library`).
+- File naming: kebab-case, singular for one-item components (`quiz-card`), plural/descriptive for collections (`library-content`). Prefer the domain term (`quiz-*`) over synonyms.
 - `cq-bubble` / `cq-md` / `cq-code` utilities are retained from the pre-refactor design; do not delete or rename — markdown content rendering depends on them.
 - Dynamic per-card CSS vars (`--tint`, `--ink-of-tint`) are set via `style=` on the parent element and consumed in children with `bg-(--tint)` Tailwind v4 syntax. This is the only acceptable use of `style=` for color — all other styling goes through Tailwind classes.
 - **Tailwind v4 CSS-var syntax**: read a CSS variable with the `(--var)` shorthand — e.g. `w-(--sidebar-width)`. The v3 `[--var]` form compiles to invalid CSS in v4 and is silently dropped (this once made the sidebar collapse to content width). Watch for it when pasting shadcn components. The sidebar width is `18rem` (`SIDEBAR_WIDTH` in `components/ui/sidebar.tsx`); long question titles `truncate` rather than widen it.
@@ -221,9 +221,11 @@ const AvatarPlayground = dynamic(
 | Quiz loader (server, cached) | `lib/server/load-quiz.ts` |
 | Quiz helpers (client-safe) | `lib/questions/quiz-helpers.ts` |
 | Markdown highlighter (server) | `lib/server/highlight.ts` |
-| Library page | `components/library/quiz-library.tsx` |
-| Collection card | `components/library/collection-card.tsx` |
-| Quiz logos + domain grouping | `components/library/quiz-icon.tsx` |
+| Home shell (server, SSG) | `app/page.tsx` |
+| Library list island (client) | `components/library/library-content.tsx` |
+| Quiz card | `components/library/quiz-card.tsx` |
+| Quiz logos (by id) | `components/library/quiz-logo.tsx` |
+| Domain grouping/ordering | `components/library/quiz-groups.tsx` |
 | Brand logo SVGs | `public/logos/` |
 | Quiz page orchestrator | `components/quiz/quiz-app.tsx` |
 | Quiz choices | `components/quiz/quiz-choices.tsx` |

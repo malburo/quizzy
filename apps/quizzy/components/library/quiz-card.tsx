@@ -6,9 +6,9 @@ import type { QuizSet } from '@/models'
 import { useAnsweredCount } from '@/stores'
 import { cn } from '@/lib/utils'
 import { pressable } from '@/components/core'
-import { getQuizLogo } from './quiz-icon'
+import { getQuizLogo } from './quiz-logo'
 
-export function CollectionCard({ c }: { c: QuizSet }) {
+export function QuizCard({ c }: { c: QuizSet }) {
   const answered = useAnsweredCount(c.id)
 
   const total = c.questions.length || 50

@@ -1,2 +1,2 @@
-export * from './collection-card'
-export * from './quiz-library'
+export * from './library-content'
+export * from './quiz-card'
