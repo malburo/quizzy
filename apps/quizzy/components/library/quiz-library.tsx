@@ -13,10 +13,9 @@ import { useIsMobile } from '@/hooks/use-mobile'
 import { CollectionCard } from './collection-card'
 import { groupQuizzes } from './quiz-icon'
 
-const RandomAvatar = dynamic(
-  () => import('@/components/avatar/random-avatar').then((m) => m.RandomAvatar),
-  { ssr: false }
-)
+const RandomAvatar = dynamic(() => import('@/components/avatar/random-avatar').then((m) => m.RandomAvatar), {
+  ssr: false,
+})
 
 export function QuizLibrary({ quizzes }: { quizzes: QuizSet[] }) {
   useHydrateQuizStore()
@@ -34,107 +33,107 @@ export function QuizLibrary({ quizzes }: { quizzes: QuizSet[] }) {
 
   const total = groups.reduce((n, g) => n + g.items.length, 0)
 
-  if (!hasHydrated) return (
-    <div className="flex min-h-dvh items-center justify-center">
-      <BeatLoader color="var(--ink-4)" size={10} />
-    </div>
-  )
+  if (!hasHydrated)
+    return (
+      <div className="flex min-h-dvh items-center justify-center opacity-10">
+        <BeatLoader color="var(--ink-4)" size={10} />
+      </div>
+    )
 
   return (
     <>
       {/* Header — sticky frosted bar (Next.js / Vercel style) */}
-      <header className="sticky top-0 z-50 border-b border-line bg-paper/70 backdrop-blur-xl backdrop-saturate-150">
+      <header className="border-line bg-paper/70 sticky top-0 z-50 border-b backdrop-blur-xl backdrop-saturate-150">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-5 px-4 py-4 sm:px-6 md:px-8">
           <QuizzyLogo />
           <GitHubStarButton />
         </div>
       </header>
 
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8 pb-14">
-      {/* Hero banner */}
-      <div className="relative overflow-hidden rounded-lg bg-brand-purple-tint mt-6 mb-8 flex items-stretch">
-        {/* Clouds — desktop only */}
-        <div aria-hidden className="hidden md:block absolute inset-y-0 right-0 w-2/3 overflow-hidden pointer-events-none">
-          <div className="cq-cloud ck1" />
-          <div className="cq-cloud ck2" />
-          <div className="cq-cloud ck3" />
-          <div className="cq-cloud ck4" />
-          <div className="cq-cloud ck5" />
-          <div className="cq-cloud ck6" />
-        </div>
-
-        {/* Content */}
-        <div className="relative z-10 flex-1 px-6 py-8 md:px-10 min-w-0">
-          <h1 className="t-display text-ink leading-tight mt-4">
-            Quiz nhỏ mỗi ngày.
-          </h1>
-          <p className="mt-3 mb-6 t-body text-ink-2">
-            Làm vài câu cho nóng máy 🔥
-          </p>
-          <div className="relative max-w-sm">
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.4"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-ink-3 pointer-events-none z-10"
-            >
-              <circle cx="11" cy="11" r="7" />
-              <path d="m20 20-3.5-3.5" />
-            </svg>
-            <Input
-              type="text"
-              placeholder="Tìm bộ câu hỏi..."
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              className="pl-10"
-            />
+      <div className="mx-auto max-w-7xl px-4 pb-14 sm:px-6 md:px-8">
+        {/* Hero banner */}
+        <div className="bg-brand-purple-tint relative mt-6 mb-8 flex items-stretch overflow-hidden rounded-lg">
+          {/* Clouds — desktop only */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-y-0 right-0 hidden w-2/3 overflow-hidden md:block"
+          >
+            <div className="cq-cloud ck1" />
+            <div className="cq-cloud ck2" />
+            <div className="cq-cloud ck3" />
+            <div className="cq-cloud ck4" />
+            <div className="cq-cloud ck5" />
+            <div className="cq-cloud ck6" />
           </div>
-        </div>
 
-        {/* Avatar — desktop only; skip the 2.4MB Rive payload on mobile where it's hidden */}
-        <div className="relative z-10 hidden md:flex items-end shrink-0 h-57.5 lg:h-65 w-52 lg:w-60 pr-6 lg:pr-10">
-          {!isMobile && <RandomAvatar className="size-52 lg:size-60" />}
-        </div>
-      </div>
-
-      {/* Empty state */}
-      {total === 0 ? (
-        <div className="text-center py-20 t-body text-ink-3">
-          <div className="text-5xl mb-2">🔍</div>
-          Không tìm thấy bộ câu hỏi nào khớp
-        </div>
-      ) : (
-        groups.map(({ domain, label, items }, i) => (
-          <div key={domain} className={i === 0 ? '' : 'mt-10'}>
-            {/* Domain heading */}
-            <div className="flex items-center gap-3 mb-5">
-              <h2 className="t-h3 text-ink whitespace-nowrap">{label}</h2>
-              <span className="grid place-items-center min-w-6 h-6 px-1.5 rounded-full bg-brand-purple-tint t-caption text-brand-purple-deep">
-                {items.length}
-              </span>
+          {/* Content */}
+          <div className="relative z-10 min-w-0 flex-1 px-6 py-8 md:px-10">
+            <h1 className="t-display text-ink mt-4 leading-tight">Quiz nhỏ mỗi ngày.</h1>
+            <p className="t-body text-ink-2 mt-3 mb-6">Làm vài câu cho nóng máy 🔥</p>
+            <div className="relative max-w-sm">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.4"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="text-ink-3 pointer-events-none absolute top-1/2 left-3.5 z-10 size-4 -translate-y-1/2"
+              >
+                <circle cx="11" cy="11" r="7" />
+                <path d="m20 20-3.5-3.5" />
+              </svg>
+              <Input
+                type="text"
+                placeholder="Tìm bộ câu hỏi..."
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                className="pl-10"
+              />
             </div>
-
-            <AnimatedGroup
-              key={query + domain}
-              preset="scale"
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
-            >
-              {items.map((c) => (
-                <CollectionCard key={c.id} c={c} />
-              ))}
-            </AnimatedGroup>
           </div>
-        ))
-      )}
 
-      {/* Footer */}
-      <footer className="mt-16 pt-5 border-t border-line flex items-center justify-between gap-4 t-caption text-ink-3">
-        <span>Made with Next.js & Claude Code</span>
-        <span>@malburo</span>
-      </footer>
+          {/* Avatar — desktop only; skip the 2.4MB Rive payload on mobile where it's hidden */}
+          <div className="relative z-10 hidden h-57.5 w-52 shrink-0 items-end pr-6 md:flex lg:h-65 lg:w-60 lg:pr-10">
+            {!isMobile && <RandomAvatar className="size-52 lg:size-60" />}
+          </div>
+        </div>
+
+        {/* Empty state */}
+        {total === 0 ? (
+          <div className="t-body text-ink-3 py-20 text-center">
+            <div className="mb-2 text-5xl">🔍</div>
+            Không tìm thấy bộ câu hỏi nào khớp
+          </div>
+        ) : (
+          groups.map(({ domain, label, items }, i) => (
+            <div key={domain} className={i === 0 ? '' : 'mt-10'}>
+              {/* Domain heading */}
+              <div className="mb-5 flex items-center gap-3">
+                <h2 className="t-h3 text-ink whitespace-nowrap">{label}</h2>
+                <span className="bg-brand-purple-tint t-caption text-brand-purple-deep grid h-6 min-w-6 place-items-center rounded-full px-1.5">
+                  {items.length}
+                </span>
+              </div>
+
+              <AnimatedGroup
+                key={query + domain}
+                preset="fade"
+                className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
+              >
+                {items.map((c) => (
+                  <CollectionCard key={c.id} c={c} />
+                ))}
+              </AnimatedGroup>
+            </div>
+          ))
+        )}
+
+        {/* Footer */}
+        <footer className="border-line t-caption text-ink-3 mt-16 flex items-center justify-between gap-4 border-t pt-5">
+          <span>Made with Next.js & Claude Code</span>
+          <span>@malburo</span>
+        </footer>
       </div>
     </>
   )

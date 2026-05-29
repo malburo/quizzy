@@ -1,7 +1,7 @@
 import type { ChoiceKey, Question, QuestionStatuses, QuizSet } from '@/models'
 
 export function getAnswerableQuestions(quiz: QuizSet): Question[] {
-  return quiz.questions.filter((q) => q.body)
+  return quiz.questions.filter((q) => q.choices?.some((c) => c.correct))
 }
 
 export function getFirstAnswerableId(quiz: QuizSet): number {
