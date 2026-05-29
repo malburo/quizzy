@@ -49,6 +49,11 @@ export function QuizApp({ quiz, bodyMap }: { quiz: QuizSet; bodyMap: Record<numb
     setMobileShowExplanation(false)
   }, [currentId, resetActive])
 
+  // Clear transient answer state when leaving the quiz, so re-entering via the
+  // library doesn't read a stale checked/selected on the first render (which
+  // briefly flags a result and fires the mascot bounce on a not-yet-ready Rive).
+  useEffect(() => () => resetActive(), [resetActive])
+
   const { controls: contentControls, displayed: displayedId } = useCrossfade(currentId)
   const displayed = getQuestionById(quiz, displayedId)
   const displayedCorrectKey = getCorrectKey(displayed)
