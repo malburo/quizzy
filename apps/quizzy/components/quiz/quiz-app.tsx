@@ -27,12 +27,22 @@ import { QuizAppLoading } from './quiz-app-loading'
 
 export function QuizApp({ quiz, bodyMap }: { quiz: QuizSet; bodyMap: Record<number, string | null> }) {
   useHydrateQuizStore()
+  const hasHydrated = useHasHydrated()
 
+  // Gate the whole view on hydration so the question content (and useCrossfade's
+  // initial state) is computed from the *real* persisted progress. Otherwise the
+  // first render reads an empty store → resolves to Q1 → then blinks to the actual
+  // resume question once the store rehydrates.
+  if (!hasHydrated) return <QuizAppLoading />
+
+  return <QuizAppView quiz={quiz} bodyMap={bodyMap} />
+}
+
+function QuizAppView({ quiz, bodyMap }: { quiz: QuizSet; bodyMap: Record<number, string | null> }) {
   const searchParams = useSearchParams()
   const mainRef = useRef<HTMLElement>(null)
   const nav = useQuizNavigation(quiz)
 
-  const hasHydrated = useHasHydrated()
   const { resetActive } = useQuizActions()
   const statuses = useStatuses(quiz.id)
 
@@ -54,18 +64,26 @@ export function QuizApp({ quiz, bodyMap }: { quiz: QuizSet; bodyMap: Record<numb
   // briefly flags a result and fires the mascot bounce on a not-yet-ready Rive).
   useEffect(() => () => resetActive(), [resetActive])
 
+  // Pin the resume target into the URL on entry. With no ?id, currentId resolves
+  // to the first unanswered question — which would recompute and skip ahead the
+  // moment you answer it. Writing ?id fixes the question being viewed so checking
+  // an answer shows the result instead of jumping to the next question.
+  useEffect(() => {
+    if (knownId === null && !showResults) {
+      nav.goToQuestion(currentId)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [knownId, showResults])
+
   const { controls: contentControls, displayed: displayedId } = useCrossfade(currentId)
   const displayed = getQuestionById(quiz, displayedId)
   const displayedCorrectKey = getCorrectKey(displayed)
   const displayedBody = bodyMap[displayedId]
 
-
   const handleNext = () => {
     mainRef.current?.scrollTo({ top: 0 })
     nav.goToNext(currentId, statuses)
   }
-
-  if (!hasHydrated) return <QuizAppLoading />
 
   return (
     <SidebarProvider className="max-md:fixed max-md:inset-0 max-md:min-h-0">
