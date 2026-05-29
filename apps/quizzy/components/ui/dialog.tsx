@@ -11,7 +11,7 @@ import {
 import { Slot } from '@radix-ui/react-slot'
 import { motion } from 'motion/react'
 import { cn } from '@/lib/utils'
-import { popIn } from '@/lib/motion'
+import { popIn } from '@/components/core'
 
 type DialogContextValue = {
   open: boolean

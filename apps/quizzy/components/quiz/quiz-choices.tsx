@@ -1,9 +1,9 @@
 'use client'
 
-import { motion } from 'motion/react'
 import type { Choice, ChoiceKey } from '@/models'
 import { useChecked, useQuizActions, useSelected } from '@/stores'
 import { cn } from '@/lib/utils'
+import { AnimatedGroup } from '@/components/core'
 
 
 export function QuizChoices({
@@ -20,16 +20,11 @@ export function QuizChoices({
   const { pick } = useQuizActions()
 
   return (
-    <div role="radiogroup" aria-label="Đáp án" className="grid grid-cols-1 md:grid-cols-2 gap-3.5 mt-1">
-      <motion.div
+    <div role="radiogroup" aria-label="Đáp án">
+      <AnimatedGroup
         key={currentId}
-        className="contents"
-        initial="hidden"
-        animate="show"
-        variants={{
-          hidden: {},
-          show: { transition: { staggerChildren: 0.04 } },
-        }}
+        preset="scale"
+        className="grid grid-cols-1 md:grid-cols-2 gap-3.5 mt-1"
       >
         {choices.map((c) => {
           const isSelected = !checked && selected === c.key
@@ -37,18 +32,15 @@ export function QuizChoices({
           const isWrong = checked && selected === c.key && c.key !== correctKey
 
           return (
-            <motion.button
+            <button
               key={c.key}
+              type="button"
               role="radio"
               aria-checked={selected === c.key}
               disabled={checked}
               onClick={() => !checked && pick(c.key)}
-              variants={{
-                hidden: { opacity: 0, y: 6 },
-                show: { opacity: 1, y: 0, transition: { duration: 0.16, ease: [0.22, 1, 0.36, 1] } },
-              }}
               className={cn(
-                'relative border-2 border-line-2 rounded-md shadow-chunky-sm bg-paper text-left font-semibold pl-15 pr-4.5 py-4.5 min-h-16 t-body-lg flex items-center',
+                'relative h-full w-full border-2 border-line-2 rounded-md shadow-chunky-sm bg-paper text-left font-semibold pl-15 pr-4.5 py-4.5 min-h-16 t-body-lg flex items-center',
                 c.code && 'font-mono t-small',
                 !isSelected && !isCorrect && !isWrong && 'hover:bg-paper-2',
                 isSelected && 'border-macaw bg-macaw-soft shadow-chunky-sm-macaw text-macaw-deep',
@@ -69,10 +61,10 @@ export function QuizChoices({
                 {c.key}
               </span>
               {c.text}
-            </motion.button>
+            </button>
           )
         })}
-      </motion.div>
+      </AnimatedGroup>
     </div>
   )
 }

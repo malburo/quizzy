@@ -2,12 +2,11 @@
 
 import dynamic from 'next/dynamic'
 import { useMemo, useState } from 'react'
-import { motion } from 'motion/react'
 import type { QuizSet } from '@/models'
 import { Input } from '@/components/ui'
 import { GitHubStarButton } from '@/components/brand'
 import { QuizzyLogo } from '@/components/brand'
-import { fadeUp, staggerContainer } from '@/lib/motion'
+import { AnimatedGroup } from '@/components/core'
 import BeatLoader from 'react-spinners/BeatLoader'
 import { useHasHydrated, useHydrateQuizStore } from '@/stores'
 import { useIsMobile } from '@/hooks/use-mobile'
@@ -118,17 +117,15 @@ export function QuizLibrary({ quizzes }: { quizzes: QuizSet[] }) {
               </span>
             </div>
 
-            <motion.div
+            <AnimatedGroup
               key={query + domain}
-              variants={staggerContainer(0.05)}
-              initial="hidden"
-              animate="show"
+              preset="scale"
               className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
             >
               {items.map((c) => (
-                <CollectionCard key={c.id} c={c} variants={fadeUp} />
+                <CollectionCard key={c.id} c={c} />
               ))}
-            </motion.div>
+            </AnimatedGroup>
           </div>
         ))
       )}

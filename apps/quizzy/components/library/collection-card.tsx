@@ -1,14 +1,14 @@
 'use client'
 
 import Link from 'next/link'
-import { motion, type Variants } from 'motion/react'
+import { motion } from 'motion/react'
 import type { QuizSet } from '@/models'
 import { useAnsweredCount } from '@/stores'
 import { cn } from '@/lib/utils'
-import { pressable } from '@/lib/motion'
+import { pressable } from '@/components/core'
 import { getQuizLogo } from './quiz-icon'
 
-export function CollectionCard({ c, variants }: { c: QuizSet; variants?: Variants }) {
+export function CollectionCard({ c }: { c: QuizSet }) {
   const answered = useAnsweredCount(c.id)
 
   const total = c.questions.length || 50
@@ -16,7 +16,7 @@ export function CollectionCard({ c, variants }: { c: QuizSet; variants?: Variant
   const logo = getQuizLogo(c.id)
 
   return (
-    <motion.div {...pressable} variants={variants} className="h-full">
+    <motion.div {...pressable} className="h-full">
       <Link
         href={`/quizzes/${c.id}`}
         prefetch={false}

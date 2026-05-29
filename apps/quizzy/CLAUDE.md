@@ -115,15 +115,16 @@ Use named Tailwind values — never raw numbers like `max-w-220`:
 - `max-w-sm` (24rem) — narrow containers (search input, button groups)
 - `max-w-2xl` (42rem) — error / not-found pages
 
-### Motion (`lib/motion.ts`)
+### Motion (`components/core/`)
 
-- `ease.out` — cubic-bezier `[0.22, 1, 0.36, 1]` for natural fades
-- `ease.spring` — stiffness 380, damping 22 (general bounce)
-- `ease.pop` — stiffness 500, damping 18 (entry pops)
-- `pageEnter`, `popIn`, `slideUp`, `pressable` — preset spreadable props for `motion.*`
-- `fadeUp` Variants + `staggerContainer(delay)` — for parent/child stagger sequences
+Animation lives in `components/core/` (imported via the `@/components/core` barrel).
 
-**Pattern**: any new `motion.*` should import a preset from here. Don't redefine `initial`/`animate`/`transition` inline.
+**Rule**: reach for a [motion-primitives](https://motion-primitives.com) component first. If it doesn't exist, build a custom component in `components/core/` — don't scatter bespoke animation logic across feature folders.
+
+- `AnimatedGroup` (`core/animated-group.tsx`) — staggered entrance for a list/grid of children. Wraps each child in a `motion.div` and applies a `preset` (`scale`, `fade`, `blur-slide`, `zoom`, …). Used by the library card grid, quiz answer choices, and the results screen. Adapted from motion-primitives: the `as`/`asChild` polymorphism was dropped (it tripped the React Compiler "no components during render" lint rule) — it always renders `div`s.
+- `motion.ts` presets — `ease`, `pageEnter`, `popIn`, `slideUp`, `pressable`. Spreadable props for one-off `motion.*` elements.
+
+**Pattern**: any new `motion.*` should import a preset from `@/components/core`. Don't redefine `initial`/`animate`/`transition` inline.
 
 ### Components (`components/ui/`)
 
@@ -157,11 +158,11 @@ These cannot easily become React components due to pseudo-element/nested selecto
 
 ### Folder structure + barrels
 
-Components are grouped by **feature** (`avatar/`, `brand/`, `debby/`, `library/`, `quiz/`, `ui/`), not by route — many components are shared across pages (e.g. `Avatar` lives in both library hero and quiz mascot row).
+Components are grouped by **feature** (`avatar/`, `brand/`, `core/`, `debby/`, `library/`, `quiz/`, `ui/`), not by route — many components are shared across pages (e.g. `Avatar` lives in both library hero and quiz mascot row).
 
 ```
 components/
-  avatar/   brand/   debby/   library/   quiz/   ui/
+  avatar/   brand/   core/   debby/   library/   quiz/   ui/
 hooks/
 models/
 stores/
@@ -169,6 +170,8 @@ lib/
   questions/          (quiz-helpers + barrel — pure, client-safe)
   server/             (load-quiz, parse-quiz, highlight — NO barrel)
 ```
+
+`core/` holds animation primitives shared across features: the `AnimatedGroup` component (from motion-primitives) and the `motion.ts` presets.
 
 Every folder has an `index.ts` barrel **except** `app/` (Next routing) and `lib/server/` (server-only safety — importing a barrel would pull `node:fs` / Shiki into client bundles). Import via the barrel, not the deep path:
 
@@ -211,7 +214,7 @@ const AvatarPlayground = dynamic(
 | Concern | File |
 |---|---|
 | Design tokens | `app/globals.css` |
-| Motion presets | `lib/motion.ts` |
+| Animation (AnimatedGroup + motion presets) | `components/core/` |
 | Store | `stores/quiz-store.ts` |
 | Models | `models/quiz.ts` |
 | Quiz parser (server) | `lib/server/parse-quiz.ts` |

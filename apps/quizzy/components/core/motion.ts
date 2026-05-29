@@ -1,5 +1,3 @@
-import type { Variants } from 'motion/react'
-
 export const ease = {
   out: [0.22, 1, 0.36, 1] as [number, number, number, number],
   spring: { type: 'spring' as const, stiffness: 380, damping: 22 },
@@ -32,13 +30,3 @@ export const pressable = {
   whileTap: { y: 1 },
   transition: ease.spring,
 }
-
-export const fadeUp: Variants = {
-  hidden: { opacity: 0, y: 12 },
-  show: { opacity: 1, y: 0, transition: { duration: dur.base, ease: ease.out } },
-}
-
-export const staggerContainer = (delay = 0.04): Variants => ({
-  hidden: {},
-  show: { transition: { staggerChildren: delay, delayChildren: 0.05 } },
-})
