@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { Avatar, type AvatarConfig } from '@/components/avatar'
+import { TextEffect } from '@/components/core'
 import { useIsMobile } from '@/hooks'
 import type { ChoiceKey } from '@/models'
 import { useResult } from '@/stores'
@@ -65,7 +66,15 @@ export function QuizMascot({ correctKey }: { correctKey: ChoiceKey | null }) {
 export function QuizBubble({ stem }: { stem?: string }) {
   return (
     <div className="cq-bubble flex-1 min-w-0 pb-6 pr-8">
-      <div className="t-h3 md:t-h2 text-ink text-pretty">{stem}</div>
+      <TextEffect
+        per="char"
+        preset="fade"
+        speedReveal={4}
+        speedSegment={2}
+        className="t-h3 md:t-h2 text-ink text-pretty"
+      >
+        {stem ?? ''}
+      </TextEffect>
     </div>
   )
 }

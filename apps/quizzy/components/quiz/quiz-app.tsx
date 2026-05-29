@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { motion } from 'motion/react'
 import { useSearchParams } from 'next/navigation'
 import type { QuizSet } from '@/models'
 import {
@@ -13,26 +12,21 @@ import {
 } from '@/lib/questions'
 import { useHasHydrated, useHydrateQuizStore, useQuizActions, useStatuses } from '@/stores'
 import { useQuizNavigation } from '@/hooks'
-import { useCrossfade } from '@/hooks'
 import { SidebarProvider, SidebarTrigger } from '@/components/ui'
 import { QuizSidebar } from './quiz-sidebar'
-import { QuizBubble, QuizMascot } from './quiz-mascot-row'
-import { QuizChoices } from './quiz-choices'
+import { QuizQuestion } from './quiz-question'
 import { QuizFooter } from './quiz-footer'
 import { QuizFeedback } from './quiz-feedback'
-import { QuizExplanation } from './quiz-explanation'
 import { QuizResults } from './quiz-results'
-import { QuizEmptyQuestion } from './quiz-empty-question'
 import { QuizAppLoading } from './quiz-app-loading'
 
 export function QuizApp({ quiz, bodyMap }: { quiz: QuizSet; bodyMap: Record<number, string | null> }) {
   useHydrateQuizStore()
   const hasHydrated = useHasHydrated()
 
-  // Gate the whole view on hydration so the question content (and useCrossfade's
-  // initial state) is computed from the *real* persisted progress. Otherwise the
-  // first render reads an empty store → resolves to Q1 → then blinks to the actual
-  // resume question once the store rehydrates.
+  // Gate on hydration so the resume question is computed from the *real* persisted
+  // progress. Otherwise the first render reads an empty store → resolves to Q1 →
+  // blinks to the actual resume question once it rehydrates.
   if (!hasHydrated) return <QuizAppLoading />
 
   return <QuizAppView quiz={quiz} bodyMap={bodyMap} />
@@ -59,26 +53,20 @@ function QuizAppView({ quiz, bodyMap }: { quiz: QuizSet; bodyMap: Record<number,
     setMobileShowExplanation(false)
   }, [currentId, resetActive])
 
-  // Clear transient answer state when leaving the quiz, so re-entering via the
-  // library doesn't read a stale checked/selected on the first render (which
-  // briefly flags a result and fires the mascot bounce on a not-yet-ready Rive).
+  // Clear transient answer state on exit, so re-entering via the library doesn't
+  // read a stale checked/selected → false result flash + mascot bounce on a
+  // not-yet-ready Rive.
   useEffect(() => () => resetActive(), [resetActive])
 
-  // Pin the resume target into the URL on entry. With no ?id, currentId resolves
-  // to the first unanswered question — which would recompute and skip ahead the
-  // moment you answer it. Writing ?id fixes the question being viewed so checking
-  // an answer shows the result instead of jumping to the next question.
+  // Pin the resume target into the URL on entry. Without ?id, currentId tracks the
+  // first unanswered question and skips ahead the moment you answer; writing ?id
+  // freezes the viewed question so checking shows the result instead of jumping.
   useEffect(() => {
     if (knownId === null && !showResults) {
       nav.goToQuestion(currentId)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [knownId, showResults])
-
-  const { controls: contentControls, displayed: displayedId } = useCrossfade(currentId)
-  const displayed = getQuestionById(quiz, displayedId)
-  const displayedCorrectKey = getCorrectKey(displayed)
-  const displayedBody = bodyMap[displayedId]
 
   const handleNext = () => {
     mainRef.current?.scrollTo({ top: 0 })
@@ -105,33 +93,13 @@ function QuizAppView({ quiz, bodyMap }: { quiz: QuizSet; bodyMap: Record<number,
                 <div className="mx-auto flex min-h-full w-full max-w-4xl flex-col px-5 pt-[calc(env(safe-area-inset-top)+1.5rem)] pb-12 md:justify-center md:px-8 md:py-6">
                   <SidebarTrigger className="mb-4 self-start md:hidden" />
 
-                  {displayed.stem ? (
-                    <motion.div
-                      animate={contentControls}
-                      initial={{ opacity: 1 }}
-                      className="flex flex-col gap-7"
-                    >
-                      <div className="flex items-center gap-3.5 md:gap-6">
-                        <QuizMascot correctKey={displayedCorrectKey} />
-                        <QuizBubble stem={displayed.stem} />
-                      </div>
-
-                      {displayedBody ? (
-                        <div className="cq-md" dangerouslySetInnerHTML={{ __html: displayedBody }} />
-                      ) : null}
-
-                      {displayed.choices && displayedCorrectKey ? (
-                        <QuizChoices choices={displayed.choices} correctKey={displayedCorrectKey} currentId={displayedId} />
-                      ) : null}
-                      <QuizExplanation
-                        correctKey={displayedCorrectKey}
-                        explanation={displayed.explanation ?? null}
-                        mobileShow={mobileShowExplanation}
-                      />
-                    </motion.div>
-                  ) : (
-                    <QuizEmptyQuestion />
-                  )}
+                  <QuizQuestion
+                    question={current}
+                    correctKey={correctKey}
+                    currentId={currentId}
+                    body={bodyMap[currentId] ?? null}
+                    mobileShowExplanation={mobileShowExplanation}
+                  />
                 </div>
               </main>
 
