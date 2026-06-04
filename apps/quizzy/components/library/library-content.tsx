@@ -1,7 +1,7 @@
 'use client'
 
 import dynamic from 'next/dynamic'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { QuizSet } from '@/models'
 import { Input } from '@/components/ui'
 import { AnimatedGroup } from '@/components/core'
@@ -21,14 +21,12 @@ export function LibraryContent({ quizzes }: { quizzes: QuizSet[] }) {
   const [mounted, setMounted] = useState(false)
   useEffect(() => setMounted(true), [])
 
-  const groups = useMemo(() => {
-    const q = query.trim().toLowerCase()
-    const list = q
-      ? quizzes.filter((c) => c.title.toLowerCase().includes(q) || c.desc.toLowerCase().includes(q))
-      : quizzes
-    return groupQuizzes(list)
-  }, [query, quizzes])
-
+  // React Compiler memoizes this — no manual useMemo needed.
+  const q = query.trim().toLowerCase()
+  const filtered = q
+    ? quizzes.filter((c) => c.title.toLowerCase().includes(q) || c.desc.toLowerCase().includes(q))
+    : quizzes
+  const groups = groupQuizzes(filtered)
   const total = groups.reduce((n, g) => n + g.items.length, 0)
 
   return (
@@ -67,6 +65,7 @@ export function LibraryContent({ quizzes }: { quizzes: QuizSet[] }) {
             </svg>
             <Input
               type="text"
+              aria-label="Tìm bộ câu hỏi"
               placeholder="Tìm bộ câu hỏi..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}

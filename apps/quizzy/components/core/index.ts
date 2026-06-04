@@ -1,4 +1,5 @@
 export * from './animated-group'
 export * from './motion'
+export * from './motion-provider'
 export * from './text-effect'
 export * from './transition-panel'

@@ -4,8 +4,10 @@ import { GitHubStarButton, QuizzyLogo } from '@/components/brand'
 import { LibraryContent } from '@/components/library'
 
 export const metadata: Metadata = {
-  title: 'Quizzy — Quiz nhỏ mỗi ngày',
+  // absolute → bypass the "%s | Quizzy" template so the brand isn't doubled.
+  title: { absolute: 'Quizzy — Quiz nhỏ mỗi ngày' },
   description: 'Chọn một bộ câu hỏi để bắt đầu học.',
+  alternates: { canonical: '/' },
 }
 
 export default async function HomePage() {

@@ -1,18 +1,19 @@
+import 'server-only'
 import matter from 'gray-matter'
+import { unified } from 'unified'
+import remarkParse from 'remark-parse'
+import { toString } from 'mdast-util-to-string'
+import type { List, Paragraph, Root, RootContent } from 'mdast'
 import type { Choice, ChoiceKey, Question, QuizSet } from '@/models'
+import { renderNodes } from './markdown'
 
-// Match: ### 7. Title text
-const Q_HEADING = /^###\s+(\d+)\.\s+(.+)$/
+const parser = unified().use(remarkParse)
 
-// Match: - A: text   (no [x]/[ ] marker — answer is hidden in <details>)
-const CHOICE_LINE = /^-\s+([A-D]):\s+(.*)$/
-
-// Match the answer marker inside a <details> block: **B** or **B** — text
-const ANSWER_LETTER = /\*\*([A-D])\*\*/
-
-export function parseQuiz(id: string, raw: string): QuizSet {
+export async function parseQuiz(id: string, raw: string): Promise<QuizSet> {
   const { data: fm, content } = matter(raw)
-  const questions = parseQuestions(content)
+  const questions = await toQuestions(parser.parse(content) as Root)
+  validate(id, questions)
+
   return {
     id,
     title: fm.title ?? id,
@@ -30,111 +31,97 @@ export function parseQuiz(id: string, raw: string): QuizSet {
   }
 }
 
-/** Pull out the <details>…</details> block. Returns the extracted block (or null) and the chunk with it removed. */
-function extractDetails(chunk: string): { details: string | null; rest: string } {
-  const open = chunk.indexOf('<details>')
-  if (open === -1) return { details: null, rest: chunk }
-  const close = chunk.indexOf('</details>', open)
-  if (close === -1) return { details: null, rest: chunk }
-  const details = chunk.slice(open + '<details>'.length, close)
-  const rest = chunk.slice(0, open) + chunk.slice(close + '</details>'.length)
-  return { details, rest }
-}
+type Block = { id: number; title: string; section: string; nodes: RootContent[] }
 
-/** Strip the <summary>…</summary> tag and return only the answer body. */
-function stripSummary(details: string): string {
-  return details.replace(/<summary>[\s\S]*?<\/summary>/i, '').trim()
-}
+/** Group the flat node list into question blocks: `## ` sets the section, `### N. Title` opens one. */
+async function toQuestions(tree: Root): Promise<Question[]> {
+  const blocks: Block[] = []
+  let section = ''
 
-/** Minimal inline markdown → HTML for explanation text: `code`, **bold**, *italic*. */
-function mdInline(text: string): string {
-  return text
-    .replace(/`([^`]+)`/g, '<code>$1</code>')
-    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
-    .replace(/(?<!\*)\*(?!\*)([^*\n]+?)\*(?!\*)/g, '<em>$1</em>')
-}
-
-function parseDetails(details: string): {
-  answerKey?: ChoiceKey
-  explanation?: string
-} {
-  const body = stripSummary(details)
-  const letter = ANSWER_LETTER.exec(body)?.[1] as ChoiceKey | undefined
-  // Strip the leading "**X** — ..." line; the rest is the explanation.
-  const rest = body.replace(/^[\s\S]*?\*\*[A-D]\*\*[^\n]*\n+/, '').trim()
-  const explanation = rest ? mdInline(rest) : undefined
-  return { answerKey: letter, explanation }
-}
-
-function parseQuestions(content: string): Question[] {
-  // Split by H2 sections (## Section Name)
-  const sectionChunks = content.split(/\n(?=## )/)
-  const questions: Question[] = []
-
-  for (const chunk of sectionChunks) {
-    const lines = chunk.split('\n')
-    const firstLine = lines[0].trim()
-
-    // Determine current section name
-    const section = firstLine.startsWith('## ')
-      ? firstLine.replace(/^## /, '').trim()
-      : ''
-
-    // Split the chunk into question blocks by ### heading
-    const qChunks = chunk.split(/\n(?=### )/)
-
-    for (const rawChunk of qChunks) {
-      // Pull out the <details> answer block first so it never leaks into body.
-      const { details, rest: qChunkNoDetails } = extractDetails(rawChunk)
-      const detailsInfo = details ? parseDetails(details) : {}
-
-      const qLines = qChunkNoDetails.split('\n')
-      const headingLine = qLines[0].trim()
-      const match = Q_HEADING.exec(headingLine)
-      if (!match) continue
-
-      const qId = parseInt(match[1], 10)
-      const title = match[2].trim()
-
-      let stem: string | undefined
-      const choices: Choice[] = []
-      const bodyLines: string[] = []
-
-      let i = 1
-      while (i < qLines.length) {
-        const line = qLines[i]
-
-        if (line.startsWith('stem: ')) {
-          stem = line.slice('stem: '.length).trim()
-        } else {
-          const choiceMatch = CHOICE_LINE.exec(line)
-          if (choiceMatch) {
-            const key = choiceMatch[1] as ChoiceKey
-            const rawText = choiceMatch[2].trim()
-            const codeMatch = /^`([^`]+)`$/.exec(rawText)
-            const text = codeMatch ? codeMatch[1] : rawText
-            const choice: Choice = { key, text }
-            if (codeMatch) choice.code = true
-            if (detailsInfo.answerKey === key) choice.correct = true
-            choices.push(choice)
-          } else {
-            bodyLines.push(line)
-          }
-        }
-        i++
-      }
-
-      const body = bodyLines.join('\n').replace(/^\n+/, '').replace(/\n+$/, '').trim()
-
-      const q: Question = { id: qId, title, section }
-      if (stem) q.stem = stem
-      if (body) q.body = body
-      if (choices.length > 0) q.choices = choices
-      if (detailsInfo.explanation) q.explanation = detailsInfo.explanation
-
-      questions.push(q)
+  for (const node of tree.children) {
+    if (node.type === 'heading' && node.depth === 2) {
+      section = toString(node).trim()
+    } else if (node.type === 'heading' && node.depth === 3) {
+      const m = /^(\d+)\.\s+(.+)$/.exec(toString(node).trim())
+      if (m) blocks.push({ id: Number(m[1]), title: m[2].trim(), section, nodes: [] })
+    } else {
+      blocks.at(-1)?.nodes.push(node)
     }
   }
 
+  const questions = await Promise.all(blocks.map(buildQuestion))
   return questions.sort((a, b) => a.id - b.id)
+}
+
+async function buildQuestion({ id, title, section, nodes }: Block): Promise<Question> {
+  // Split off the <details> answer block (answer marker + explanation).
+  const start = nodes.findIndex((n) => n.type === 'html' && n.value.includes('<details'))
+  const end = nodes.findIndex((n) => n.type === 'html' && n.value.includes('</details>'))
+  const hasDetails = start !== -1 && end > start
+  const main = hasDetails ? nodes.slice(0, start) : nodes
+  const detail = hasDetails ? nodes.slice(start + 1, end).filter((n) => n.type !== 'html') : []
+
+  // main = [stem paragraph?, choices list?, ...body (code/prose)]
+  const stem = main.find((n) => n.type === 'paragraph' && /^stem:/i.test(toString(n)))
+  const list = main.find((n): n is List => n.type === 'list')
+  const answer = detail[0] ? answerKey(detail[0]) : undefined
+
+  const [body, explanation] = await Promise.all([
+    renderNodes(main.filter((n) => n !== stem && n !== list)),
+    renderNodes(detail.slice(1)),
+  ])
+
+  return {
+    id,
+    title,
+    section,
+    ...(stem && { stem: toString(stem).replace(/^stem:\s*/i, '').trim() }),
+    ...(body && { body }),
+    ...(list && { choices: toChoices(list, answer) }),
+    ...(explanation && { explanation }),
+  }
+}
+
+/** Answer = the **X** at the start of the first node inside <details>. */
+function answerKey(node: RootContent): ChoiceKey | undefined {
+  const strong = node.type === 'paragraph' ? node.children.find((c) => c.type === 'strong') : undefined
+  const letter = strong && toString(strong).trim()
+  return letter && /^[A-D]$/.test(letter) ? (letter as ChoiceKey) : undefined
+}
+
+function toChoices(list: List, answer?: ChoiceKey): Choice[] {
+  return list.children.flatMap((item) => {
+    const para = item.children.find((c): c is Paragraph => c.type === 'paragraph')
+    const m = para && /^([A-D]):\s*([\s\S]+)$/.exec(toString(para).trim())
+    if (!para || !m) return []
+    const key = m[1] as ChoiceKey
+    return [
+      {
+        key,
+        text: m[2].trim(),
+        ...(isCodeOnly(para, key) && { code: true }),
+        ...(key === answer && { correct: true }),
+      },
+    ]
+  })
+}
+
+/** True when the choice content (after the "X:" prefix) is a single inline-code span. */
+function isCodeOnly(para: Paragraph, key: ChoiceKey): boolean {
+  const rest = para.children.filter((c) => !(c.type === 'text' && new RegExp(`^${key}:\\s*$`).test(c.value)))
+  return rest.length === 1 && rest[0].type === 'inlineCode'
+}
+
+/** Malformed quizzes throw → fail the build instead of rendering broken content. */
+function validate(id: string, questions: Question[]): void {
+  if (questions.length === 0) throw new Error(`[quiz:${id}] no questions parsed`)
+  const ids = new Set<number>()
+  for (const q of questions) {
+    if (ids.has(q.id)) throw new Error(`[quiz:${id}] duplicate question id ${q.id}`)
+    ids.add(q.id)
+    const correct = q.choices?.filter((c) => c.correct).length ?? 0
+    if (q.choices?.length && correct !== 1) {
+      throw new Error(`[quiz:${id}] question ${q.id}: expected exactly 1 correct choice, got ${correct}`)
+    }
+  }
 }

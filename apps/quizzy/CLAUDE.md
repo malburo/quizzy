@@ -28,14 +28,20 @@ Next.js 16 App Router, React 19, TypeScript, Tailwind v4. Self-contained: no sha
 
 - `/` — RSC, statically prerendered (**SSG**). Calls `getAllQuizzes()` (server), renders the static shell (header/footer markup lives in `page.tsx`) + `<LibraryContent>` client island (search + cards + motion). Per-card progress fills in after hydration.
 - `/quizzes` — RSC. `redirect('/')`.
-- `/quizzes/[id]` — RSC. `generateStaticParams` + `generateMetadata`. Renders body markdown to HTML server-side via Shiki/marked, passes `bodyMap` into `<QuizApp>` client island. `params` is `Promise<{ id: string }>` (Next 15+ async).
+- `/quizzes/[id]` — RSC. `generateStaticParams` + `generateMetadata`. Passes the parsed `quiz` (bodies + explanations already rendered to HTML by the parser) into `<QuizApp>` client island. `params` is `Promise<{ id: string }>` (Next 15+ async).
 - `/playground-avatar` — Client page (Rive needs `canvas`, dynamic-imports `AvatarPlayground` with `ssr: false`).
+
+### SEO + metadata
+
+`app/layout.tsx` sets `metadataBase` (`https://quiz.malburo.site`), title template `'%s | Quizzy'`, `openGraph` (+ `locale: 'vi_VN'`) and `twitter`. Per-page metadata supplies its own title/description; the home page uses `title: { absolute }` (its title already contains the brand — a templated string would double it) and `alternates.canonical`. `app/opengraph-image.tsx` renders the share card via `next/og` — **ASCII text only** (Satori's default font lacks Vietnamese glyphs; the diacritic copy stays in the HTML metadata). `app/sitemap.ts` (quiz routes from `loadAllQuizIds()`) and `app/robots.ts` are file-based metadata routes.
+
+Animations honor reduced-motion globally via `<MotionProvider>` (`components/core/motion-provider.tsx`, a `MotionConfig reducedMotion="user"` wrapper) around `{children}` in the root layout — the CSS `@media (prefers-reduced-motion)` block only covers CSS animations, not Framer Motion.
 
 ### Data layer
 
 Quizzes live as markdown files in `content/quizzes/<slug>.md` with frontmatter (`title`, `desc`, `category`, `icon`, `iconMono`, `tint`, `inkOfTint`, `level`, `section`, `minutes`, `isNew`). Questions are `### N. Title` headings inside `## Section Name` blocks. Answer + explanation live inside a `<details>` block per question.
 
-`lib/server/parse-quiz.ts` reads frontmatter via gray-matter and parses question blocks into `Question[]`. `lib/server/load-quiz.ts` reads markdown files from disk (`node:fs`) and uses `'use cache'` so reads are memoized across requests. Both live under `lib/server/` because they import `node:fs` / use `'server-only'` — barreling them would pull `fs` into client bundles.
+`lib/server/parse-quiz.ts` reads frontmatter via gray-matter, parses the body into an **mdast tree** (`remark-parse`), and walks it: `## ` → section, `### N. Title` → a question block; within a block it pulls the `stem:` paragraph, the choices list, the code/prose `body`, and the `<details>` answer block. Body **and** explanation are rendered to HTML through one pipeline (`lib/server/markdown.ts`), so the parser returns fully-rendered `Question`s — no separate `bodyMap` step. `parseQuiz` is **async** (Shiki) and `validate()`s its output (one correct choice per choice-bearing question, unique ids) — malformed quizzes **throw and fail the build** rather than being silently skipped. `lib/server/load-quiz.ts` reads markdown files from disk (`node:fs`), `'use cache'`-memoized; it only swallows file-not-found (parse/validation errors propagate). All three live under `lib/server/` because they import `node:fs` / Shiki / use `'server-only'`.
 
 ### Library logos + grouping (`components/library/`)
 
@@ -43,7 +49,7 @@ Library cards render official **colored brand SVG logos** (Devicon) from `public
 
 `lib/questions/quiz-helpers.ts` is the pure helpers module (find next unanswered, get correct key, etc.) — safe for both server and client. The `lib/questions/index.ts` barrel re-exports ONLY these helpers; server-side loaders are deep-imported from `@/lib/server/load-quiz` directly in RSC pages.
 
-Body content is converted to HTML by `marked` (server-side) and injected via `dangerouslySetInnerHTML` into `.cq-md` containers — styled by the `.cq-md` block in `globals.css`.
+Markdown → HTML is one `unified` pipeline in `lib/server/markdown.ts` (`renderNodes`): `remark-rehype` → `rehype-stringify`, with a custom `code` handler that runs Shiki and wraps the result in the chunky `.cq-code` frame. It renders both question bodies and explanations (the old hand-rolled regex renderers in `parse-quiz` + `highlight.ts` are gone). Output is injected via `dangerouslySetInnerHTML` into `.cq-md` containers — styled by the `.cq-md` block in `globals.css`.
 
 ### State management — Zustand store (`stores/quiz-store.ts`)
 
@@ -68,6 +74,8 @@ Quiz page reads `?id=<n>` from `useSearchParams()` and treats URL as source of t
 ## Avatar (Rive)
 
 `components/avatar/avatar.tsx` wraps `@rive-app/react-webgl2`. Driven by a single `config: AvatarConfig` prop applying input values to state machine `SMButtons`. Two SMs are loaded (`SMAvatar`, `SMButtons`); `default_avatar_bool` is forced off on mount so config takes effect.
+
+**Self-hosted WASM**: `components/avatar/rive-runtime.ts` is a side-effect module that points `RuntimeLoader.setWasmUrl` / `setWasmFallbackUrl` at `/rive.wasm` + `/rive_fallback.wasm` (the Rive default is the unpkg/jsdelivr CDN). Both `avatar.tsx` and `avatar-playground.tsx` `import './rive-runtime'` before any `useRive`. The wasm files are **committed** in `public/` (2.3MB each) and `@rive-app/webgl2` is a direct dep that **pins the version** they came from — when upgrading Rive, re-copy `rive.wasm` + `rive_fallback.wasm` from `node_modules/.../@rive-app/webgl2/` so the binary matches the runtime.
 
 **Inputs that drive the SM directly**: most fields (`SkinTone`, `MainHair`, `Expression`, etc.).
 
@@ -137,6 +145,7 @@ shadcn-style primitives, customized to chunky aesthetic:
 - **`Input` / `Label`** — chunky bordered input with `shadow-chunky-sm`; label uses `.t-caption`.
 - **`GitHubStarButton`** — wraps `Button variant="pill"`.
 - **`QuizzyLogo`** — Q badge + "Quizzy" wordmark. Props: `size` (`sm`|`md`), `href` (default `/`).
+- **`CenteredMessage`** — shared centered full-page layout (`eyebrow` / `title` / body / `action`) for the 404, error, and quiz-not-found pages.
 
 ### Markdown content styling (`@layer components`)
 
@@ -168,7 +177,7 @@ models/
 stores/
 lib/
   questions/          (quiz-helpers + barrel — pure, client-safe)
-  server/             (load-quiz, parse-quiz, highlight — NO barrel)
+  server/             (load-quiz, parse-quiz, markdown — NO barrel)
 ```
 
 `core/` holds animation primitives shared across features: the `AnimatedGroup` component (from motion-primitives) and the `motion.ts` presets.
@@ -185,7 +194,7 @@ import { useQuizNavigation } from '@/hooks'                         // ✅
 import { findNextUnanswered } from '@/lib/questions'                // ✅ client-safe helpers
 
 import { loadAllQuizzes } from '@/lib/server/load-quiz'             // ✅ deep — by design
-import { renderQuestionBody } from '@/lib/server/highlight'         // ✅ deep — by design
+import { renderNodes } from '@/lib/server/markdown'                 // ✅ deep — by design
 ```
 
 **Exception — `dynamic()` imports keep deep paths** to preserve code splitting. Importing through a barrel pulls the whole chunk:
@@ -220,7 +229,7 @@ const AvatarPlayground = dynamic(
 | Quiz parser (server) | `lib/server/parse-quiz.ts` |
 | Quiz loader (server, cached) | `lib/server/load-quiz.ts` |
 | Quiz helpers (client-safe) | `lib/questions/quiz-helpers.ts` |
-| Markdown highlighter (server) | `lib/server/highlight.ts` |
+| Markdown → HTML pipeline (server, Shiki) | `lib/server/markdown.ts` |
 | Home shell (server, SSG) | `app/page.tsx` |
 | Library list island (client) | `components/library/library-content.tsx` |
 | Quiz card | `components/library/quiz-card.tsx` |

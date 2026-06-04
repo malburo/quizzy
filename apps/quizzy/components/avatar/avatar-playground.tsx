@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Alignment, Fit, Layout, useRive, useStateMachineInput } from '@rive-app/react-webgl2'
 import { cn } from '@/lib/utils'
+import './rive-runtime' // self-host the Rive wasm (must run before useRive)
 
 const STATE_MACHINES = ['SMAvatar', 'SMButtons']
 const TARGET_SM = 'SMButtons'

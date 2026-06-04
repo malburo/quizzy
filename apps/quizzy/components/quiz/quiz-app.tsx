@@ -20,7 +20,7 @@ import { QuizFeedback } from './quiz-feedback'
 import { QuizResults } from './quiz-results'
 import { QuizAppLoading } from './quiz-app-loading'
 
-export function QuizApp({ quiz, bodyMap }: { quiz: QuizSet; bodyMap: Record<number, string | null> }) {
+export function QuizApp({ quiz }: { quiz: QuizSet }) {
   useHydrateQuizStore()
   const hasHydrated = useHasHydrated()
 
@@ -29,10 +29,10 @@ export function QuizApp({ quiz, bodyMap }: { quiz: QuizSet; bodyMap: Record<numb
   // blinks to the actual resume question once it rehydrates.
   if (!hasHydrated) return <QuizAppLoading />
 
-  return <QuizAppView quiz={quiz} bodyMap={bodyMap} />
+  return <QuizAppView quiz={quiz} />
 }
 
-function QuizAppView({ quiz, bodyMap }: { quiz: QuizSet; bodyMap: Record<number, string | null> }) {
+function QuizAppView({ quiz }: { quiz: QuizSet }) {
   const searchParams = useSearchParams()
   const mainRef = useRef<HTMLElement>(null)
   const nav = useQuizNavigation(quiz)
@@ -97,7 +97,7 @@ function QuizAppView({ quiz, bodyMap }: { quiz: QuizSet; bodyMap: Record<number,
                     question={current}
                     correctKey={correctKey}
                     currentId={currentId}
-                    body={bodyMap[currentId] ?? null}
+                    body={current.body ?? null}
                     mobileShowExplanation={mobileShowExplanation}
                   />
                 </div>

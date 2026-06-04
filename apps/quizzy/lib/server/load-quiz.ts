@@ -8,12 +8,15 @@ const CONTENT_DIR = join(process.cwd(), 'content/quizzes')
 
 export async function loadQuiz(id: string): Promise<QuizSet | null> {
   'use cache'
+  let raw: string
   try {
-    const raw = readFileSync(join(CONTENT_DIR, `${id}.md`), 'utf-8')
-    return parseQuiz(id, raw)
+    raw = readFileSync(join(CONTENT_DIR, `${id}.md`), 'utf-8')
   } catch {
-    return null
+    return null // missing file → not found
   }
+  // Parse/validation errors propagate on purpose — a malformed quiz should fail
+  // the build, not be silently dropped.
+  return parseQuiz(id, raw)
 }
 
 export async function loadAllQuizzes(): Promise<QuizSet[]> {
