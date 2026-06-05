@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect } from 'react'
 import Link from 'next/link'
 import { Avatar, type AvatarConfig } from '@/components/avatar'
 import { Button } from '@/components/ui'
@@ -8,7 +9,7 @@ import { AnimatedGroup } from '@/components/core'
 import { getAnswerableQuestions } from '@/lib/questions'
 import type { QuizSet } from '@/models'
 import { useQuizActions, useStatuses } from '@/stores'
-import { useQuizNavigation } from '@/hooks'
+import { useFeedback, useQuizNavigation } from '@/hooks'
 
 const PASSING_RATIO = 0.7
 
@@ -40,6 +41,12 @@ export function QuizResults({ quiz }: { quiz: QuizSet }) {
   const ratio = total > 0 ? correctCount / total : 0
   const passed = ratio >= PASSING_RATIO
   const percent = Math.round(ratio * 100)
+
+  const { fire } = useFeedback()
+  useEffect(() => {
+    fire(passed ? 'complete' : 'incomplete')
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const handleRetry = () => {
     resetQuiz(quiz.id)

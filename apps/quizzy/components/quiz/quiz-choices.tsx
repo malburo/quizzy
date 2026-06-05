@@ -4,6 +4,7 @@ import type { Choice, ChoiceKey } from '@/models'
 import { useChecked, useQuizActions, useSelected } from '@/stores'
 import { cn } from '@/lib/utils'
 import { AnimatedGroup } from '@/components/core'
+import { useFeedback } from '@/hooks'
 
 
 export function QuizChoices({
@@ -18,6 +19,7 @@ export function QuizChoices({
   const selected = useSelected()
   const checked = useChecked()
   const { pick } = useQuizActions()
+  const { fire } = useFeedback()
 
   return (
     <div role="radiogroup" aria-label="Đáp án">
@@ -38,7 +40,11 @@ export function QuizChoices({
               role="radio"
               aria-checked={selected === c.key}
               disabled={checked}
-              onClick={() => !checked && pick(c.key)}
+              onClick={() => {
+                if (checked) return
+                pick(c.key)
+                fire('pick')
+              }}
               className={cn(
                 'relative h-full w-full border-2 border-line-2 rounded-md shadow-chunky-sm bg-paper text-left font-semibold pl-15 pr-4.5 py-4.5 min-h-16 t-body-lg flex items-center',
                 c.code && 'font-mono t-small',

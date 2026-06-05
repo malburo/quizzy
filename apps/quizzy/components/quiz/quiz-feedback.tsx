@@ -4,6 +4,7 @@ import { useEffect, useState, type ReactNode } from 'react'
 import { useReducedMotion } from 'motion/react'
 import type { ChoiceKey } from '@/models'
 import { useResult } from '@/stores'
+import { useFeedback } from '@/hooks'
 import { cn } from '@/lib/utils'
 
 const SHAKE_MS = 600
@@ -20,6 +21,7 @@ export function QuizFeedback({
   const result = useResult(correctKey)
   const reduce = useReducedMotion()
   const [shake, setShake] = useState(false)
+  const { fire } = useFeedback()
 
   useEffect(() => {
     if (result === 'idle') {
@@ -32,6 +34,12 @@ export function QuizFeedback({
     const t = window.setTimeout(() => setShake(false), SHAKE_MS)
     return () => window.clearTimeout(t)
   }, [result, reduce])
+
+  useEffect(() => {
+    if (result === 'correct') fire('correct')
+    else if (result === 'wrong') fire('wrong')
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [result])
 
   return (
     <div
