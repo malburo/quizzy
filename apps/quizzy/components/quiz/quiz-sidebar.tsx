@@ -12,6 +12,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SoundToggle,
   useSidebar,
 } from '@/components/ui'
 import type { Question, QuizSet } from '@/models'
@@ -59,7 +60,10 @@ export function QuizSidebar({
           <h2 className="flex-1 min-w-0 t-small font-extrabold text-ink leading-tight line-clamp-2">
             {quiz.title}
           </h2>
-          <QuizResetDialog quiz={quiz} />
+          <div className="flex shrink-0 items-center gap-0.5">
+            <SoundToggle />
+            <QuizResetDialog quiz={quiz} />
+          </div>
         </div>
       </SidebarHeader>
 

@@ -12,7 +12,7 @@ import {
 } from '@/lib/questions'
 import { useHasHydrated, useHydrateQuizStore, useQuizActions, useStatuses } from '@/stores'
 import { useQuizNavigation } from '@/hooks'
-import { SidebarProvider, SidebarTrigger } from '@/components/ui'
+import { SidebarProvider, SidebarTrigger, SoundToggle } from '@/components/ui'
 import { QuizSidebar } from './quiz-sidebar'
 import { QuizQuestion } from './quiz-question'
 import { QuizFooter } from './quiz-footer'
@@ -91,7 +91,10 @@ function QuizAppView({ quiz }: { quiz: QuizSet }) {
             <>
               <main ref={mainRef} className="flex-1 overflow-x-hidden overflow-y-auto">
                 <div className="mx-auto flex min-h-full w-full max-w-4xl flex-col px-5 pt-[calc(env(safe-area-inset-top)+1.5rem)] pb-12 md:justify-center md:px-8 md:py-6">
-                  <SidebarTrigger className="mb-4 self-start md:hidden" />
+                  <div className="mb-4 flex items-center justify-between md:hidden">
+                    <SidebarTrigger />
+                    <SoundToggle />
+                  </div>
 
                   <QuizQuestion
                     question={current}
