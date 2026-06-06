@@ -11,7 +11,7 @@
 
 </div>
 
-![Quizzy](docs/home.png)
+![Quizzy](docs/hero.png)
 
 Bite-sized multiple-choice quizzes for web fundamentals — HTML, CSS, JS, TS, React, Next.js, Express, MongoDB, Socket.io — with the chunky, satisfying feel of Duolingo. Questions are authored in plain Markdown and progress is saved locally, so there's no sign-up.
 
@@ -30,9 +30,7 @@ Bite-sized multiple-choice quizzes for web fundamentals — HTML, CSS, JS, TS, R
 
 ## Screenshots
 
-A question on desktop:
-
-![A question](docs/quiz.png)
+![Quizzy on desktop](docs/quiz.png)
 
 Instant feedback, with the answer revealed and an explanation a tap away:
 
