@@ -1,0 +1,46 @@
+# Dependency dirs
+**/node_modules
+
+# Build outputs
+**/.next
+**/.turbo
+**/dist
+**/build
+**/*.tsbuildinfo
+
+# Env files (leak risk + shouldn't be baked into images)
+**/.env
+**/.env.*
+!**/.env.example
+
+# VCS
+.git
+.gitignore
+.gitattributes
+
+# Editor / OS
+.vscode
+.idea
+.DS_Store
+Thumbs.db
+
+# Logs
+**/*.log
+**/npm-debug.log*
+**/yarn-debug.log*
+**/pnpm-debug.log*
+
+# Test coverage
+**/coverage
+
+# Docker (don't recurse into ourselves)
+**/Dockerfile
+**/Dockerfile.*
+docker-compose*.yaml
+docker-compose*.yml
+.dockerignore
+
+# Docs / repo meta (not needed at runtime)
+README.md
+docs
+.claude
