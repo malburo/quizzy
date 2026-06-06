@@ -65,5 +65,9 @@ Turborepo monorepo — the app lives in `apps/quizzy` (an `apps/admin` is planne
 ---
 
 <div align="center">
+
+Designed &amp; built by **[malburo](https://malburo.site)** in collaboration with **[Claude Code](https://claude.com/claude-code)**.
+
 If Quizzy made learning a little more fun, leave a ⭐
+
 </div>
