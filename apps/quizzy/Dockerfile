@@ -37,7 +37,7 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
   CMD wget --no-verbose --tries=1 --spider http://localhost:3001/ || exit 1
 ARG GIT_SHA=unknown
 ARG GIT_REF=unknown
-LABEL org.opencontainers.image.source="https://github.com/malburo/portfolio" \
+LABEL org.opencontainers.image.source="https://github.com/malburo/quizzy" \
       org.opencontainers.image.description="malburo quizzy — Next.js quiz app" \
       org.opencontainers.image.licenses="MIT" \
       org.opencontainers.image.revision="${GIT_SHA}" \
