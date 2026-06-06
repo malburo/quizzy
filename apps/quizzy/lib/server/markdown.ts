@@ -2,7 +2,7 @@ import 'server-only'
 import { unified } from 'unified'
 import remarkRehype from 'remark-rehype'
 import rehypeStringify from 'rehype-stringify'
-import { h } from 'hastscript'
+import { h, s } from 'hastscript'
 import { createHighlighter, type Highlighter } from 'shiki'
 import type { Element } from 'hast'
 import type { Code, RootContent } from 'mdast'
@@ -20,7 +20,22 @@ function getHighlighter() {
 
 const KNOWN_LANGS = new Set(['ts', 'tsx', 'js', 'jsx'])
 
-// Wrap shiki-highlighted code in the chunky `.cq-code` frame (styled in globals.css).
+// Copy button (Next.js-docs style). Clicks are handled by the useCodeCopy hook's
+// delegated listener, which reads the sibling <pre> text.
+function copyButton(): Element {
+  return h('button.cq-code-copy', { type: 'button', 'data-cq-copy': '', 'aria-label': 'Sao chép code', title: 'Sao chép' }, [
+    s('svg', { className: ['cq-copy-i'], viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round' }, [
+      s('rect', { x: 9, y: 9, width: 13, height: 13, rx: 2 }),
+      s('path', { d: 'M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1' }),
+    ]),
+    s('svg', { className: ['cq-check-i'], viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 2.5, strokeLinecap: 'round', strokeLinejoin: 'round' }, [
+      s('path', { d: 'M20 6 9 17l-5-5' }),
+    ]),
+  ])
+}
+
+// Wrap shiki-highlighted code in the `.cq-code` frame (Next.js-docs style: file-type
+// badge + copy button header, light body). Styled in globals.css.
 function codeFrame(node: Code, hl: Highlighter): Element {
   const lang = (node.lang ?? 'ts').toLowerCase()
   const shikiLang = KNOWN_LANGS.has(lang) ? lang : 'ts'
@@ -30,8 +45,8 @@ function codeFrame(node: Code, hl: Highlighter): Element {
 
   return h('div.cq-code', [
     h('div.cq-code-head', [
-      h('span.cq-code-lang', [h('span', { className: ['swatch', lang] }), lang]),
-      h('span.cq-code-dots', [h('span'), h('span'), h('span')]),
+      h('span', { className: ['cq-code-badge', lang] }, lang.toUpperCase()),
+      copyButton(),
     ]),
     h('pre', code ? [code] : []),
   ])

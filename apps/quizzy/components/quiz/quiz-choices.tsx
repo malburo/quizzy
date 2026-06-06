@@ -82,14 +82,14 @@ export function QuizChoices({
                   'border-correct bg-correct-soft shadow-chunky-md-correct text-correct-deep',
                 celebrate && 'cq-pop',
                 state === 'wrong' &&
-                  'border-wrong bg-wrong-soft shadow-chunky-md-wrong text-wrong-deep cq-shake',
+                  'border-wrong bg-wrong-soft shadow-chunky-md-wrong text-wrong-deep',
                 state === 'dimmed' && 'border-line-2 shadow-chunky-md opacity-45',
                 checked && 'cursor-default'
               )}
             >
               <span
                 className={cn(
-                  'grid size-8 shrink-0 place-items-center rounded-sm border-2 bg-transparent font-extrabold t-small transition-[border-color,color] duration-80',
+                  'grid size-8 shrink-0 place-items-center rounded-sm border-2 bg-transparent font-extrabold t-small leading-none transition-[border-color,color] duration-80',
                   (state === 'idle' || state === 'dimmed') && 'border-line-2 text-ink-3',
                   state === 'selected' && 'border-macaw text-macaw-deep',
                   state === 'correct' && 'border-correct text-correct-deep',

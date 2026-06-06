@@ -63,7 +63,8 @@ export function QuizMascot({ correctKey }: { correctKey: ChoiceKey | null }) {
   )
 }
 
-export function QuizBubble({ stem }: { stem?: string }) {
+export function QuizBubble({ stem, label }: { stem?: string; label?: string }) {
+  const text = stem ? (label ? `${label}: ${stem}` : stem) : ''
   return (
     <div className="cq-bubble flex-1 min-w-0 pb-6 pr-8">
       <TextEffect
@@ -73,7 +74,7 @@ export function QuizBubble({ stem }: { stem?: string }) {
         speedSegment={2}
         className="t-h3 md:t-h2 text-ink text-pretty"
       >
-        {stem ?? ''}
+        {text}
       </TextEffect>
     </div>
   )

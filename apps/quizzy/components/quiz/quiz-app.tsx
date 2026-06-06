@@ -11,7 +11,7 @@ import {
   parseQuestionId,
 } from '@/lib/questions'
 import { useHasHydrated, useHydrateQuizStore, useQuizActions, useStatuses } from '@/stores'
-import { useQuizNavigation } from '@/hooks'
+import { useCodeCopy, useQuizNavigation } from '@/hooks'
 import { SidebarProvider, SidebarTrigger, SoundToggle } from '@/components/ui'
 import { QuizSidebar } from './quiz-sidebar'
 import { QuizQuestion } from './quiz-question'
@@ -36,6 +36,7 @@ function QuizAppView({ quiz }: { quiz: QuizSet }) {
   const searchParams = useSearchParams()
   const mainRef = useRef<HTMLElement>(null)
   const nav = useQuizNavigation(quiz)
+  useCodeCopy()
 
   const { resetActive } = useQuizActions()
   const statuses = useStatuses(quiz.id)

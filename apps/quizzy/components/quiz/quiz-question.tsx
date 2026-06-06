@@ -29,7 +29,7 @@ export function QuizQuestion({
       <div className="flex items-center gap-3.5 md:gap-6">
         <QuizMascot correctKey={correctKey} />
         <TransitionPanel activeKey={currentId} className="min-w-0 flex-1">
-          <QuizBubble stem={question.stem} />
+          <QuizBubble stem={question.stem} label={`Câu ${question.id}`} />
         </TransitionPanel>
       </div>
 
