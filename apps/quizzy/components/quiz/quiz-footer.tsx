@@ -1,9 +1,42 @@
 'use client'
 
+import { useState } from 'react'
 import type { ChoiceKey } from '@/models'
 import { useQuizActions, useResult, useSelected } from '@/stores'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui'
+
+const CORRECT_MESSAGES = [
+  'Tuyệt quá!',
+  'Hay lắm!',
+  'Xuất sắc!',
+  'Quá đỉnh!',
+  'Giỏi quá!',
+  'Chuẩn luôn!',
+  'Ngon lành!',
+  'Đỉnh thật sự!',
+  'Làm tốt lắm!',
+  'Tuyệt vời!',
+  'Quá chuẩn!',
+  'Chính xác!',
+]
+
+const WRONG_MESSAGES = [
+  'Sai mất rồi...',
+  'Tiếc quá!',
+  'Suýt nữa thôi!',
+  'Gần đúng rồi!',
+  'Hụt mất rồi!',
+  'Chưa đúng rồi...',
+  'Ơ, chưa phải!',
+  'Sai chút xíu!',
+  'Cố lần sau nhé!',
+  'Tiếc ghê!',
+  'Chưa trúng rồi!',
+  'Không sao nhé!',
+]
+
+const randomFrom = (list: string[]) => list[Math.floor(Math.random() * list.length)]
 
 export function QuizFooter({
   onContinue,
@@ -28,9 +61,14 @@ export function QuizFooter({
   return (
     <footer className="relative mt-auto overflow-hidden touch-none">
       {result === 'idle' ? (
-        <div className="md:border-t border-t-line bg-paper pt-4.5 pb-[calc(2rem+env(safe-area-inset-bottom))] px-6">
+        <div className="md:border-t border-t-line bg-transparent pt-4.5 pb-[calc(2rem+env(safe-area-inset-bottom))] px-6">
           <div className="max-w-4xl mx-auto flex items-center justify-between gap-4">
-            <Button onClick={onContinue} variant="neutral" size="md" className="hidden md:inline-flex">
+            <Button
+              onClick={onContinue}
+              variant="ghost"
+              size="md"
+              className="hidden md:inline-flex text-ink-3 hover:text-ink"
+            >
               Bỏ qua
             </Button>
             <Button
@@ -79,9 +117,11 @@ function FeedbackResult({
   onShowExplanation: () => void
 }) {
   const isCorrect = result === 'correct'
+  // Pick once when this result mounts; stays stable across re-renders, re-rolls next question.
+  const [message] = useState(() => randomFrom(isCorrect ? CORRECT_MESSAGES : WRONG_MESSAGES))
 
   return (
-    <div className="flex w-full items-center justify-between gap-4">
+    <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between md:gap-4">
       <div className="flex items-center gap-3">
         <div
           className={cn(
@@ -94,21 +134,25 @@ function FeedbackResult({
           </svg>
         </div>
         <h4 className={cn('t-h2', isCorrect ? 'text-correct-deep' : 'text-wrong-deep')}>
-          {isCorrect ? 'Đúng!' : 'Sai'}
+          {message}
         </h4>
       </div>
-      <div className="flex items-center gap-2">
+      {/* Mobile: full-width stacked buttons (Duolingo). Desktop: compact, right-aligned. */}
+      <div className="flex flex-col gap-2.5 md:flex-row md:items-center md:gap-2">
         {!mobileShowExplanation && (
           <Button
             onClick={onShowExplanation}
             variant="ghost"
-            size="sm"
-            className={cn('md:hidden', isCorrect ? 'text-correct-deep' : 'text-wrong-deep')}
+            size="md"
+            className={cn(
+              'w-full border-2 md:hidden',
+              isCorrect ? 'border-correct text-correct-deep' : 'border-wrong text-wrong-deep'
+            )}
           >
             Giải thích
           </Button>
         )}
-        <Button onClick={onContinue} variant={isCorrect ? 'success' : 'danger'} size="md" className="w-fit">
+        <Button onClick={onContinue} variant={isCorrect ? 'success' : 'danger'} size="md" className="w-full md:w-fit">
           {isCorrect ? 'Tiếp tục' : 'Hiểu rồi'}
         </Button>
       </div>

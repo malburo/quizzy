@@ -32,16 +32,16 @@
   --accent-sea-soft: #c7f4e6;
   --accent-sea-deep: #008b6a;
 
-  /* Neutrals — warm */
-  --paper: #fefcf9;
-  --paper-2: #f6f1ea;
-  --paper-3: #ede6db;
+  /* Neutrals — cool (Duolingo design palette) */
+  --paper: #ffffff;
+  --paper-2: #f0f0f0;
+  --paper-3: #e8e8e8;
   --ink: #2a2438;
   --ink-2: #5a5470;
   --ink-3: #8b8597;
   --ink-4: #b5b0be;
-  --line: #ebe4d9;
-  --line-2: #d9d2c4;
+  --line: #e5e5e5;
+  --line-2: #d0d0d0;
 
   /* Radius */
   --radius-xs: 6px;
@@ -168,7 +168,7 @@
 html {
   font-family: var(--font-display);
   color: var(--ink);
-  background: var(--paper);
+  background: #f7f7f7; /* app background — gray page, white cards (Duolingo polar/snow) */
   min-height: 100dvh;
 }
 
