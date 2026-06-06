@@ -36,7 +36,7 @@ export function LibraryContent({ quizzes }: { quizzes: QuizSet[] }) {
         {/* Clouds — desktop only */}
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-y-0 right-0 hidden w-2/3 overflow-hidden md:block"
+          className="pointer-events-none absolute inset-0 hidden overflow-hidden md:block"
         >
           <div className="cq-cloud ck1" />
           <div className="cq-cloud ck2" />
@@ -45,6 +45,13 @@ export function LibraryContent({ quizzes }: { quizzes: QuizSet[] }) {
           <div className="cq-cloud ck5" />
           <div className="cq-cloud ck6" />
         </div>
+
+        {/* Gradient mask — purple over the text (left), fading to transparent so the
+            clouds only show on the right and never cover the copy. */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 hidden md:block bg-linear-to-r from-brand-purple-tint from-30% to-transparent to-70%"
+        />
 
         {/* Content */}
         <div className="relative z-10 min-w-0 flex-1 px-6 py-8 md:px-10">
