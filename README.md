@@ -2,58 +2,68 @@
 
 # 🦉 Quizzy
 
-**A Duolingo-style quiz app for learning programming — playful, tactile, and fast.**
+**A Duolingo-style quiz app for learning programming — playful, tactile, fast.**
 
-[**Live demo → quiz.malburo.site**](https://quiz.malburo.site)
+[![Live demo](https://img.shields.io/badge/demo-quiz.malburo.site-58cc02?style=flat-square)](https://quiz.malburo.site)
+&nbsp;![Next.js](https://img.shields.io/badge/Next.js-16-000?style=flat-square&logo=nextdotjs)
+&nbsp;![React](https://img.shields.io/badge/React-19-1cb0f6?style=flat-square&logo=react)
+&nbsp;![Tailwind](https://img.shields.io/badge/Tailwind-v4-38bdf8?style=flat-square&logo=tailwindcss)
 
 </div>
 
-![Quizzy home](docs/home.png)
+![Quizzy](docs/home.png)
 
-Quizzy turns programming fundamentals (HTML, CSS, JS, TS, React, Next.js, Express, MongoDB, Socket.io) into bite-sized multiple-choice quizzes with the chunky, satisfying feel of Duolingo. Quizzes are authored in plain Markdown; progress is saved locally — no account needed.
+Bite-sized multiple-choice quizzes for web fundamentals — HTML, CSS, JS, TS, React, Next.js, Express, MongoDB, Socket.io — with the chunky, satisfying feel of Duolingo. Questions are authored in plain Markdown and progress is saved locally, so there's no sign-up.
 
-> ℹ️ Quiz content is in Vietnamese 🇻🇳.
+> Quiz content is in Vietnamese 🇻🇳.
 
-## ✨ Features
+## Features
 
-- **Duolingo-style lesson flow** — 3D press buttons, choice states (select / correct / wrong), a feedback panel that slides up from the bottom, and randomized encouraging messages.
-- **Interactive Rive mascot** — reacts to your answers (happy / sad), with a randomized look.
-- **Sound + haptics** — satisfying, toggleable audio cues and vibration on supported devices.
-- **Markdown quizzes** — questions, code, and explanations in Markdown; server-side syntax highlighting (Shiki) with Next.js-docs–style code blocks + a copy button.
-- **Keyboard friendly** — press **1–4** to pick an answer.
-- **Local progress** — per-question correct/wrong tracking via localStorage (Zustand persist).
-- **SEO + share cards** — file-based metadata, `next/og` Open Graph images, sitemap, robots.
+- **Duolingo-style lesson flow** — 3D buttons, distinct choice states, a feedback panel that rises from the bottom, and randomized encouragement.
+- **Interactive Rive mascot** that reacts to every answer.
+- **Sound + haptics** — toggleable audio cues and vibration where supported.
+- **Markdown quizzes** with server-side syntax highlighting (Shiki) and Next.js-docs–style code blocks + copy button.
+- **Keyboard friendly** — press `1`–`4` to answer.
+- **Offline-first progress** via `localStorage` (Zustand persist).
+- **SEO & share cards** with `next/og`, sitemap, and robots.
 - **Accessible motion** — honors `prefers-reduced-motion`.
 
-![Quizzy lesson flow](docs/quiz.png)
+## Screenshots
 
-## 🧱 Tech stack
+A question on desktop:
 
-- **Next.js 16** — App Router, React Server Components, Partial Prerendering, `cacheComponents`
-- **React 19** with the React Compiler
-- **TypeScript** · **Tailwind CSS v4**
-- **Zustand** (state + persist) · **Rive** (avatar) · **Shiki** (highlighting) · **motion** (animation)
-- **Turborepo + pnpm** monorepo
+![A question](docs/quiz.png)
 
-## 📦 Monorepo layout
+Instant feedback, with the answer revealed and an explanation a tap away:
 
-```
-apps/
-  quizzy/      # the quiz web app  (apps/admin — planned)
-```
+<table>
+  <tr>
+    <td align="center"><b>Correct</b></td>
+    <td align="center"><b>Incorrect</b></td>
+  </tr>
+  <tr>
+    <td width="50%"><img src="docs/correct.png" alt="Correct answer" /></td>
+    <td width="50%"><img src="docs/wrong.png" alt="Incorrect answer" /></td>
+  </tr>
+</table>
 
-## 🚀 Run locally
+## Tech stack
+
+**Next.js 16** (App Router · RSC · Partial Prerendering · React Compiler) · **React 19** · **TypeScript** · **Tailwind CSS v4** · **Zustand** · **Rive** · **Shiki** · **Turborepo + pnpm**
+
+## Getting started
 
 ```bash
 pnpm install
-pnpm dev            # quizzy → http://localhost:3001
-# pnpm build · pnpm lint · pnpm type-check
+pnpm dev            # → http://localhost:3001
 ```
 
-Requires Node ≥ 20 and pnpm.
+Requires Node ≥ 20 and pnpm. Other tasks: `pnpm build`, `pnpm lint`, `pnpm type-check`.
+
+Turborepo monorepo — the app lives in `apps/quizzy` (an `apps/admin` is planned).
 
 ---
 
 <div align="center">
-Built with ☕ by <a href="https://malburo.site">malburo</a> · if you like it, drop a ⭐
+If Quizzy made learning a little more fun, leave a ⭐
 </div>
