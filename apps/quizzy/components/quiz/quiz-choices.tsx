@@ -1,11 +1,13 @@
 'use client'
 
+import { useEffect } from 'react'
 import type { Choice, ChoiceKey } from '@/models'
 import { useChecked, useQuizActions, useSelected } from '@/stores'
 import { cn } from '@/lib/utils'
 import { AnimatedGroup } from '@/components/core'
 import { useFeedback } from '@/hooks'
 
+type ChoiceState = 'idle' | 'selected' | 'correct' | 'wrong' | 'dimmed'
 
 export function QuizChoices({
   choices,
@@ -21,6 +23,22 @@ export function QuizChoices({
   const { pick } = useQuizActions()
   const { fire } = useFeedback()
 
+  // Keyboard 1–4 to pick a choice (until the answer is checked).
+  useEffect(() => {
+    if (checked) return
+    const onKey = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement | null
+      if (target && /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName)) return
+      const n = Number(e.key)
+      const choice = Number.isInteger(n) ? choices[n - 1] : undefined
+      if (!choice) return
+      pick(choice.key)
+      fire('pick')
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [checked, choices, pick, fire])
+
   return (
     <div role="radiogroup" aria-label="Đáp án">
       <AnimatedGroup
@@ -28,10 +46,18 @@ export function QuizChoices({
         preset="scale"
         className="grid grid-cols-1 md:grid-cols-2 gap-3.5 mt-1"
       >
-        {choices.map((c) => {
-          const isSelected = !checked && selected === c.key
-          const isCorrect = checked && c.key === correctKey
-          const isWrong = checked && selected === c.key && c.key !== correctKey
+        {choices.map((c, i) => {
+          const state: ChoiceState = checked
+            ? c.key === correctKey
+              ? 'correct'
+              : selected === c.key
+                ? 'wrong'
+                : 'dimmed'
+            : selected === c.key
+              ? 'selected'
+              : 'idle'
+          // Celebratory bounce only when the user actually picked the right answer.
+          const celebrate = state === 'correct' && selected === correctKey
 
           return (
             <button
@@ -46,27 +72,33 @@ export function QuizChoices({
                 fire('pick')
               }}
               className={cn(
-                'relative h-full w-full border-2 border-line-2 rounded-md shadow-chunky-sm bg-paper text-left font-semibold pl-15 pr-4.5 py-4.5 min-h-16 t-body-lg flex items-center',
-                c.code && 'font-mono t-small',
-                !isSelected && !isCorrect && !isWrong && 'hover:bg-paper-2',
-                isSelected && 'border-macaw bg-macaw-soft shadow-chunky-sm-macaw text-macaw-deep',
-                isCorrect && 'border-correct bg-correct-soft shadow-chunky-sm-correct text-correct-deep',
-                isWrong && 'border-wrong bg-wrong-soft shadow-chunky-sm-wrong text-wrong-deep',
-                checked && 'cursor-not-allowed'
+                'flex h-full w-full items-center gap-4 border-2 rounded-md bg-paper text-left font-semibold px-4.5 py-4 min-h-16 t-body-lg',
+                'transition-[background-color,border-color,box-shadow,opacity,transform] duration-80 ease-[cubic-bezier(.2,.7,.3,1)]',
+                state === 'idle' &&
+                  'border-line-2 shadow-chunky-md hover:bg-paper-2 active:translate-y-1 active:shadow-none',
+                state === 'selected' &&
+                  'border-macaw bg-macaw-soft shadow-chunky-md-macaw text-macaw-deep active:translate-y-1 active:shadow-none',
+                state === 'correct' &&
+                  'border-correct bg-correct-soft shadow-chunky-md-correct text-correct-deep',
+                celebrate && 'cq-pop',
+                state === 'wrong' &&
+                  'border-wrong bg-wrong-soft shadow-chunky-md-wrong text-wrong-deep cq-shake',
+                state === 'dimmed' && 'border-line-2 shadow-chunky-md opacity-45',
+                checked && 'cursor-default'
               )}
             >
               <span
                 className={cn(
-                  'absolute left-3.5 top-1/2 -translate-y-1/2 size-8 rounded-sm border-2 grid place-items-center font-extrabold t-small transition-all duration-150',
-                  !isSelected && !isCorrect && !isWrong && 'border-line-2 bg-transparent text-ink-3',
-                  isSelected && 'border-macaw bg-transparent text-macaw-deep',
-                  isCorrect && 'border-correct bg-correct text-white',
-                  isWrong && 'border-wrong bg-wrong text-white'
+                  'grid size-8 shrink-0 place-items-center rounded-sm border-2 bg-transparent font-extrabold t-small transition-[border-color,color] duration-80',
+                  (state === 'idle' || state === 'dimmed') && 'border-line-2 text-ink-3',
+                  state === 'selected' && 'border-macaw text-macaw-deep',
+                  state === 'correct' && 'border-correct text-correct-deep',
+                  state === 'wrong' && 'border-wrong text-wrong-deep'
                 )}
               >
-                {c.key}
+                {i + 1}
               </span>
-              {c.text}
+              <span className={cn('flex-1 min-w-0', c.code && 'font-mono t-small')}>{c.text}</span>
             </button>
           )
         })}

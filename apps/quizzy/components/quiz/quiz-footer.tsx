@@ -25,20 +25,11 @@ export function QuizFooter({
   const canCheck = selected != null
   const { submit } = useQuizActions()
 
-  const tint =
-    result === 'correct'
-      ? 'bg-correct-soft border-t-correct'
-      : result === 'wrong'
-        ? 'bg-wrong-soft border-t-wrong'
-        : 'bg-paper border-t-line'
-
   return (
-    <footer
-      className={cn('mt-auto md:border-t pt-4.5 pb-[calc(2rem+env(safe-area-inset-bottom))] px-6 touch-none', tint)}
-    >
-      <div className="max-w-4xl mx-auto flex items-center justify-between gap-4">
-        {result === 'idle' ? (
-          <>
+    <footer className="relative mt-auto overflow-hidden touch-none">
+      {result === 'idle' ? (
+        <div className="md:border-t border-t-line bg-paper pt-4.5 pb-[calc(2rem+env(safe-area-inset-bottom))] px-6">
+          <div className="max-w-4xl mx-auto flex items-center justify-between gap-4">
             <Button onClick={onContinue} variant="neutral" size="md" className="hidden md:inline-flex">
               Bỏ qua
             </Button>
@@ -51,61 +42,76 @@ export function QuizFooter({
             >
               Kiểm tra
             </Button>
-          </>
-        ) : result === 'correct' ? (
-          <div className="flex w-full items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <div className="grid size-10 rounded-full place-items-center bg-correct text-white shrink-0 md:size-14">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round" className="size-5 md:size-7">
-                  <path d="M5 12.5l5 5 9-11" />
-                </svg>
-              </div>
-              <h4 className="t-h2 text-correct-deep">Đúng!</h4>
-            </div>
-            <div className="flex items-center gap-2">
-              {!mobileShowExplanation && (
-                <Button
-                  onClick={onShowExplanation}
-                  variant="ghost"
-                  size="sm"
-                  className="md:hidden text-correct-deep"
-                >
-                  Giải thích
-                </Button>
-              )}
-              <Button onClick={onContinue} variant="success" size="md" className="w-fit">
-                Tiếp tục
-              </Button>
-            </div>
           </div>
-        ) : (
-          <div className="flex w-full items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <div className="grid size-10 rounded-full place-items-center bg-wrong text-white shrink-0 md:size-14">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round" className="size-5 md:size-7">
-                  <path d="M6 6l12 12M18 6L6 18" />
-                </svg>
-              </div>
-              <h4 className="t-h2 text-wrong-deep">Sai</h4>
-            </div>
-            <div className="flex items-center gap-2">
-              {!mobileShowExplanation && (
-                <Button
-                  onClick={onShowExplanation}
-                  variant="ghost"
-                  size="sm"
-                  className="md:hidden text-wrong-deep"
-                >
-                  Giải thích
-                </Button>
-              )}
-              <Button onClick={onContinue} variant="danger" size="md" className="w-fit">
-                Hiểu rồi
-              </Button>
-            </div>
+        </div>
+      ) : (
+        // The whole colored panel — background and content together — slides up from
+        // the bottom edge (Duolingo lesson feedback).
+        <div
+          className={cn(
+            'cq-footer-up pt-4.5 pb-[calc(2rem+env(safe-area-inset-bottom))] px-6',
+            result === 'correct' ? 'bg-correct-soft' : 'bg-wrong-soft'
+          )}
+        >
+          <div className="max-w-4xl mx-auto">
+            <FeedbackResult
+              result={result}
+              onContinue={onContinue}
+              mobileShowExplanation={mobileShowExplanation}
+              onShowExplanation={onShowExplanation}
+            />
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </footer>
+  )
+}
+
+function FeedbackResult({
+  result,
+  onContinue,
+  mobileShowExplanation,
+  onShowExplanation,
+}: {
+  result: 'correct' | 'wrong'
+  onContinue: () => void
+  mobileShowExplanation: boolean
+  onShowExplanation: () => void
+}) {
+  const isCorrect = result === 'correct'
+
+  return (
+    <div className="flex w-full items-center justify-between gap-4">
+      <div className="flex items-center gap-3">
+        <div
+          className={cn(
+            'cq-badge-pop grid size-10 rounded-full place-items-center bg-white shrink-0 md:size-14',
+            isCorrect ? 'text-correct' : 'text-wrong'
+          )}
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round" className="size-5 md:size-7">
+            {isCorrect ? <path d="M5 12.5l5 5 9-11" /> : <path d="M6 6l12 12M18 6L6 18" />}
+          </svg>
+        </div>
+        <h4 className={cn('t-h2', isCorrect ? 'text-correct-deep' : 'text-wrong-deep')}>
+          {isCorrect ? 'Đúng!' : 'Sai'}
+        </h4>
+      </div>
+      <div className="flex items-center gap-2">
+        {!mobileShowExplanation && (
+          <Button
+            onClick={onShowExplanation}
+            variant="ghost"
+            size="sm"
+            className={cn('md:hidden', isCorrect ? 'text-correct-deep' : 'text-wrong-deep')}
+          >
+            Giải thích
+          </Button>
+        )}
+        <Button onClick={onContinue} variant={isCorrect ? 'success' : 'danger'} size="md" className="w-fit">
+          {isCorrect ? 'Tiếp tục' : 'Hiểu rồi'}
+        </Button>
+      </div>
+    </div>
   )
 }

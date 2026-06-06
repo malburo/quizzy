@@ -1,13 +1,9 @@
 'use client'
 
-import { useEffect, useState, type ReactNode } from 'react'
-import { useReducedMotion } from 'motion/react'
+import { useEffect, type ReactNode } from 'react'
 import type { ChoiceKey } from '@/models'
 import { useResult } from '@/stores'
 import { useFeedback } from '@/hooks'
-import { cn } from '@/lib/utils'
-
-const SHAKE_MS = 600
 
 export function QuizFeedback({
   className,
@@ -19,36 +15,16 @@ export function QuizFeedback({
   correctKey: ChoiceKey | null
 }) {
   const result = useResult(correctKey)
-  const reduce = useReducedMotion()
-  const [shake, setShake] = useState(false)
   const { fire } = useFeedback()
 
-  useEffect(() => {
-    if (result === 'idle') {
-      setShake(false)
-      return
-    }
-    if (result === 'correct') return
-    if (reduce) return
-    setShake(true)
-    const t = window.setTimeout(() => setShake(false), SHAKE_MS)
-    return () => window.clearTimeout(t)
-  }, [result, reduce])
-
+  // Sound + haptic on the idle → correct|wrong transition. The visual reaction
+  // (pop on correct, shake on wrong) now lives on the individual choice cards
+  // in quiz-choices, not as a whole-screen shake.
   useEffect(() => {
     if (result === 'correct') fire('correct')
     else if (result === 'wrong') fire('wrong')
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [result])
 
-  return (
-    <div
-      className={cn(
-        className,
-        shake && 'animate-[cqshake_500ms_cubic-bezier(.36,.07,.19,.97)]'
-      )}
-    >
-      {children}
-    </div>
-  )
+  return <div className={className}>{children}</div>
 }

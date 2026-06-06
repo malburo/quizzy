@@ -29,19 +29,30 @@ export function QuizExplanation({
     <div
       ref={ref}
       className={cn(
-        'scroll-mb-8 rounded-lg border-2 bg-paper p-4 md:block',
-        mobileShow ? 'block' : 'hidden',
-        result === 'correct' ? 'border-correct shadow-chunky-sm-correct' : 'border-wrong shadow-chunky-sm-wrong'
+        'scroll-mb-8 rounded-lg border-2 border-line-2 bg-paper-2 shadow-chunky-sm p-4 md:p-5 md:block',
+        mobileShow ? 'block' : 'hidden'
       )}
     >
-      <p className={cn('t-body mb-2 font-extrabold', result === 'correct' ? 'text-correct-deep' : 'text-wrong-deep')}>
-        Giải thích
-      </p>
+      <div className="mb-2.5 flex items-center gap-2">
+        <span className="grid size-6 shrink-0 place-items-center rounded-md bg-brand-purple text-white">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.4"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="size-3.5"
+          >
+            <path d="M9 18h6" />
+            <path d="M10 22h4" />
+            <path d="M15.1 14c.2-1 .7-1.8 1.4-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.2 1.5 1.4 2.5" />
+          </svg>
+        </span>
+        <p className="m-0 t-small font-extrabold text-brand-purple-deep">Giải thích</p>
+      </div>
       {explanation ? (
-        <p
-          className="m-0 t-body leading-relaxed text-ink [&>code]:font-mono [&>code]:font-semibold [&>code]:bg-paper-2 [&>code]:px-1.5 [&>code]:py-px [&>code]:rounded-xs [&>code]:text-[0.92em]"
-          dangerouslySetInnerHTML={{ __html: explanation }}
-        />
+        <div className="cq-md" dangerouslySetInnerHTML={{ __html: explanation }} />
       ) : null}
     </div>
   )

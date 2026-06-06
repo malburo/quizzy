@@ -58,10 +58,8 @@
   --shadow-chunky-md-brand: 0 4px 0 var(--brand-purple-deep);
   --shadow-chunky-md-correct: 0 4px 0 var(--status-correct-deep);
   --shadow-chunky-md-wrong: 0 4px 0 var(--status-wrong-deep);
+  --shadow-chunky-md-macaw: 0 4px 0 var(--accent-macaw);
   --shadow-chunky-sm-brand: 0 2px 0 var(--brand-purple-deep);
-  --shadow-chunky-sm-macaw: 0 2px 0 var(--accent-macaw);
-  --shadow-chunky-sm-correct: 0 2px 0 var(--status-correct-deep);
-  --shadow-chunky-sm-wrong: 0 2px 0 var(--status-wrong-deep);
 
   /* shadcn semantic tokens — mapped to Quizzy palette */
   --background: var(--paper);
@@ -159,10 +157,8 @@
   --shadow-chunky-md-brand: var(--shadow-chunky-md-brand);
   --shadow-chunky-md-correct: var(--shadow-chunky-md-correct);
   --shadow-chunky-md-wrong: var(--shadow-chunky-md-wrong);
+  --shadow-chunky-md-macaw: var(--shadow-chunky-md-macaw);
   --shadow-chunky-sm-brand: var(--shadow-chunky-sm-brand);
-  --shadow-chunky-sm-macaw: var(--shadow-chunky-sm-macaw);
-  --shadow-chunky-sm-correct: var(--shadow-chunky-sm-correct);
-  --shadow-chunky-sm-wrong: var(--shadow-chunky-sm-wrong);
 
   /* Fonts */
   --font-display: var(--font-nunito), ui-rounded, system-ui, sans-serif;
@@ -367,9 +363,10 @@ body {
     font-family: var(--font-mono);
     font-size: 0.9em;
     font-weight: 600;
-    background: var(--brand-purple-soft);
-    color: var(--brand-purple-deep);
-    padding: 2px 7px;
+    background: var(--paper-3);
+    color: var(--ink);
+    border: 1px solid var(--line-2);
+    padding: 1px 6px;
     border-radius: 6px;
   }
 }
@@ -379,20 +376,52 @@ body {
   50% { opacity: 0.5; transform: scale(0.8); }
 }
 
-@keyframes cqshake {
-  0%, 100% { transform: translateX(0); }
-  20%, 60% { transform: translateX(-3px); }
-  40%, 80% { transform: translateX(3px); }
-}
-
 @keyframes cqfadeIn {
   from { opacity: 0; }
   to   { opacity: 1; }
 }
 
-@keyframes cqpop {
-  from { opacity: 0; transform: scale(0.94); }
-  to   { opacity: 1; transform: scale(1); }
+/* ------------------------------------------------------------------ */
+/* Lesson-flow motion — Duolingo-style choreography                     */
+/* ------------------------------------------------------------------ */
+@keyframes cqspring {
+  0%   { transform: scale(1); }
+  28%  { transform: scale(1.07); }
+  52%  { transform: scale(0.97); }
+  72%  { transform: scale(1.025); }
+  88%  { transform: scale(0.99); }
+  100% { transform: scale(1); }
+}
+@keyframes cqcardshake {
+  0%   { transform: translateX(0); }
+  22%  { transform: translateX(-9px); }
+  44%  { transform: translateX(7px); }
+  66%  { transform: translateX(-4px); }
+  85%  { transform: translateX(2px); }
+  100% { transform: translateX(0); }
+}
+@keyframes cqfootup {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+@keyframes cqbadgepop {
+  0%   { transform: scale(0) rotate(-35deg); }
+  55%  { transform: scale(1.18) rotate(9deg); }
+  78%  { transform: scale(0.94) rotate(-3deg); }
+  100% { transform: scale(1) rotate(0); }
+}
+
+@layer components {
+  .cq-pop       { animation: cqspring 0.5s cubic-bezier(.2,.7,.3,1); }
+  .cq-shake     { animation: cqcardshake 0.4s ease-in-out; }
+  .cq-footer-up { animation: cqfootup 0.4s cubic-bezier(.22,1,.36,1); }
+  .cq-badge-pop { animation: cqbadgepop 0.45s cubic-bezier(.18,.89,.32,1.4); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cq-pop, .cq-shake, .cq-footer-up, .cq-badge-pop {
+    animation: none;
+  }
 }
 
 /* Hero cloud drift */

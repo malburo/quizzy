@@ -4,18 +4,18 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/lib/utils'
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center gap-2 whitespace-nowrap font-display font-extrabold transition-[transform,box-shadow,filter,background-color] duration-150 disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-purple-tint focus-visible:ring-offset-2 focus-visible:ring-offset-paper [&_svg]:size-4 [&_svg]:shrink-0',
+  'inline-flex items-center justify-center gap-2 whitespace-nowrap font-display font-extrabold transition-[transform,box-shadow,filter,background-color] duration-80 ease-[cubic-bezier(.2,.7,.3,1)] disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-purple-tint focus-visible:ring-offset-2 focus-visible:ring-offset-paper [&_svg]:size-4 [&_svg]:shrink-0',
   {
     variants: {
       variant: {
         brand:
-          'bg-brand-purple text-white shadow-chunky-sm-brand hover:brightness-110 active:translate-y-0.5 active:shadow-none',
+          'bg-brand-purple text-white shadow-chunky-md-brand hover:brightness-110 active:translate-y-1 active:shadow-none',
         success:
-          'bg-correct text-white shadow-chunky-sm-correct hover:brightness-110 active:translate-y-0.5 active:shadow-none',
+          'bg-correct text-white shadow-chunky-md-correct hover:brightness-110 active:translate-y-1 active:shadow-none',
         danger:
-          'bg-wrong text-white shadow-chunky-sm-wrong hover:brightness-110 active:translate-y-0.5 active:shadow-none',
+          'bg-wrong text-white shadow-chunky-md-wrong hover:brightness-110 active:translate-y-1 active:shadow-none',
         neutral:
-          'bg-paper text-ink border-2 border-line-2 shadow-chunky-sm hover:bg-paper-2 active:translate-y-0.5 active:shadow-none',
+          'bg-paper text-ink border-2 border-line-2 shadow-chunky-md hover:bg-paper-2 active:translate-y-1 active:shadow-none',
         muted: 'bg-paper-3 text-ink-3 disabled:opacity-100',
         ghost: 'bg-transparent text-ink-2 hover:bg-paper-2 hover:text-ink',
         pill:
