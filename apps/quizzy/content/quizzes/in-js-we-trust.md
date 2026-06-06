@@ -1,5 +1,5 @@
 ---
-title: In JS we trust (thầy Yeungon)
+title: In JS we trust
 desc: Bộ thử thách JavaScript từ open-source repo của thầy — closure, hoisting, IIFE, event loop.
 category: code
 icon: 🎯
