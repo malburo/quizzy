@@ -30,7 +30,7 @@ Bite-sized multiple-choice quizzes for web fundamentals — HTML, CSS, JS, TS, R
 
 ## Screenshots
 
-![Quizzy on desktop](docs/quiz.png)
+![Quizzy on desktop](docs/quiz-desktop.png)
 
 Instant feedback, with the answer revealed and an explanation a tap away:
 
